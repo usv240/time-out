@@ -8,16 +8,22 @@ decision document (why this idea, prize tiers, cut order). Work from `tasks/*.md
 
 Two projects for the DevNetwork [API + Cloud + AI] Hackathon 2026. Submit **3 Sep 2026, 10:00 AM PST**.
 
-**Baseline** (`/baseline`) — compliance gate for medical aesthetics. Before a procedure happens,
-verify it is legal for that provider in that state, generate the consent that state requires,
-capture a clinical baseline, collect three signatures, seal the record.
+**BEFORE** (`/before`) — the pre-procedure safety proof for cosmetic treatments. Before an
+injection or laser treatment begins, BEFORE verifies the provider's authority, checks product
+provenance and active alerts, confirms the patient actually *understands* the consent, captures a
+standardized clinical baseline, and produces a signed, independently verifiable safety receipt.
 
-**Recon** (`/recon`) — expense reports rebuilt. Receipts checked against live market prices.
+Scope: **Texas · neurotoxin · one hero path.** Recon (expense reports) was cancelled — current
+market prices cannot reconstruct what was purchasable at the historical booking moment, so
+"above market" was never a sound fraud signal.
 
 ## Hard rules — violating these breaks the project
 
-1. **The LLM never decides legality and never does arithmetic.** Models map documents to a typed
-   schema. All compliance verdicts and all money math run in deterministic code over a rules table.
+1. **The software never determines legality.** It produces a *safety determination for human
+   review*. Models map documents to a typed schema; verdicts run in deterministic code over a
+   rules table. Enforce this in copy, types, and comments — no exceptions.
+   Verdicts are three-state: `CLEAR` / `BLOCKED` / `REVIEW`. Ambiguity resolves to REVIEW,
+   never to a guess.
 2. **Synthetic data only. Always.** Never a real clinic name, real person's face, real licence
    number, real lot number, or real patient document. Publicly implying a real business commits
    malpractice is defamation.
@@ -35,12 +41,11 @@ capture a clinical baseline, collect three signatures, seal the record.
 | Backend | **Xano** (data model, business logic, workflows, auth) |
 | Hosting | Xano static hosting |
 | Frontend | Keep it simple and fast — the demo video is the deliverable, not the framework |
-| Documents | Nutrient DWS (extract/redact/view), Doctavian (generate/sign), Foxit (assemble/present) |
+| Documents | Nutrient DWS (extract/redact/review), Doctavian (consent + treatment-party signing), Foxit (agent-assembled evidence record + medical director eSign) |
 | Live data | SerpApi |
 | Vision | Perfect Corp YouCam (Camera Kit, Skin Analysis, VTO) |
 | Domains/DNS | name.com CORE (sandbox: `https://api.dev.name.com`) |
-| Graph | Wundergraph Cosmo — one subgraph per US state |
-| API collections | Bruno `.bru` files, committed |
+
 
 ## Known API gotchas
 
@@ -50,14 +55,22 @@ capture a clinical baseline, collect three signatures, seal the record.
 - **Perfect Corp:** use **SD** not HD for skin analysis — HD burns credits fast. Budget: 1,000 units.
 - **Nutrient:** Data Extraction returns confidence + page coords. Low confidence must route to the
   DWS Viewer for human sign-off — that routing is the point, not a nice-to-have.
-- **Doctavian:** templates use expressions + elements (branch, loop, calculate). Signing is
-  multi-party — patient, injector, supervising physician.
+- **Doctavian:** templates use expressions + elements (branch, loop, calculate). Signs the
+  **consent** with treatment-party signatures (patient + injector).
+- **Foxit:** brief is an *agent from plain prompt to signed document* via MCP + PDF Services,
+  with explicit handoff to human signing. Foxit collects the **medical director attestation** —
+  never the same signature as Doctavian.
+- **Live prize pool is $13,500 across 7 challenges.** Apptio, useBruno, Wundergraph, Kong and
+  Impart have no challenge — do not build for them.
 
 ## Conventions
 
 - Small, reviewable commits. Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`).
 - Every external call goes through a client module with caching + typed responses. No inline fetch.
-- Seed only **4 states**: TX, CA, NY, FL. Breadth is a trap; depth demos better.
+- **Texas only, neurotoxin only.** One hero path done excellently beats breadth.
+- Never claim novelty absolutely. Zenoti already ships credential-based booking gating and
+  lot-level injectable reconciliation. Our defensible ground is jurisdiction rules-as-code with
+  citations, the frozen snapshot, the comprehension gate, and the patient-verifiable receipt.
 - Prefer boring, working code. This ships in 17 days and is judged on a video.
 
 ## Definition of done for any task

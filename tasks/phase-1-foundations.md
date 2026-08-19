@@ -2,74 +2,78 @@
 
 Read `AGENTS.md` first. Do not read `PLAN.md` for instructions.
 
+## Scope discipline
+**Texas only. Neurotoxin only.** One hero path. Everything else is out of scope
+until the hero path runs end to end.
+
 ## Goal
-A running skeleton with a seeded rules table and a synthetic corpus. No sponsor
-integrations yet beyond Xano. By the end of this phase the Gate must return a
-verdict for a hardcoded encounter.
+The Gate returns a three-state verdict for a synthetic encounter, with citations
+and a frozen rule snapshot. No sponsor integrations yet beyond Xano.
 
 ## Tasks
 
 ### 1. Repo structure
 ```
-/baseline      clinic + patient app
-/recon         expense app (Builder B, starts Aug 27)
+/before        clinic app + patient receipt view
 /shared        rules engine, types, API clients
 /fixtures      synthetic corpus (committed)
-/bruno         .bru collections
 /tasks         these briefs
 ```
 
 ### 2. Xano data model
-Create tables exactly as specified in PLAN.md §1.5. Entities:
 `Clinic · Provider · Procedure · JurisdictionRule · Encounter · GateDecision ·
-IntakeDoc · SkinBaseline · ConsentRecord · EvidenceBundle · AuditEvent · ProductLot`
+IntakeDoc · SkinBaseline · Comprehension · ConsentRecord · SafetyReceipt ·
+AuditEvent · ProductLot`
 
 Enable CLI push in workspace settings first. Use the Xano CLI + MCP.
+**Xano must visibly be the system** — state machine, rules, approvals, audit all live here.
 
-### 3. Seed JurisdictionRule — 4 states only
-TX, CA, NY, FL × procedure categories
-`NEUROTOXIN · FILLER · LASER · IPL · PEEL · MICRONEEDLING · IV · GLP1`
-
-Each row needs: `permitted_credentials[]`, `supervision_model`
+### 3. Seed JurisdictionRule — Texas neurotoxin only
+Rows need: `permitted_credentials[]`, `supervision_model`
 (NONE|GENERAL|DIRECT|ONSITE), `requires_delegation_doc`, `requires_medical_director`,
-`citation_url`, `source`, `verified_at`.
+`requires_good_faith_exam`, `citation_url`, `source`, `verified_at`, `confidence`.
 
-Seed from public state board sources. Where a rule is uncertain, mark it and move on —
-do not guess silently.
+Seed from primary sources: Texas Medical Board, Texas Board of Nursing.
+Where a rule is genuinely ambiguous, mark it `REVIEW` — never guess silently.
 
 ### 4. The Gate (`/shared/gate`)
 Pure function, no network, fully unit-tested.
 
-Input: `{ state, procedure_id, provider_id, clinic_id, patient_flags[] }`
+**Three-state verdict — this matters:**
+- `CLEAR` — all checks pass on unambiguous rules
+- `BLOCKED` — a check fails on an unambiguous rule
+- `REVIEW` — a rule is ambiguous, stale, or the evidence is low-confidence.
+  A human decides. **The software never resolves ambiguity by guessing.**
 
-Evaluate in order, collecting **all** failures (do not short-circuit):
-1. Provider licence active + unexpired in `state`
+Evaluate in order, collecting **all** findings (do not short-circuit):
+1. Provider licence active + unexpired in state
 2. Credential ∈ `permitted_credentials`
 3. Supervision model satisfied
-4. QUAD A tier requirements met
-5. Good-faith exam recorded where required
-6. Product lot not FDA-flagged
+4. Good-faith exam recorded where required
+5. Product lot verifiable and not alerted
+6. Patient comprehension recorded and passing
 7. Board disciplinary status clear
 
-Output must match the contract in PLAN.md §1.6, including a frozen `rule_snapshot`.
+Every finding carries `citation_url` + the exact facts that failed.
+Output freezes `rule_snapshot` so the decision stays explainable years later.
+
+**Language rule:** the Gate produces a *safety determination for human review*.
+It never "determines legality." Enforce this in copy, types, and comments.
 
 ### 5. Synthetic corpus (`/fixtures`)
-- 4 fictional clinics, one per state, obviously-fake licence formats
-- 6 fictional providers spanning MD, NP, RN, AESTHETICIAN, LASER_TECH — **at least
-  two must fail the Gate**
-- Synthetic patient faces (generated, never real people)
-- 8–10 intake documents: handwritten-style history, typed consent, product packaging
-  with invented lot number, prior-treatment record
-- **2–3 deliberately low-quality documents** so the human-review path fires on camera
+- 1 fictional Texas clinic, obviously-fake licence format
+- 3 fictional providers: one aesthetician (fails), one RN with delegation (clears),
+  one medical director
+- Synthetic patient face (generated, never a real person)
+- 5–6 intake documents incl. product packaging with an invented lot number
+- **1–2 deliberately low-confidence documents** so the review path fires on camera
 
 ### 6. Housekeeping
-- `.env` populated from `.env.example` (do not commit)
-- README with setup steps
-- CI running unit tests
+`.env` from `.env.example` · README · CI running unit tests
 
 ## Done when
-- [ ] `gate.evaluate()` returns CLEAR for a valid encounter and BLOCKED with citations
-      for an aesthetician attempting neurotoxin in TX
-- [ ] Unit tests cover all 7 checks
-- [ ] Corpus committed, all synthetic
-- [ ] Clean checkout + `.env` → runs
+- [ ] Gate returns BLOCKED with citation for aesthetician + neurotoxin in TX
+- [ ] Gate returns CLEAR for RN with valid delegation
+- [ ] Gate returns REVIEW for a low-confidence or ambiguous input
+- [ ] Unit tests cover all 7 checks and all 3 verdicts
+- [ ] No copy anywhere claims the software determines legality
