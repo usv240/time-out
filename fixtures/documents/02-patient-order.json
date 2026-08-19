@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "document_type": "patient_specific_order",
+  "patient_id": "SYN-PATIENT-001",
+  "drug": "SYNTHETIC NEUROTOXIN — NOT FOR USE",
+  "dose": "20 invented units",
+  "strength": "100 invented units/vial",
+  "route": "intramuscular",
+  "delegating_physician_id": "SYN-PROV-MD-003",
+  "confidence": "HIGH"
+}
+

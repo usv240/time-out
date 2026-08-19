@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "document_type": "procedure_consent",
+  "patient_id": "SYN-PATIENT-001",
+  "procedure": "NEUROTOXIN_INJECTION",
+  "signature_status": "PENDING",
+  "notice": "Synthetic demonstration document; not clinical consent",
+  "confidence": "HIGH"
+}
+

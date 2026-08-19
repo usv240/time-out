@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "document_type": "product_packaging",
+  "manufacturer": "Fictional Therapeutics",
+  "product": "EXAMPLETOX — NOT A REAL PRODUCT",
+  "lot": "INVENTED-LOT-0007",
+  "expires_on": "2027-10-31",
+  "confidence": "LOW",
+  "review_reason": "Deliberately blurred/uncertain extraction fixture for the human-review demo"
+}
+

@@ -1,0 +1,13 @@
+{
+  "synthetic": true,
+  "document_type": "delegation_protocol",
+  "delegating_physician_id": "SYN-PROV-MD-003",
+  "delegate_id": "SYN-PROV-RN-002",
+  "signed_on": "2026-08-18",
+  "patient_selection_criteria": "Synthetic adult fixture with completed assessment",
+  "appropriate_care": "Synthetic hero-path protocol only",
+  "complication_and_emergency_procedure": "Stop; initiate synthetic emergency workflow; contact delegating physician",
+  "feedback_channel": "Synthetic Xano audit event",
+  "confidence": "HIGH"
+}
+

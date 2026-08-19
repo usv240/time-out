@@ -1,0 +1,56 @@
+{
+  "rule_id": "TX_NEUROTOXIN_2025_01_09",
+  "jurisdiction": "TX",
+  "procedure": "NEUROTOXIN_INJECTION",
+  "effective_on": "2025-01-09",
+  "verified_at": "2026-08-18",
+  "source": "Texas Medical Board; Texas Board of Nursing; Texas Occupations Code",
+  "confidence": "HIGH",
+  "direct_performer_credentials": [
+    "PHYSICIAN"
+  ],
+  "delegated_path_credentials": [
+    "PHYSICIAN_ASSISTANT",
+    "APRN",
+    "RN",
+    "LVN",
+    "OTHER_QUALIFIED_TRAINED_DELEGATE"
+  ],
+  "credential_interpretation_review": [
+    "AESTHETICIAN",
+    "OTHER"
+  ],
+  "credential_rule_note": "Texas Occupations Code 157.001 and 22 TAC 169.25 use a qualified-and-properly-trained delegation standard, not a closed credential whitelist. A nonmedical title alone is not authority; interaction with that person's other licensing law requires human review.",
+  "supervision_model": "ONSITE_OR_IMMEDIATELY_AVAILABLE",
+  "requires_delegation_doc": true,
+  "requires_medical_director": false,
+  "requires_good_faith_exam": "REVIEW",
+  "good_faith_exam_note": "Current 22 TAC 169.26 expressly requires a practitioner-patient relationship, an adequate medical record, performer disclosure, BLS presence, and availability. It does not use the phrase good-faith exam in this rule. Do not infer a separate named requirement without counsel review.",
+  "written_order_minimum": [
+    "delegating_physician_identity",
+    "patient_selection_criteria",
+    "description_of_appropriate_care",
+    "common_complication_serious_injury_and_emergency_procedures",
+    "communication_or_feedback_to_physician_or_pa_or_aprn"
+  ],
+  "rn_additional_evidence": [
+    "individual_scope_decision",
+    "education_knowledge_competence",
+    "appropriate_patient_order",
+    "drug_dose_strength_route",
+    "appropriate_medical_supervision"
+  ],
+  "citations": {
+    "tmb_chapter_169": "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+    "bon_rn_cosmetic_faq": "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+    "bon_aprn_cosmetic_faq": "https://www.bon.texas.gov/faq_practice_aprn.asp.html",
+    "occupations_code_157": "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+  },
+  "product_safety_citations": [
+    "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+  ],
+  "comprehension_citations": [
+    "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+  ]
+}
+

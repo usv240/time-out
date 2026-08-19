@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "document_type": "teach_back_record",
+  "patient_id": "SYN-PATIENT-001",
+  "attempt": 1,
+  "score": 4,
+  "threshold": 4,
+  "confidence": "LOW",
+  "review_reason": "Deliberately uncertain transcription fixture; must route to human review"
+}
+

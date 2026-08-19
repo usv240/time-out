@@ -1,0 +1,42 @@
+[
+  {
+    "provider_id": "SYN-PROV-AESTHETICIAN-001",
+    "display_name": "Casey Example",
+    "credential": "AESTHETICIAN",
+    "license_number": "SYNTHETIC-NOT-A-LICENSE-A01",
+    "license_state": "TX",
+    "license_status": "ACTIVE",
+    "license_expires_on": "2027-12-31",
+    "license_confidence": "HIGH",
+    "disciplinary_status": "CLEAR",
+    "training_documented": false,
+    "complication_training_documented": false
+  },
+  {
+    "provider_id": "SYN-PROV-RN-002",
+    "display_name": "Riley Example",
+    "credential": "RN",
+    "license_number": "SYNTHETIC-NOT-A-LICENSE-R02",
+    "license_state": "TX",
+    "license_status": "ACTIVE",
+    "license_expires_on": "2027-12-31",
+    "license_confidence": "HIGH",
+    "disciplinary_status": "CLEAR",
+    "training_documented": true,
+    "complication_training_documented": true
+  },
+  {
+    "provider_id": "SYN-PROV-MD-003",
+    "display_name": "Morgan Example",
+    "credential": "PHYSICIAN",
+    "license_number": "SYNTHETIC-NOT-A-LICENSE-M03",
+    "license_state": "TX",
+    "license_status": "ACTIVE",
+    "license_expires_on": "2027-12-31",
+    "license_confidence": "HIGH",
+    "disciplinary_status": "CLEAR",
+    "training_documented": true,
+    "complication_training_documented": true
+  }
+]
+
