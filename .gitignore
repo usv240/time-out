@@ -1,0 +1,28 @@
+# Secrets — never commit
+.env
+.env.local
+*.key
+*.pem
+
+# Cached API responses (regenerate; may contain sponsor quota data)
+.cache/
+fixtures/live/
+
+# Deps & builds
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Media working files (demo renders are large)
+*.mp4
+*.mov
+!demo/final/*.mp4
