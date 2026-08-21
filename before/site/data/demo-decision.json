@@ -1,0 +1,16 @@
+{
+  "fixture_id": "aesthetician-blocked",
+  "encounter_id": "SYN-ENC-BLOCKED-002",
+  "verdict": "BLOCKED",
+  "determination_scope": "Pre-procedure safety determination for human review",
+  "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+  "findings": [
+    {"check_id":"provider_license","status":"PASS","summary":"Provider licence evidence is active, in-state, and unexpired.","citation_urls":["https://www.bon.texas.gov/faq_nursing_practice.asp.html"],"facts":{"state":"TX","license_status":"ACTIVE","expires_on":"2027-12-31","scheduled_on":"2026-08-20","confidence":"HIGH"}},
+    {"check_id":"authority_pathway","status":"REVIEW","summary":"This title alone neither establishes nor disproves delegated authority; reviewer must assess the other licence and delegation rules.","citation_urls":["https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html","https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"],"facts":{"credential":"AESTHETICIAN","training_documented":false,"complication_training_documented":false}},
+    {"check_id":"delegation_and_supervision","status":"BLOCK","summary":"Delegation, order, BLS, or required availability evidence is incomplete.","citation_urls":["https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html","https://www.bon.texas.gov/faq_nursing_practice.asp.html","https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"],"facts":{"delegation_required":true,"delegation_document_present":false,"protocol_signed_and_dated":false,"delegating_physician_active":false,"patient_specific_order_present":false,"order_contains_drug_dose_strength_route":false,"supervisor_onsite":false,"supervisor_immediately_available":false,"physician_emergency_appointment_available":false,"bls_person_present":false}},
+    {"check_id":"preprocedure_assessment","status":"BLOCK","summary":"Practitioner-patient relationship, medical record, or performer disclosure evidence is missing.","citation_urls":["https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"],"facts":{"practitioner_patient_relationship_established":false,"adequate_medical_record_present":false,"performer_identity_disclosed":false,"good_faith_exam_label_status":"REVIEW"}},
+    {"check_id":"product_lot","status":"PASS","summary":"Product lot is verified and has no captured alert.","citation_urls":["https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"],"facts":{"verified":true,"alerted":false,"confidence":"HIGH"}},
+    {"check_id":"comprehension","status":"PASS","summary":"Comprehension evidence meets the configured threshold.","citation_urls":["https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"],"facts":{"recorded":true,"score":4,"threshold":4,"confidence":"HIGH"}},
+    {"check_id":"disciplinary_status","status":"PASS","summary":"Captured disciplinary status is clear.","citation_urls":["https://www.bon.texas.gov/faq_nursing_practice.asp.html"],"facts":{"disciplinary_status":"CLEAR"}}
+  ]
+}

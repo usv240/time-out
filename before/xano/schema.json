@@ -1,53 +1,279 @@
 {
-  "schema_version": "phase-1-2026-08-18",
-  "deployment_status": "BLUEPRINT_NOT_PUSHED",
-  "notice": "Import blueprint for Xano. No deployment is asserted by this file.",
-  "enums": {
-    "gate_verdict": ["CLEAR", "BLOCKED", "REVIEW"],
-    "evidence_confidence": ["HIGH", "MEDIUM", "LOW"],
-    "encounter_state": [
-      "DRAFT",
-      "EVIDENCE_PENDING",
-      "GATE_READY",
-      "HELD",
-      "HUMAN_REVIEW",
-      "CONSENT_PENDING",
-      "READY_FOR_PROCEDURE",
-      "SEALED"
-    ]
-  },
-  "tables": {
-    "Clinic": ["id", "display_name", "state", "synthetic", "created_at"],
-    "Provider": ["id", "clinic_id", "display_name", "credential", "license_state", "license_status", "license_expires_on", "disciplinary_status", "evidence_confidence", "synthetic"],
-    "Procedure": ["id", "code", "display_name", "jurisdiction", "active"],
-    "JurisdictionRule": ["id", "rule_id", "jurisdiction", "procedure_code", "effective_on", "verified_at", "confidence", "rule_json", "source_urls", "rule_sha256"],
-    "Encounter": ["id", "clinic_id", "patient_synthetic_id", "provider_id", "procedure_id", "state", "scheduled_at", "active_gate_decision_id", "version", "synthetic"],
-    "GateDecision": ["id", "encounter_id", "verdict", "determination_scope", "findings_json", "rule_snapshot_json", "rule_snapshot_sha256", "created_at", "created_by"],
-    "IntakeDoc": ["id", "encounter_id", "document_type", "cache_key", "extracted_json", "confidence", "review_status"],
-    "SkinBaseline": ["id", "encounter_id", "capture_ref", "analysis_json", "confidence", "captured_at"],
-    "Comprehension": ["id", "encounter_id", "question_set_version", "attempt", "answers_json", "score", "threshold", "confidence", "remediation_status", "recorded_at"],
-    "ConsentRecord": ["id", "encounter_id", "template_version", "status", "patient_signature_ref", "injector_signature_ref", "signed_at"],
-    "SafetyReceipt": ["id", "encounter_id", "gate_decision_id", "receipt_hash", "document_ref", "verification_token", "sealed_at"],
-    "AuditEvent": ["id", "encounter_id", "event_type", "from_state", "to_state", "actor_type", "actor_id", "reason", "evidence_refs", "created_at"],
-    "ProductLot": ["id", "encounter_id", "manufacturer", "product_name", "lot_number", "expires_on", "verification_status", "alert_status", "confidence", "source_refs"]
-  },
-  "state_transitions": [
-    {"from": "DRAFT", "to": "EVIDENCE_PENDING", "event": "encounter_opened"},
-    {"from": "EVIDENCE_PENDING", "to": "GATE_READY", "event": "minimum_evidence_received"},
-    {"from": "GATE_READY", "to": "HELD", "event": "gate_blocked"},
-    {"from": "GATE_READY", "to": "HUMAN_REVIEW", "event": "gate_review"},
-    {"from": "GATE_READY", "to": "CONSENT_PENDING", "event": "gate_clear"},
-    {"from": "HUMAN_REVIEW", "to": "GATE_READY", "event": "review_remediated"},
-    {"from": "CONSENT_PENDING", "to": "READY_FOR_PROCEDURE", "event": "comprehension_and_signatures_complete"},
-    {"from": "READY_FOR_PROCEDURE", "to": "HUMAN_REVIEW", "event": "material_rule_or_product_alert_candidate"},
-    {"from": "READY_FOR_PROCEDURE", "to": "SEALED", "event": "receipt_sealed"}
-  ],
-  "invariants": [
-    "Every state transition appends an AuditEvent.",
-    "GateDecision rows are append-only and store the full rule snapshot plus hash.",
-    "A low-confidence required input cannot produce READY_FOR_PROCEDURE.",
-    "A SerpApi result may create a review task but may not directly produce CLEAR or BLOCKED.",
-    "No external response is consumed without a cache key and offline replay path."
-  ]
+    "schema_version":  "end-to-end-reference-2026-08-20",
+    "deployment_status":  "LOCAL_REFERENCE_COMPLETE_XANO_NOT_PUSHED",
+    "notice":  "Executable local reference mirrors the intended Xano contract. Xano deployment is not asserted until workspace authentication and billing are completed.",
+    "enums":  {
+                  "gate_verdict":  [
+                                       "CLEAR",
+                                       "BLOCKED",
+                                       "REVIEW"
+                                   ],
+                  "evidence_confidence":  [
+                                              "HIGH",
+                                              "MEDIUM",
+                                              "LOW"
+                                          ],
+                  "encounter_state":  [
+                                          "DRAFT",
+                                          "EVIDENCE_PENDING",
+                                          "GATE_EVALUATED",
+                                          "HUMAN_REVIEW",
+                                          "REMEDIATION",
+                                          "CONSENT_COMPILED",
+                                          "BASELINE_CAPTURED",
+                                          "AWAITING_ATTESTATION",
+                                          "READY_FOR_PROCEDURE",
+                                          "SEALED"
+                                      ]
+              },
+    "tables":  {
+                   "Clinic":  [
+                                  "id",
+                                  "display_name",
+                                  "state",
+                                  "synthetic",
+                                  "created_at"
+                              ],
+                   "Provider":  [
+                                    "id",
+                                    "clinic_id",
+                                    "display_name",
+                                    "credential",
+                                    "license_state",
+                                    "license_status",
+                                    "license_expires_on",
+                                    "disciplinary_status",
+                                    "evidence_confidence",
+                                    "synthetic"
+                                ],
+                   "Procedure":  [
+                                     "id",
+                                     "code",
+                                     "display_name",
+                                     "jurisdiction",
+                                     "active"
+                                 ],
+                   "JurisdictionRule":  [
+                                            "id",
+                                            "rule_id",
+                                            "jurisdiction",
+                                            "procedure_code",
+                                            "effective_on",
+                                            "verified_at",
+                                            "confidence",
+                                            "rule_json",
+                                            "source_urls",
+                                            "rule_sha256"
+                                        ],
+                   "Encounter":  [
+                                     "id",
+                                     "clinic_id",
+                                     "patient_synthetic_id",
+                                     "provider_id",
+                                     "procedure_id",
+                                     "state",
+                                     "scheduled_at",
+                                     "active_gate_decision_id",
+                                     "version",
+                                     "synthetic"
+                                 ],
+                   "GateDecision":  [
+                                        "id",
+                                        "encounter_id",
+                                        "verdict",
+                                        "determination_scope",
+                                        "findings_json",
+                                        "rule_snapshot_json",
+                                        "rule_snapshot_sha256",
+                                        "created_at",
+                                        "created_by"
+                                    ],
+                   "IntakeDoc":  [
+                                     "id",
+                                     "encounter_id",
+                                     "document_type",
+                                     "cache_key",
+                                     "extracted_json",
+                                     "confidence",
+                                     "review_status"
+                                 ],
+                   "SkinBaseline":  [
+                                        "id",
+                                        "encounter_id",
+                                        "capture_ref",
+                                        "analysis_json",
+                                        "confidence",
+                                        "captured_at"
+                                    ],
+                   "Comprehension":  [
+                                         "id",
+                                         "encounter_id",
+                                         "question_set_version",
+                                         "attempt",
+                                         "answers_json",
+                                         "score",
+                                         "threshold",
+                                         "confidence",
+                                         "remediation_status",
+                                         "recorded_at"
+                                     ],
+                   "ConsentRecord":  [
+                                         "id",
+                                         "encounter_id",
+                                         "template_version",
+                                         "status",
+                                         "patient_signature_ref",
+                                         "injector_signature_ref",
+                                         "signed_at"
+                                     ],
+                   "SafetyReceipt":  [
+                                         "id",
+                                         "encounter_id",
+                                         "gate_decision_id",
+                                         "receipt_hash",
+                                         "document_ref",
+                                         "verification_token",
+                                         "sealed_at"
+                                     ],
+                   "AuditEvent":  [
+                                      "id",
+                                      "encounter_id",
+                                      "event_type",
+                                      "from_state",
+                                      "to_state",
+                                      "actor_type",
+                                      "actor_id",
+                                      "reason",
+                                      "evidence_refs",
+                                      "created_at"
+                                  ],
+                   "ProductLot":  [
+                                      "id",
+                                      "encounter_id",
+                                      "manufacturer",
+                                      "product_name",
+                                      "lot_number",
+                                      "expires_on",
+                                      "verification_status",
+                                      "alert_status",
+                                      "confidence",
+                                      "source_refs"
+                                  ],
+                   "ReviewTask":  [
+                                      "id",
+                                      "encounter_id",
+                                      "kind",
+                                      "assigned_role",
+                                      "status",
+                                      "reason",
+                                      "source_ref",
+                                      "resolution",
+                                      "resolved_by",
+                                      "created_at",
+                                      "resolved_at"
+                                  ],
+                   "AlertCandidate":  [
+                                          "id",
+                                          "encounter_id",
+                                          "source_url",
+                                          "published_at",
+                                          "matched_entity",
+                                          "status",
+                                          "confirmed_by",
+                                          "confirmed_at"
+                                      ],
+                   "Attestation":  [
+                                       "id",
+                                       "encounter_id",
+                                       "evidence_record_id",
+                                       "signed_by_role",
+                                       "signature_ref",
+                                       "status",
+                                       "signed_at"
+                                   ]
+               },
+    "state_transitions":  [
+                              {
+                                  "from":  "DRAFT",
+                                  "to":  "EVIDENCE_PENDING",
+                                  "event":  "encounter_opened"
+                              },
+                              {
+                                  "from":  "EVIDENCE_PENDING",
+                                  "to":  "GATE_EVALUATED",
+                                  "event":  "gate_evaluated"
+                              },
+                              {
+                                  "from":  "GATE_EVALUATED",
+                                  "to":  "REMEDIATION",
+                                  "event":  "gate_blocked"
+                              },
+                              {
+                                  "from":  "GATE_EVALUATED",
+                                  "to":  "HUMAN_REVIEW",
+                                  "event":  "gate_review_required"
+                              },
+                              {
+                                  "from":  "REMEDIATION",
+                                  "to":  "EVIDENCE_PENDING",
+                                  "event":  "evidence_remediated"
+                              },
+                              {
+                                  "from":  "HUMAN_REVIEW",
+                                  "to":  "EVIDENCE_PENDING",
+                                  "event":  "human_review_resolved"
+                              },
+                              {
+                                  "from":  "GATE_EVALUATED",
+                                  "to":  "CONSENT_COMPILED",
+                                  "event":  "consent_compiled_and_signed"
+                              },
+                              {
+                                  "from":  "CONSENT_COMPILED",
+                                  "to":  "HUMAN_REVIEW",
+                                  "event":  "comprehension_held"
+                              },
+                              {
+                                  "from":  "HUMAN_REVIEW",
+                                  "to":  "CONSENT_COMPILED",
+                                  "event":  "comprehension_remediated"
+                              },
+                              {
+                                  "from":  "CONSENT_COMPILED",
+                                  "to":  "BASELINE_CAPTURED",
+                                  "event":  "baseline_captured"
+                              },
+                              {
+                                  "from":  "BASELINE_CAPTURED",
+                                  "to":  "AWAITING_ATTESTATION",
+                                  "event":  "evidence_record_assembled"
+                              },
+                              {
+                                  "from":  "AWAITING_ATTESTATION",
+                                  "to":  "READY_FOR_PROCEDURE",
+                                  "event":  "medical_director_attested"
+                              },
+                              {
+                                  "from":  "READY_FOR_PROCEDURE",
+                                  "to":  "HUMAN_REVIEW",
+                                  "event":  "alert_candidate_raised"
+                              },
+                              {
+                                  "from":  "HUMAN_REVIEW",
+                                  "to":  "READY_FOR_PROCEDURE",
+                                  "event":  "alert_candidate_dismissed"
+                              },
+                              {
+                                  "from":  "READY_FOR_PROCEDURE",
+                                  "to":  "SEALED",
+                                  "event":  "receipt_sealed"
+                              }
+                          ],
+    "invariants":  [
+                       "Every state transition appends an AuditEvent.",
+                       "GateDecision rows are append-only and store the full rule snapshot plus hash.",
+                       "A low-confidence required input cannot produce READY_FOR_PROCEDURE.",
+                       "A SerpApi result may create a review task but may not directly produce CLEAR or BLOCKED.",
+                       "No external response is consumed without a cache key and offline replay path."
+                   ]
 }
-

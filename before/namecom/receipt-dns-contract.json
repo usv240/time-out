@@ -1,0 +1,18 @@
+{
+  "status": "OFFLINE_REFERENCE_NOT_ACTIVATED",
+  "base_url": "https://api.dev.name.com",
+  "operations": [
+    "domain search",
+    "availability check",
+    "sandbox registration",
+    "TXT record create",
+    "TXT record read-back through sandbox API"
+  ],
+  "txt_name": "_before.{receipt_id}",
+  "txt_value": "{receipt_hash}",
+  "limits": [
+    "sandbox DNS does not propagate to public resolvers",
+    "the domain owner can mutate the record",
+    "this is a verification channel, not an immutable notary"
+  ]
+}

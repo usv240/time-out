@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="BEFORE synthetic sandbox API documentation and playground.">
+  <title>API sandbox — BEFORE</title><script>(()=>{const t=localStorage.getItem("before-theme");if(t)document.documentElement.dataset.theme=t})();</script>
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/product.css"><script src="/api-page.js" defer></script>
+<script src="/shell.js" defer></script></head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a><div class="offline-banner">Synthetic sandbox · No PHI · 60 requests/minute · Keys expire in seven days</div>
+  <header class="site-header"><nav class="shell nav" aria-label="Primary navigation"><a class="wordmark" href="/"><span class="wordmark-mark" aria-hidden="true"></span>BEFORE</a><div class="nav-links"><a href="/try">Try</a><a href="/api">API</a><a href="/evidence">Evidence</a><a href="/how-it-works">How it works</a></div></nav></header>
+  <main id="main">
+    <section class="page-hero shell"><p class="eyebrow">BEFORE as a service</p><h1>One call. The exact facts that failed.</h1><p class="lead">Use the real deterministic Gate with synthetic Texas neurotoxin data. No account is required for the seeded demo encounter.</p></section>
+    <div class="docs-layout shell">
+      <div>
+        <section class="docs-card"><p class="eyebrow">The one call</p><h2>Evaluate the seeded encounter</h2><pre><code>curl -X POST http://localhost:4173/v1/encounters/demo/evaluate \
+  -H "Content-Type: application/json" \
+  -d '{}'</code></pre><button class="button button-primary" id="run-example" type="button">Run this request</button></section>
+        <section class="docs-card"><p class="eyebrow">Language examples</p><h2>Use the same Gate from any client</h2>
+<h3>Python</h3><pre><code>urllib.request.urlopen(urllib.request.Request(
+  "http://localhost:4173/v1/encounters/demo/evaluate",
+  data=b"{}", method="POST", headers={"Content-Type": "application/json"}))</code></pre>
+<h3>JavaScript</h3><pre><code>await fetch("/v1/encounters/demo/evaluate", {
+  method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+});</code></pre>
+<h3>Xano function call</h3><pre><code>api.request {
+  url = $env.BEFORE_API + "/v1/encounters/demo/evaluate"
+  method = "POST"
+}</code></pre></section>
+        <section class="docs-card playground"><p class="eyebrow">Live playground</p><h2>Request</h2><textarea id="request-body" spellcheck="false" aria-label="JSON request body">{}</textarea><button class="button button-primary" id="send-request" type="button">Send request</button><h2 style="margin-top:24px">Response</h2><pre id="response-output" aria-live="polite"><code>Select “Send request” to call the local API.</code></pre></section>
+        <section class="docs-card"><p class="eyebrow">Endpoint reference</p><h2>Encounter and receipt API</h2><div style="overflow-x:auto"><table class="endpoint-table"><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody>
+          <tr><td>POST</td><td><code>/v1/encounters/demo/evaluate</code></td><td>Run the seeded Gate.</td></tr>
+          <tr><td>GET</td><td><code>/v1/encounters/:id</code></td><td>State, findings, review tasks, history.</td></tr>
+          <tr><td>POST</td><td><code>/v1/encounters</code></td><td>Create a synthetic encounter from a committed fixture.</td></tr>
+          <tr><td>POST</td><td><code>/v1/encounters/:id/evidence</code></td><td>Replay typed Nutrient extraction.</td></tr>
+          <tr><td>POST</td><td><code>/v1/encounters/:id/remediate</code></td><td>Attach documented remediation without DB editing.</td></tr>
+          <tr><td>POST</td><td><code>/v1/encounters/:id/reproduce</code></td><td>Rerun against the frozen snapshot.</td></tr>
+          <tr><td>GET</td><td><code>/v1/receipts/:id</code></td><td>Read a bounded safety receipt.</td></tr>
+          <tr><td>POST</td><td><code>/v1/receipts/verify</code></td><td>Recompute and compare the receipt hash.</td></tr>
+          <tr><td>GET</td><td><code>/v1/rules/TX/NEUROTOXIN_INJECTION</code></td><td>Current synthetic-demo ruleset with sources.</td></tr>
+          <tr><td>POST</td><td><code>/v1/webhooks</code></td><td>Register an HMAC-SHA256 signed event target.</td></tr>
+          <tr><td>POST</td><td><code>/v1/rule-proposals</code></td><td>Start the proposed → reviewed → effective workflow.</td></tr>
+        </tbody></table></div></section>
+      </div>
+      <aside>
+        <section class="docs-card"><p class="eyebrow">Instant access</p><h2>Get a sandbox key</h2><p>No signup. Synthetic-data scope only. The seeded demo call works without a key.</p><button class="button button-primary" id="get-key" type="button">Get a sandbox key</button><div class="key-output" id="key-output" aria-live="polite" hidden></div></section>
+        <section class="docs-card"><p class="eyebrow">Safety boundaries</p><div class="boundary-box"><strong>Not for clinical use.</strong><p>Texas neurotoxin only. Returns a pre-procedure safety determination for human review, never a legal conclusion. The sandbox rejects common real-data patterns.</p></div></section>
+        <section class="docs-card"><p class="eyebrow">Changelog</p><p><code>2026-08-20</code> — Complete offline reference API, signed webhook outbox, and rule-review workflow.</p></section>
+        <section class="docs-card"><p class="eyebrow">Errors</p><p><code>400 INVALID_JSON</code> — correct the JSON object.</p><p><code>409 WORKFLOW_CONFLICT</code> — follow the returned remedy and retry.</p><p><code>429 RATE_LIMITED</code> — wait one minute.</p></section>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

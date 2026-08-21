@@ -19,3 +19,12 @@ When access is configured:
 The judging demo should show the Xano state transition and its matching
 `AuditEvent`, not just a frontend badge.
 
+
+
+## Executable reference
+
+`before.app.service.BeforeService` now implements and tests the full intended
+business-logic contract locally. `api-contract.json` lists the functions to
+reproduce in Xano. This is not a substitute for the required Xano deployment;
+it prevents the UI, transitions, and integration contracts from being blocked
+while workspace authentication and billing remain unavailable.

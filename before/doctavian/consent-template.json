@@ -1,0 +1,52 @@
+{
+  "template_id": "TX-NEUROTOXIN-CONSENT-1",
+  "status": "OFFLINE_REFERENCE_NOT_PUSHED",
+  "notice": "Synthetic demonstration template. No clinical dose or uncited cooling-off period is calculated.",
+  "inputs": [
+    "procedure",
+    "authority_pathway",
+    "patient_flags",
+    "performer_display_name",
+    "rule_snapshot_sha256",
+    "required_disclosures"
+  ],
+  "expressions": [
+    {
+      "type": "branch",
+      "when": "procedure == 'NEUROTOXIN_INJECTION'",
+      "render": "texas_neurotoxin_disclosures"
+    },
+    {
+      "type": "branch",
+      "when": "authority_pathway == 'DELEGATED'",
+      "render": "delegation_and_supervision_disclosure"
+    },
+    {
+      "type": "loop",
+      "over": "required_disclosures",
+      "render": "risk_disclosure_item"
+    },
+    {
+      "type": "branch",
+      "when": "patient_flags contains 'PREGNANCY_REVIEW'",
+      "render": "named_human_review_hold"
+    }
+  ],
+  "calculations": [
+    {
+      "name": "disclosure_count",
+      "expression": "length(required_disclosures)",
+      "clinical": false
+    }
+  ],
+  "signers": [
+    {"role": "Patient", "required": true},
+    {"role": "Injector", "required": true}
+  ],
+  "forbidden_outputs": [
+    "legal conclusion",
+    "clinical dose calculation",
+    "uncited cooling-off period",
+    "medical director attestation"
+  ]
+}

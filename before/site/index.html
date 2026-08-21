@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BEFORE is a pre-procedure safety determination for human review, demonstrated with synthetic Texas neurotoxin evidence.">
+    <meta name="color-scheme" content="light dark">
+    <title>BEFORE — Run the safety check</title>
+    <script>
+      (() => {
+        const saved = localStorage.getItem("before-theme");
+        if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="shell nav" aria-label="Primary navigation">
+        <a class="wordmark" href="#top" aria-label="BEFORE home"><span class="wordmark-mark" aria-hidden="true"></span>BEFORE</a>
+        <div class="nav-links" id="nav-links">
+          <a href="/try">Try</a><a href="/api">API</a><a href="/evidence">Evidence</a><a href="#limits">Limits</a>
+        </div>
+        <div class="nav-actions">
+          <a class="button button-small" href="/try">Try</a>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Theme: system" title="Theme: system"><span aria-hidden="true">◐</span></button>
+          <button class="icon-button menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu"><span aria-hidden="true">☰</span></button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero shell" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">Texas · neurotoxin · synthetic demonstration</p>
+          <h1>Some treatments cannot be undone.</h1>
+          <p class="lead">BEFORE checks who is performing it, what is being used, and whether the patient actually understood — and refuses to produce a safety record when the evidence isn't there.</p>
+        </div>
+
+        <article class="evaluation" aria-labelledby="encounter-title">
+          <header class="evaluation-header">
+            <div>
+              <p class="evidence-label" id="encounter-title">Encounter SYN-ENC-BLOCKED-002</p>
+              <p>Ava Chen · Neurotoxin · Austin, TX · 20 Aug 2026</p>
+              <p class="muted">Assigned performer: Casey Example · aesthetician</p>
+            </div>
+            <span class="synthetic-chip">Synthetic</span>
+          </header>
+          <div class="recorded-banner"><span aria-hidden="true">●</span> Running from a committed Gate response. Every value is regression-tested against the evaluator.</div>
+          <div class="check-list" id="check-list" aria-live="polite" aria-label="Safety checks">
+            <div class="check-row" data-check="provider_license"><span class="check-icon" aria-hidden="true">○</span><span>Provider licence</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="authority_pathway"><span class="check-icon" aria-hidden="true">○</span><span>Authority pathway</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="delegation_and_supervision"><span class="check-icon" aria-hidden="true">○</span><span>Delegation and supervision</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="preprocedure_assessment"><span class="check-icon" aria-hidden="true">○</span><span>Pre-procedure assessment</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="product_lot"><span class="check-icon" aria-hidden="true">○</span><span>Product lot</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="comprehension"><span class="check-icon" aria-hidden="true">○</span><span>Comprehension</span><span class="check-status">WAITING</span></div>
+            <div class="check-row" data-check="disciplinary_status"><span class="check-icon" aria-hidden="true">○</span><span>Disciplinary status</span><span class="check-status">WAITING</span></div>
+          </div>
+          <div class="evaluation-action" id="evaluation-action">
+            <button class="button button-primary button-large" id="run-check" type="button">Run the safety check</button>
+            <p>Real evaluator output. Synthetic patient. Replayed from the committed Gate.</p>
+          </div>
+          <section class="blocked-result" id="blocked-result" role="alert" aria-labelledby="blocked-title" tabindex="-1" hidden>
+            <div class="blocked-heading">
+              <span class="hold-icon" aria-hidden="true">Ⅱ</span>
+              <div><p class="verdict">BLOCKED · DO NOT PROCEED</p><h2 id="blocked-title">This encounter cannot produce a safety receipt.</h2></div>
+            </div>
+            <p id="blocked-summary"></p>
+            <dl class="failed-facts" id="failed-facts"></dl>
+            <div class="result-evidence">
+              <p><span>Source</span> <a id="blocked-citation" href="#" target="_blank" rel="noreferrer">22 TAC Chapter 169</a></p>
+              <p><span>Snapshot</span> <code id="snapshot-hash"></code></p>
+            </div>
+            <div class="remedy"><p class="remedy-label">Remedy</p><p>Reassign to a provider with documented delegation evidence, or attach the missing records for human review.</p></div>
+          </section>
+        </article>
+        <p class="after-copy" id="after-copy" aria-live="polite" hidden><strong>That took 1.2 seconds.</strong> Not because the software knows the law — it doesn't. Because a person now has to attach the missing evidence before this encounter can go any further.</p>
+      </section>
+
+      <section class="section surface-section" id="evidence">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">What just happened</p><h2>One encounter. Three kinds of proof.</h2></div>
+          <div class="card-grid three-up">
+            <article class="card info-card">
+              <div class="card-title-row"><h3>Who may perform this</h3><button class="info-button" type="button" aria-expanded="false" aria-controls="info-authority">i<span class="sr-only">About authority evidence</span></button></div>
+              <p>Texas doesn't publish a list of job titles allowed to inject. It requires documented delegation — specific training, a patient-specific order, a signed protocol, and an available supervisor. A title alone is never enough, so BEFORE never treats one as an answer.</p>
+              <div class="popover" id="info-authority" hidden><p><strong>WHAT</strong> The Gate checks the documented authority pathway, not the person's title alone.</p><p><strong>WHY</strong> Missing delegation evidence holds the entire encounter for human review.</p><p><strong>SOURCE</strong> <a href="https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html" target="_blank" rel="noreferrer">22 TAC §169.25</a> · <code>TX_NEUROTOXIN_2025_01_09</code></p></div>
+            </article>
+            <article class="card info-card">
+              <div class="card-title-row"><h3>What is being used</h3><button class="info-button" type="button" aria-expanded="false" aria-controls="info-product">i<span class="sr-only">About product evidence</span></button></div>
+              <p>The product lot is captured and checked against current alert candidates. In April 2026 the FDA warned a Texas med spa that couldn't reconcile the authentic Botox it purchased against what it recorded administering.</p>
+              <div class="popover" id="info-product" hidden><p><strong>WHAT</strong> A search result is an alert candidate, not a finding of authenticity or wrongdoing.</p><p><strong>WHY</strong> An unverified or alerted lot blocks the safety record until a human confirms it.</p><p><strong>SOURCE</strong> <a href="https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/pure-indulgence-aesthetics-723267-04012026" target="_blank" rel="noreferrer">FDA warning letter · 1 Apr 2026</a> · <code>product_lot</code></p></div>
+            </article>
+            <article class="card info-card">
+              <div class="card-title-row"><h3>Whether the patient understood</h3><button class="info-button" type="button" aria-expanded="false" aria-controls="info-comprehension">i<span class="sr-only">About comprehension evidence</span></button></div>
+              <p>A signature proves someone clicked. BEFORE asks the patient to say the risks back in their own words, and holds the encounter until they can.</p>
+              <div class="popover" id="info-comprehension" hidden><p><strong>WHAT</strong> Teach-back records whether a patient can explain the material in their own words.</p><p><strong>WHY</strong> A signature without demonstrated understanding is not enough evidence for this safety record.</p><p><strong>SOURCE</strong> <a href="https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html" target="_blank" rel="noreferrer">AHRQ informed-choice guide</a> · <code>comprehension</code></p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" aria-labelledby="why-title">
+        <div class="section-heading narrow"><p class="eyebrow">Why this exists</p><h2 id="why-title">Med spas are among the fastest-growing venues for medical procedures in America, and one of the least supervised.</h2></div>
+        <div class="facts-grid">
+          <article><p class="fact-number">≈13,000</p><p>US med spas by the end of 2026, with complication rates measurably higher than physician offices.</p><a href="https://doi.org/10.1093/asj/sjag085" target="_blank" rel="noreferrer">Aesthetic Surgery Journal · 2026</a></article>
+          <article><p class="fact-number">13 of 20</p><p>reviewed med-spa malpractice cases ended in plaintiff verdicts, averaging near $2.5M.</p><a href="https://pubmed.ncbi.nlm.nih.gov/42048538/" target="_blank" rel="noreferrer">Westlaw review · 2006–2024</a></article>
+          <article><p class="fact-number">3 drivers</p><p>Absent informed consent, failure to communicate risk, and liability for the actions of delegates.</p><a href="https://pubmed.ncbi.nlm.nih.gov/42048538/" target="_blank" rel="noreferrer">Institutional review · 2026</a></article>
+          <article><p class="fact-number">Teach-back</p><p>Interactive teach-back materially outperforms written consent for patient understanding.</p><a href="https://pubmed.ncbi.nlm.nih.gov/31948345/" target="_blank" rel="noreferrer">Systematic review · 2020</a></article>
+        </div>
+        <p class="section-closing">Every one of those is a paperwork failure that happens <em>before</em> the needle. That is the only moment when it is still cheap to fix.</p>
+      </section>
+
+      <section class="section surface-section" id="how">
+        <div class="shell">
+          <div class="section-heading narrow"><p class="eyebrow">How it works</p><h2>A cited checklist that cannot be skipped.</h2><p>BEFORE is not an AI that decides what's legal. It's a checklist that cannot be skipped, built from cited rules, that freezes exactly what it checked.</p></div>
+          <div class="flow-scroll" aria-label="Encounter state machine">
+            <ol class="flow"><li><span>1</span><strong>Evidence collected</strong></li><li><span>2</span><strong>Gate evaluated</strong></li><li><span>3</span><strong>Human review</strong></li><li><span>4</span><strong>Ready for procedure</strong></li><li><span>5</span><strong>Receipt issued</strong></li></ol>
+            <p class="reverse-edge"><span aria-hidden="true">↶</span> A new alert candidate moves a ready encounter back to human review.</p>
+          </div>
+          <div class="principles-grid"><article><h3>Rules as code, with citations.</h3><p>Every rule carries its primary source.</p></article><article><h3>Evidence, not assumptions.</h3><p>Anything uncertain goes to a named human.</p></article><article><h3>One hold for the whole encounter.</h3><p>Any gap holds authority, product, comprehension and baseline together.</p></article><article><h3>Frozen and reproducible.</h3><p>Every decision keeps the exact ruleset it used.</p></article></div>
+          <div class="snapshot-proof"><div><p class="eyebrow">Reproduce this decision</p><h3>One ruleset. The same result later.</h3></div><code>447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4</code></div>
+        </div>
+      </section>
+
+      <section class="section shell" id="try">
+        <div class="section-heading"><p class="eyebrow">Try it yourself</p><h2>Three synthetic encounters. Three outcomes.</h2><p>The complete console is next. The committed Gate already evaluates each path offline.</p></div>
+        <div class="card-grid three-up scenario-grid">
+          <a class="card scenario-card" id="reset-demo" href="/try#blocked"><span class="state-label state-blocked">BLOCKED</span><h3>Authority evidence missing</h3><p>Run the landing-page encounter again.</p><span class="link-line">Open seeded encounter →</span></a>
+          <article class="card scenario-card"><span class="state-label state-review">REVIEW</span><h3>Low-confidence product evidence</h3><p>A named human must confirm the extracted lot before the encounter advances.</p><span class="pending-label">Console route in progress</span></article>
+          <article class="card scenario-card"><span class="state-label state-clear">CLEAR</span><h3>Complete evidence</h3><p>All seven checks pass and the encounter may proceed to receipt assembly.</p><span class="pending-label">Console route in progress</span></article>
+        </div>
+      </section>
+
+      <section class="section surface-section" id="built-with">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">Built with</p><h2>Each integration owns a visible safety handoff.</h2><p>All six vendor responses replay from typed cache adapters today. Xano is the production backend target and remains pending workspace activation.</p></div>
+          <div class="card-grid three-up">
+            <article class="card"><h3>Xano</h3><p>State machine, rules, approvals, audit log, auth, and REST API production target.</p><code>before/xano/schema.json</code></article>
+            <article class="card"><h3>Nutrient DWS</h3><p>Extraction confidence and page coordinates route uncertain evidence to the Medical Director.</p><code>before/app/integrations.py</code></article>
+            <article class="card"><h3>SerpApi</h3><p>An alert candidate can reverse a ready encounter; a named human decides its meaning.</p><code>before/app/integrations.py</code></article>
+            <article class="card"><h3>Doctavian</h3><p>Verified branches and disclosure loops produce patient-plus-injector consent signatures.</p><code>before/app/integrations.py</code></article>
+            <article class="card"><h3>Perfect Corp</h3><p>SD skin baseline and VTO support consistent documentation and communication, never diagnosis.</p><code>before/app/integrations.py</code></article>
+            <article class="card"><h3>Foxit</h3><p>The agent assembles the evidence record, stops, and hands attestation to the Medical Director.</p><code>before/app/integrations.py</code></article>
+            <article class="card"><h3>name.com</h3><p>The sandbox API publishes and reads the receipt hash with propagation and mutability limits.</p><code>before/app/integrations.py</code></article>
+          </div>
+          <p style="margin-top:32px"><a href="/evidence#integrations">Inspect the implementation evidence →</a></p>
+        </div>
+      </section>
+      <section class="section limits-section" id="limits">
+        <div class="shell limits-grid">
+          <div class="section-heading"><p class="eyebrow">What this is not</p><h2>We'd rather you trust the parts that work.</h2></div>
+          <ul class="limits-list">
+            <li><strong>It does not determine legality.</strong> It produces a safety determination for a licensed human to review.</li>
+            <li><strong>It does not certify</strong> that a treatment is safe, that a product is authentic, or that an outcome will be good.</li>
+            <li><strong>It does not replace professional judgement.</strong> Every ambiguous call goes to a person, by design.</li>
+            <li><strong>Teach-back isn't ours.</strong> What we haven't found documented elsewhere is binding a scored comprehension result to a whole-encounter hold with a versioned rule snapshot.</li>
+            <li><strong>The receipt is a record, not a notary.</strong> It proves which checks and sources were captured before the procedure.</li>
+            <li><strong>Texas neurotoxin only.</strong> Other states are a rule-authoring exercise, not a claim we've already made.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section api-section shell" id="api">
+        <div><p class="eyebrow">Use it as a service</p><h2>Call the Gate from your own system.</h2><p>One endpoint, no signup, a key in one click. Send an encounter, get back a verdict, the exact facts that failed, the citations, and a hash you can reproduce.</p></div>
+        <div class="api-preview">
+          <p class="preview-label">Planned call shape</p><pre><code>curl -X POST $XANO_BASE_URL/v1/encounters/demo/evaluate \
+  -H "Authorization: Bearer $BEFORE_KEY"</code></pre>
+          <a class="button button-primary" href="/api" aria-describedby="api-status">Get a sandbox key</a>
+          <p id="api-status" class="muted">Local synthetic sandbox is working. Public Xano deployment awaits workspace provisioning.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><div class="shell footer-inner"><p><strong>BEFORE</strong> · Pre-procedure safety determination for human review.</p><p>Synthetic data only · Texas neurotoxin demonstration · 2026</p></div></footer>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "status": "OFFLINE_REFERENCE_NOT_ACTIVATED",
+  "synthetic": true,
+  "camera_kit": {
+    "required_geometry": ["frontal", "neutral_expression", "even_lighting", "fixed_distance"],
+    "reject_if": ["face_out_of_frame", "motion_blur", "uneven_lighting"]
+  },
+  "skin_analysis": {
+    "mode": "SD",
+    "hd_forbidden_in_demo": true,
+    "concerns": ["acne", "dark_circle", "eye_bag", "firmness", "moisture", "oiliness", "pores", "radiance", "redness", "spots", "texture", "uneven_tone", "wrinkles", "sensitivity"]
+  },
+  "vto": {
+    "purpose": "expectation-setting during consent",
+    "boundary": "communication aid only; not prediction or diagnosis"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "status": "REFERENCE_CONTRACT_NOT_PUSHED",
+  "notice": "These routes are implemented by before.app.server and are the contract to reproduce in Xano after workspace activation.",
+  "routes": [
+    {"method": "POST", "path": "/v1/encounters", "function": "encounter_create_synthetic"},
+    {"method": "POST", "path": "/v1/encounters/{id}/evidence", "function": "nutrient_extract_and_route"},
+    {"method": "POST", "path": "/v1/encounters/{id}/evaluate", "function": "gate_evaluate_and_transition"},
+    {"method": "POST", "path": "/v1/encounters/{id}/remediate", "function": "evidence_attach_remediation"},
+    {"method": "POST", "path": "/v1/encounters/{id}/consent", "function": "doctavian_compile_and_sign"},
+    {"method": "POST", "path": "/v1/encounters/{id}/comprehension", "function": "teachback_score_and_hold"},
+    {"method": "POST", "path": "/v1/encounters/{id}/baseline", "function": "perfectcorp_capture_sd"},
+    {"method": "POST", "path": "/v1/encounters/{id}/evidence-record", "function": "foxit_assemble_and_pause"},
+    {"method": "POST", "path": "/v1/encounters/{id}/attest", "function": "medical_director_esign"},
+    {"method": "POST", "path": "/v1/encounters/{id}/alerts/scan", "function": "serpapi_candidate_scan"},
+    {"method": "POST", "path": "/v1/encounters/{id}/receipt", "function": "receipt_seal_and_publish"},
+    {"method": "POST", "path": "/v1/receipts/verify", "function": "receipt_verify"},
+    {"method": "POST", "path": "/v1/rule-proposals", "function": "rule_propose"},
+    {"method": "POST", "path": "/v1/rule-proposals/{id}/review", "function": "rule_human_review"},
+    {"method": "POST", "path": "/v1/rule-proposals/{id}/activate", "function": "rule_activate_and_snapshot"}
+  ],
+  "deployment": {
+    "workspace": null,
+    "version": null,
+    "reason": "Xano CLI/MCP authentication and billing are human-only open dependencies."
+  }
+}

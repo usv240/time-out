@@ -1,0 +1,18 @@
+{
+  "status": "OFFLINE_REFERENCE_NOT_PUSHED",
+  "prompt": "assemble the safety record for encounter {encounter_id}",
+  "reversible_steps": [
+    "fetch frozen Gate decision",
+    "index source evidence",
+    "merge signed treatment consent",
+    "attach synthetic baseline",
+    "render bounded receipt language",
+    "assemble PDF through Foxit PDF Services"
+  ],
+  "stop_condition": "evidence record assembled and awaiting attestation",
+  "irreversible_handoff": {
+    "service": "Foxit eSign",
+    "required_human_role": "Medical Director",
+    "agent_may_sign": false
+  }
+}
