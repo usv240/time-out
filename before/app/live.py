@@ -47,7 +47,7 @@ def _check(response: requests.Response, vendor: str) -> None:
 
 # ---------------------------------------------------------------- Nutrient DWS
 
-def nutrient_parse(document: Path) -> dict[str, Any]:
+def _nutrient_parse_live(document: Path) -> dict[str, Any]:
     """Parse a document into spatial elements with per-element confidence.
 
     Returns the DWS payload verbatim. Confidence values drive human-review
@@ -65,7 +65,7 @@ def nutrient_parse(document: Path) -> dict[str, Any]:
     return response.json()
 
 
-def nutrient_build_pdf(html: str, filename: str = "index.html") -> bytes:
+def _nutrient_build_pdf_live(html: str, filename: str = "index.html") -> bytes:
     """Render HTML to PDF through the DWS Processor API."""
     key = _env("NUTRIENT_PROCESSOR_API_KEY")
     response = requests.post(
@@ -114,7 +114,7 @@ def summarise_parse(payload: dict[str, Any], floor: float = 0.80) -> dict[str, A
 
 # --------------------------------------------------------------------- SerpApi
 
-def serpapi_search(query: str, num: int = 5) -> dict[str, Any]:
+def _serpapi_search_live(query: str, num: int = 5) -> dict[str, Any]:
     """Run a live search. Results are alert *candidates* only.
 
     A hit never establishes that a product is counterfeit, that a licence is
@@ -155,7 +155,7 @@ def _namecom_auth() -> tuple[str, str]:
     return _env("NAMECOM_USERNAME"), _env("NAMECOM_TOKEN")
 
 
-def namecom_publish_receipt(host: str, digest: str) -> dict[str, Any]:
+def _namecom_publish_receipt_live(host: str, digest: str) -> dict[str, Any]:
     """Publish a receipt digest as a DNS TXT record.
 
     Sandbox DNS does not propagate publicly, so verification reads the record
@@ -179,7 +179,7 @@ def namecom_publish_receipt(host: str, digest: str) -> dict[str, Any]:
     return response.json()
 
 
-def namecom_read_receipt(host: str) -> dict[str, Any] | None:
+def _namecom_read_receipt_live(host: str) -> dict[str, Any] | None:
     """Read a published receipt record back through the sandbox API."""
     base = _env("NAMECOM_BASE_URL")
     domain = _env("NAMECOM_REGISTRY_DOMAIN")
@@ -195,9 +195,9 @@ def namecom_read_receipt(host: str) -> dict[str, Any] | None:
     return None
 
 
-def verify_receipt(host: str, digest: str) -> dict[str, Any]:
+def _verify_receipt_live(host: str, digest: str) -> dict[str, Any]:
     """Confirm the published record still matches the digest we hold."""
-    record = namecom_read_receipt(host)
+    record = _namecom_read_receipt_live(host)
     if record is None:
         return {"published": False, "matches": False, "reason": "No TXT record found."}
     answer = str(record.get("answer", ""))
@@ -253,7 +253,7 @@ def prepare_face(source: Path, destination: Path) -> tuple[int, int]:
     return scaled.size
 
 
-def perfectcorp_upload(image: Path) -> str:
+def _perfectcorp_upload_live(image: Path) -> str:
     """Reserve an upload slot and PUT the bytes. Returns their file id."""
     size = image.stat().st_size
     response = requests.post(
@@ -270,7 +270,7 @@ def perfectcorp_upload(image: Path) -> str:
     return entry["file_id"]
 
 
-def perfectcorp_skin_analysis(
+def _perfectcorp_skin_analysis_live(
     file_id: str, concerns: list[str] | None = None, poll_seconds: int = 4, max_polls: int = 30
 ) -> dict[str, Any]:
     """Submit the analysis task and poll until it resolves.
@@ -306,7 +306,7 @@ def perfectcorp_skin_analysis(
     raise LiveCallError("Perfect Corp analysis did not resolve within the polling window.")
 
 
-def perfectcorp_scores(task_data: dict[str, Any], cache_dir: Path | None = None) -> dict[str, Any]:
+def _perfectcorp_scores_live(task_data: dict[str, Any], cache_dir: Path | None = None) -> dict[str, Any]:
     """Download the result bundle and return the per-concern scores."""
     import io
     import zipfile
@@ -355,7 +355,7 @@ def _foxit_headers() -> dict[str, str]:
     }
 
 
-def foxit_upload(document: Path) -> str:
+def _foxit_upload_live(document: Path) -> str:
     """Upload a document for assembly. Returns Foxit's document id."""
     with document.open("rb") as handle:
         response = requests.post(
