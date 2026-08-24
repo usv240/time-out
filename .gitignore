@@ -37,3 +37,6 @@ OUTREACH.md
 research/teach-back-competitive-audit.md
 
 plan/
+
+# Live API response cache (regenerate with the live clients)
+.cache/

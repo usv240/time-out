@@ -12,6 +12,7 @@ Design rules (see AGENTS.md):
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any
@@ -210,3 +211,158 @@ def verify_receipt(host: str, digest: str) -> dict[str, Any]:
             "by its owner. This is a verification channel, not a notary."
         ),
     }
+
+
+# ---------------------------------------------------------------- Perfect Corp
+
+PERFECTCORP_BASE = "https://yce-api-01.makeupar.com/s2s/v2.0"
+
+# Their detector rejects large images with `error_src_face_too_small` because it
+# downsamples internally. 1024px wide with a tight face crop is the working size.
+PERFECTCORP_TARGET_WIDTH = 1024
+
+SKIN_CONCERNS = [
+    "wrinkle", "texture", "pore", "redness", "oiliness", "eye_bag",
+    "firmness", "acne", "moisture", "radiance",
+    "droopy_upper_eyelid", "droopy_lower_eyelid",
+]
+
+
+def _perfectcorp_headers() -> dict[str, str]:
+    return {
+        "Authorization": f"Bearer {_env('PERFECTCORP_API_KEY')}",
+        "Content-Type": "application/json",
+    }
+
+
+def prepare_face(source: Path, destination: Path) -> tuple[int, int]:
+    """Crop to the face and resize to the width their detector accepts."""
+    from PIL import Image
+
+    image = Image.open(source).convert("RGB")
+    width, height = image.size
+    tight = image.crop(
+        (int(width * 0.22), int(height * 0.05), int(width * 0.78), int(height * 0.88))
+    )
+    scaled = tight.resize(
+        (PERFECTCORP_TARGET_WIDTH, int(PERFECTCORP_TARGET_WIDTH * tight.height / tight.width)),
+        Image.LANCZOS,
+    )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    scaled.save(destination, quality=95)
+    return scaled.size
+
+
+def perfectcorp_upload(image: Path) -> str:
+    """Reserve an upload slot and PUT the bytes. Returns their file id."""
+    size = image.stat().st_size
+    response = requests.post(
+        f"{PERFECTCORP_BASE}/file/skin-analysis",
+        headers=_perfectcorp_headers(),
+        json={"files": [{"content_type": "image/jpeg", "file_name": image.name, "file_size": size}]},
+        timeout=TIMEOUT,
+    )
+    _check(response, "Perfect Corp upload slot")
+    entry = response.json()["data"]["files"][0]
+    slot = entry["requests"][0]
+    put = requests.put(slot["url"], data=image.read_bytes(), headers=slot["headers"], timeout=180)
+    _check(put, "Perfect Corp S3 upload")
+    return entry["file_id"]
+
+
+def perfectcorp_skin_analysis(
+    file_id: str, concerns: list[str] | None = None, poll_seconds: int = 4, max_polls: int = 30
+) -> dict[str, Any]:
+    """Submit the analysis task and poll until it resolves.
+
+    Returns the raw task payload. Scores are a documentation and communication
+    aid — never a diagnosis, and never an input to the Gate's legal reasoning.
+    """
+    submit = requests.post(
+        f"{PERFECTCORP_BASE}/task/skin-analysis",
+        headers=_perfectcorp_headers(),
+        json={"src_file_id": file_id, "dst_actions": concerns or SKIN_CONCERNS},
+        timeout=TIMEOUT,
+    )
+    _check(submit, "Perfect Corp task submit")
+    task_id = submit.json()["data"]["task_id"]
+
+    import time
+
+    for _ in range(max_polls):
+        time.sleep(poll_seconds)
+        poll = requests.get(
+            f"{PERFECTCORP_BASE}/task/skin-analysis/{task_id}",
+            headers=_perfectcorp_headers(),
+            timeout=TIMEOUT,
+        )
+        _check(poll, "Perfect Corp task poll")
+        data = poll.json().get("data", {})
+        status = data.get("status") or data.get("task_status")
+        if status == "error":
+            raise LiveCallError(f"Perfect Corp analysis failed: {data.get('error')}")
+        if status in {"success", "done"}:
+            return data
+    raise LiveCallError("Perfect Corp analysis did not resolve within the polling window.")
+
+
+def perfectcorp_scores(task_data: dict[str, Any], cache_dir: Path | None = None) -> dict[str, Any]:
+    """Download the result bundle and return the per-concern scores."""
+    import io
+    import zipfile
+
+    url = (task_data.get("results") or task_data.get("result") or {}).get("url")
+    if not url:
+        raise LiveCallError("Perfect Corp returned no result bundle.")
+    blob = requests.get(url, timeout=120).content
+
+    if cache_dir:
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        (cache_dir / "skin-analysis.zip").write_bytes(blob)
+
+    archive = zipfile.ZipFile(io.BytesIO(blob))
+    payload = json.loads(archive.read("skinanalysisResult/score_info.json"))
+
+    # Per-concern entries carry `ui_score`; `all`, `skin_age` and `resize_image`
+    # are summary keys with different shapes.
+    concerns = {
+        name: entry["ui_score"]
+        for name, entry in payload.items()
+        if isinstance(entry, dict) and "ui_score" in entry
+    }
+    overall = payload.get("all", {})
+    return {
+        "scores": concerns,
+        "overall": overall.get("score") if isinstance(overall, dict) else None,
+        "skin_age": payload.get("skin_age"),
+        "raw": payload,
+        "masks": [n for n in archive.namelist() if n.endswith("_output.png")],
+        "scope": "Baseline and communication aid. Not a diagnosis.",
+    }
+
+
+# --------------------------------------------------------------------- Foxit
+
+# api.foxit.com sits behind a Cloudflare challenge; the fusion host their own MCP
+# server targets accepts plain credentials.
+FOXIT_BASE = "https://na1.fusion.foxit.com/pdf-services"
+
+
+def _foxit_headers() -> dict[str, str]:
+    return {
+        "client_id": _env("FOXIT_CLIENT_ID"),
+        "client_secret": _env("FOXIT_CLIENT_SECRET"),
+    }
+
+
+def foxit_upload(document: Path) -> str:
+    """Upload a document for assembly. Returns Foxit's document id."""
+    with document.open("rb") as handle:
+        response = requests.post(
+            f"{FOXIT_BASE}/api/documents/upload",
+            headers=_foxit_headers(),
+            files={"file": (document.name, handle, "application/pdf")},
+            timeout=TIMEOUT,
+        )
+    _check(response, "Foxit upload")
+    return response.json()["documentId"]
