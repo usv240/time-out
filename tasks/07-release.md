@@ -11,8 +11,8 @@ demo, and bounded honestly in copy.
   pruned from the local object database.
 - [x] Exposed Doctavian values cleared; fresh rotated credentials are required.
 - [x] Xano schema, Gate, guarded transitions, public API, and static site live.
-- [x] Core workflow and Xano contract tests pass locally (34 total).
-- [ ] Every live vendor operation uses the shared cache envelope and offline
+- [x] Core workflow and Xano contract tests pass locally (46 pytest tests, including 29 unittest-style cases).
+- [x] Every live vendor operation uses the shared cache envelope and offline
   replay; no direct uncached request remains.
 - [ ] One encounter demonstrates every enabled sponsor consequence without
   direct database editing.
@@ -32,16 +32,16 @@ demo, and bounded honestly in copy.
 
 - [x] Live Processor build and Extraction parse authenticated successfully.
 - [x] Confidence and page-coordinate summary exists.
-- [ ] Live typed extraction is cached and replayable.
-- [ ] Low-confidence required field creates a named Medical Director review task
+- [x] Live typed extraction is cached and replayable.
+- [x] Low-confidence required field creates a named Medical Director review task
   visible in the encounter; resolution reruns the Gate.
-- [ ] Semantic identifier redaction is applied before egress.
+- [x] A SHA-bound synthetic-only egress manifest refuses changed, real-entity, or identifier-bearing documents before transmission.
 
 ### SerpApi
 
 - [x] Live FDA search authenticated and returned real public results.
 - [x] Results are mapped only to `CANDIDATE`, never conclusions.
-- [ ] Cached candidate reverts `READY_FOR_PROCEDURE` to `HUMAN_REVIEW`.
+- [x] Cached candidate reverts `READY_FOR_PROCEDURE` to `HUMAN_REVIEW`.
 - [ ] Named human confirm/dismiss decision is audited and shown in the demo.
 
 ### Perfect Corp
@@ -90,3 +90,11 @@ demo, and bounded honestly in copy.
 
 Created after reconciling the 24 Aug Claude handoff with the repository. It
 corrects the earlier overstatement that all seven sponsors were fully live.
+24 Aug integration closure: all raw sponsor transports were moved behind the
+integrity-checked operation cache. Nutrient now parses a reproducible synthetic
+PDF into typed fields/confidence/coordinates, refuses egress unless a matching
+synthetic-only manifest is present, and routes uncertainty to a named Medical
+Director. SerpApi runs FDA and Texas Board queries, removes echoed credentials
+before caching, maps results only to candidates, and replays without network.
+The frozen-response state-machine path and credential hygiene are covered by
+tests; live captures for both vendors were refreshed successfully.

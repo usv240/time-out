@@ -141,6 +141,7 @@ def alert_candidates(payload: dict[str, Any], query: str) -> list[dict[str, Any]
             "title": result.get("title"),
             "source_url": result.get("link"),
             "snippet": result.get("snippet"),
+            "published_at": result.get("date"),
             "query": query,
             "status": "CANDIDATE",
             "boundary": "Search result only. A named human must confirm or dismiss it.",

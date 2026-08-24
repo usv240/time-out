@@ -8,12 +8,16 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 from pathlib import Path
 from typing import Any
 
 from .cache import OperationCache, file_sha256
 from .live import (
     SKIN_CONCERNS,
+    LiveCallError,
+    alert_candidates,
+    summarise_parse,
     _foxit_upload_live,
     _namecom_publish_receipt_live,
     _namecom_read_receipt_live,
@@ -32,6 +36,20 @@ DEFAULT_CACHE = OperationCache()
 def _cache(cache: OperationCache | None) -> OperationCache:
     return cache or DEFAULT_CACHE
 
+
+def _scrub_serpapi_payload(value: Any) -> Any:
+    """Remove credentials SerpApi may echo inside request and pagination URLs."""
+    if isinstance(value, dict):
+        return {
+            key: _scrub_serpapi_payload(item)
+            for key, item in value.items()
+            if key.lower() != "api_key"
+        }
+    if isinstance(value, list):
+        return [_scrub_serpapi_payload(item) for item in value]
+    if isinstance(value, str):
+        return re.sub(r"(?i)([?&]api_key=)[^&\s]+", r"\1[REDACTED]", value)
+    return value
 
 def nutrient_parse(document: Path, *, offline: bool = False, cache: OperationCache | None = None) -> dict[str, Any]:
     descriptor = {"document_sha256": file_sha256(document), "document_name": document.name}
@@ -76,7 +94,7 @@ def serpapi_search(
         operation="google-search",
         request_descriptor={"query": query, "num": num, "engine": "google"},
         offline=offline,
-        live_call=lambda: _serpapi_search_live(query, num),
+        live_call=lambda: _scrub_serpapi_payload(_serpapi_search_live(query, num)),
     )
 
 

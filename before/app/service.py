@@ -17,6 +17,7 @@ from typing import Any
 from before.gate_demo import _encounter, _load, _provider
 from shared.gate import evaluate_gate
 
+from .cache import OperationCache
 from .integrations import (
     DoctavianClient,
     FoxitClient,
@@ -55,9 +56,16 @@ class WorkflowError(RuntimeError):
 
 
 class BeforeService:
-    def __init__(self, *, offline: bool = True, repository: EncounterRepository | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offline: bool = True,
+        repository: EncounterRepository | None = None,
+        operation_cache: OperationCache | None = None,
+    ) -> None:
         self.offline = offline
         self.repository = repository or EncounterRepository()
+        self.operation_cache = operation_cache
         self.providers = {row["provider_id"]: _provider(row) for row in _load("providers.json")}
         self.encounter_fixtures = {row["fixture_id"]: row for row in _load("encounters.json")}
         self.rule = _load("rules/tx-neurotoxin.json")
@@ -229,7 +237,7 @@ class BeforeService:
 
     def extract_with_nutrient(self, encounter_id: str) -> dict[str, Any]:
         record = self.repository.get(encounter_id)
-        result = asdict(NutrientClient(self.offline).run())
+        result = asdict(NutrientClient(self.offline, self.operation_cache).run())
         if result["review_required"]:
             task = ReviewTask(
                 id=f"SYN-REVIEW-NUTRIENT-{record.id}", encounter_id=record.id, kind="LOW_CONFIDENCE_EXTRACTION",
@@ -258,7 +266,7 @@ class BeforeService:
         record = self.repository.get(encounter_id)
         if not record.gate_decision or record.gate_decision["verdict"] != "CLEAR" or record.state != EncounterState.GATE_EVALUATED.value:
             raise WorkflowError("A CLEAR Gate decision with no unresolved review is required before consent compilation.")
-        result = asdict(DoctavianClient(self.offline).run())
+        result = asdict(DoctavianClient(self.offline, self.operation_cache).run())
         result["rule_snapshot_sha256"] = record.gate_decision["rule_snapshot_sha256"]
         record.consent = result
         self._transition(record, EncounterState.CONSENT_COMPILED, "consent_compiled_and_signed", "Patient + Injector", "Doctavian treatment-party signatures captured", result)
@@ -303,7 +311,7 @@ class BeforeService:
         record = self.repository.get(encounter_id)
         if not record.comprehension or not record.comprehension["passed"] or record.state != EncounterState.CONSENT_COMPILED.value:
             raise WorkflowError("Passing comprehension is required before baseline progression.")
-        result = asdict(PerfectCorpClient(self.offline).run())
+        result = asdict(PerfectCorpClient(self.offline, self.operation_cache).run())
         record.baseline = result
         self._transition(record, EncounterState.BASELINE_CAPTURED, "baseline_captured", "Clinic Operator", "Standardized SD baseline captured; not diagnosis", result)
         self.repository.save(record)
@@ -313,7 +321,7 @@ class BeforeService:
         record = self.repository.get(encounter_id)
         if record.state != EncounterState.BASELINE_CAPTURED.value:
             raise WorkflowError("Baseline capture is required before evidence-record assembly.")
-        result = asdict(FoxitClient(self.offline).run())
+        result = asdict(FoxitClient(self.offline, self.operation_cache).run())
         result["encounter_id"] = record.id
         record.evidence_record = result
         self._transition(record, EncounterState.AWAITING_ATTESTATION, "evidence_record_assembled", "Foxit Assembly Agent", "Reversible assembly complete; agent stopped before human signature", result)
@@ -332,7 +340,7 @@ class BeforeService:
 
     def scan_alerts(self, encounter_id: str) -> dict[str, Any]:
         record = self.repository.get(encounter_id)
-        result = asdict(SerpApiClient(self.offline).run())
+        result = asdict(SerpApiClient(self.offline, self.operation_cache).run())
         record.alert_candidates.append(result)
         if record.state == EncounterState.READY_FOR_PROCEDURE.value:
             task = ReviewTask(
@@ -377,7 +385,7 @@ class BeforeService:
             "attestation_id": record.attestation["attestation_id"], "cache_manifest": cache_manifest(), "sealed_at": now_iso(),
         }
         receipt_hash = self._canonical_hash(payload)
-        dns = asdict(NameComClient(self.offline).run())
+        dns = asdict(NameComClient(self.offline, self.operation_cache).run())
         dns["txt_value"] = receipt_hash
         receipt = {**payload, "receipt_hash": receipt_hash, "dns_verification": dns, "verification_path": f"/receipt/{payload['receipt_id']}"}
         record.receipt = receipt

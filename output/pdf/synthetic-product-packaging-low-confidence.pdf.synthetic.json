@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "contains_real_people_or_businesses": false,
+  "contains_prohibited_identifiers": false,
+  "artifact_sha256": "5a26710b02f865908ebd0bb26a58de37804d6397036f0b63ff013766e5841df0",
+  "purpose": "Nutrient DWS low-confidence product-packaging demo"
+}

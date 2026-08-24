@@ -1,4 +1,4 @@
-# BEFORE implementation status - 21 Aug 2026
+# BEFORE implementation status - 24 Aug 2026
 
 ## Code-complete reference and live Xano spine
 
@@ -28,15 +28,15 @@
 - `POST /v1/encounters/{encounter_id}/evaluate` invokes the deterministic seven-check Gate.
 - Live synthetic proof: `BLOCKED / REMEDIATION` -> documented remediation -> `CLEAR / GATE_EVALUATED`.
 - Static-host production build 2 serves the landing page, API sandbox, evidence, walkthrough, console, and receipt pages.
-- Verification: 34 repository tests pass; final full workspace dry-run reports no changes.
+- Verification: repository tests pass locally; the Xano dry-run discipline remains mandatory before the next push.
 
 ## Sponsor closure status — 24 Aug
 
-| Dependency | Current evidence | Human action required |
+| Dependency | Current evidence | Remaining closure |
 |---|---|---|
 | Xano | Live in workspace 1: 15 tables, four reusable functions, eight public endpoints, production static host | No action required for the implemented spine; preserve dry-run-before-push discipline |
-| Nutrient | Live build/parse proven; offline typed fixture passes | Cache the live typed result and wire named-role Viewer remediation into the encounter |
-| SerpApi | Live FDA results proven; bounded candidate mapper exists | Wire cached candidate → encounter hold → audited human decision |
+| Nutrient | Live parse frozen behind the shared cache; exact offline replay; typed fields/confidence/coordinates; SHA-bound synthetic egress guard; named-role state-machine hold tested | Surface the source page/coordinates and review resolution in the hosted encounter UI |
+| SerpApi | Live FDA + Texas Board queries frozen behind the shared cache; echoed keys scrubbed; candidates revert readiness to human review | Surface the audited confirm/dismiss action in the hosted encounter UI |
 | Doctavian | Auth/solution/template/data upload proven | Rotate credentials, authorize Drive, generate branching consent, collect two signatures |
 | Perfect Corp | Live SD analysis and result ZIP proven | Persist the typed baseline and overlays to the encounter and UI; cut or prove VTO |
 | Foxit | Live PDF Services upload proven | Implement prompt → MCP assembly → pause → Medical Director eSign |

@@ -11,9 +11,13 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Generic, TypeVar
+
+from . import sponsor_clients
+from .cache import OperationCache, OperationCacheError, OperationCacheMiss
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -117,8 +121,9 @@ class CachedAdapter(Generic[T]):
     fixture: dict[str, Any]
     result_type: type[T]
 
-    def __init__(self, offline: bool = True) -> None:
+    def __init__(self, offline: bool = True, operation_cache: OperationCache | None = None) -> None:
         self.offline = offline
+        self.operation_cache = operation_cache
 
     @property
     def cache_path(self) -> Path:
@@ -137,11 +142,89 @@ class CachedAdapter(Generic[T]):
 
     def run(self) -> T:
         if self.offline:
+            if self.operation_cache is None:
+                return self.replay()
+            try:
+                return self._run_operation(offline=True)
+            except OperationCacheMiss:
+                return self.replay()
+        try:
+            return self._run_operation(offline=False)
+        except IntegrationError:
+            raise
+        except (sponsor_clients.LiveCallError, OperationCacheError, OSError, KeyError, TypeError, ValueError) as exc:
+            raise IntegrationError(f"{self.vendor} live operation failed: {exc}") from exc
+
+    def _run_operation(self, *, offline: bool) -> T:
+        if offline:
             return self.replay()
         raise IntegrationError(
             f"{self.vendor} live activation is not configured. Cached replay remains available."
         )
 
+
+def _confidence_label(value: Any) -> str:
+    if not isinstance(value, (int, float)):
+        return "LOW"
+    if value >= 0.90:
+        return "HIGH"
+    if value >= 0.80:
+        return "MEDIUM"
+    return "LOW"
+
+
+def _normalise_bounds(value: Any) -> list[float]:
+    if isinstance(value, list) and len(value) >= 4:
+        return [float(item) for item in value[:4]]
+    if isinstance(value, dict):
+        keys = ("left", "top", "width", "height")
+        if all(isinstance(value.get(key), (int, float)) for key in keys):
+            return [float(value[key]) for key in keys]
+    return []
+
+
+def _verify_synthetic_egress_document(source: Path) -> None:
+    manifest_path = source.with_name(source.name + ".synthetic.json")
+    if not manifest_path.exists():
+        raise IntegrationError("Synthetic egress manifest is missing; sponsor transmission refused.")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("synthetic") is not True:
+        raise IntegrationError("Egress manifest does not attest synthetic-only data.")
+    if manifest.get("contains_real_people_or_businesses") is not False:
+        raise IntegrationError("Egress manifest does not exclude real people or businesses.")
+    if manifest.get("contains_prohibited_identifiers") is not False:
+        raise IntegrationError("Egress manifest does not exclude prohibited identifiers.")
+    if manifest.get("artifact_sha256") != hashlib.sha256(source.read_bytes()).hexdigest():
+        raise IntegrationError("Synthetic egress manifest digest does not match the document.")
+
+
+def _typed_packaging_fields(payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, str], dict[str, list[float]]]:
+    elements = payload.get("output", {}).get("elements", []) or []
+    text = "\n".join(str(element.get("text", "")) for element in elements)
+    patterns = {
+        "manufacturer": r"MANUFACTURER\s*:\s*([^\n]+)",
+        "product": r"PRODUCT\s*:\s*([^\n]+)",
+        "lot": r"LOT\s*:\s*([^\s\n]+)",
+        "expires_on": r"EXPIRES\s*:\s*(\d{4}-\d{2}-\d{2})",
+    }
+    fields: dict[str, Any] = {}
+    confidence: dict[str, str] = {}
+    coordinates: dict[str, list[float]] = {}
+    for field, pattern in patterns.items():
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        fields[field] = match.group(1).strip() if match else None
+        label = field.replace("expires_on", "expires").split("_")[0].upper()
+        matching_element = next(
+            (element for element in elements if label in str(element.get("text", "")).upper()),
+            None,
+        )
+        score = matching_element.get("confidence") if matching_element else None
+        confidence[field] = _confidence_label(score)
+        if matching_element:
+            bounds = _normalise_bounds(matching_element.get("bounds"))
+            if bounds:
+                coordinates[field] = bounds
+    return fields, confidence, coordinates
 
 class NutrientClient(CachedAdapter[ExtractionResult]):
     vendor = "nutrient"
@@ -163,6 +246,62 @@ class NutrientClient(CachedAdapter[ExtractionResult]):
         ],
     }
 
+    def __init__(
+        self,
+        offline: bool = True,
+        operation_cache: OperationCache | None = None,
+        source_document: Path | None = None,
+    ) -> None:
+        super().__init__(offline=offline, operation_cache=operation_cache)
+        configured = os.getenv("NUTRIENT_SOURCE_PDF", "").strip()
+        self.source_document = source_document or (
+            Path(configured)
+            if configured
+            else ROOT / "output" / "pdf" / "synthetic-product-packaging-low-confidence.pdf"
+        )
+
+    def _run_operation(self, *, offline: bool) -> ExtractionResult:
+        source = self.source_document.resolve()
+        if not source.exists():
+            if offline:
+                raise OperationCacheMiss("Synthetic Nutrient source PDF is not built.")
+            raise IntegrationError(f"Synthetic Nutrient source PDF does not exist: {source}")
+        if source.suffix.lower() != ".pdf" or "synthetic" not in source.name.lower():
+            raise IntegrationError("Nutrient egress is restricted to an explicitly synthetic PDF fixture.")
+        _verify_synthetic_egress_document(source)
+        raw = sponsor_clients.nutrient_parse(source, offline=offline, cache=self.operation_cache)
+        summary = sponsor_clients.summarise_parse(raw)
+        fields, confidence, coordinates = _typed_packaging_fields(raw)
+        review_required = summary["review_required"] or any(
+            value is None or confidence[key] == "LOW" for key, value in fields.items()
+        )
+        relative_source = (
+            str(source.relative_to(ROOT)).replace("\\", "/")
+            if source.is_relative_to(ROOT)
+            else source.name
+        )
+        confidence_order = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+        return ExtractionResult(
+            vendor="Nutrient DWS",
+            document_type="product_packaging",
+            fields=fields,
+            confidence=confidence,
+            page_coordinates=coordinates,
+            redacted_before_egress=True,
+            review_required=review_required,
+            assigned_role="Medical Director" if review_required else None,
+            source_ref=relative_source,
+            extractions=[
+                {
+                    "document_type": "product_packaging",
+                    "source_ref": relative_source,
+                    "confidence": min(confidence.values(), key=confidence_order.get),
+                    "review_required": review_required,
+                    "elements_total": summary["elements_total"],
+                    "pages_processed": summary["pages_processed"],
+                }
+            ],
+        )
 
 class SerpApiClient(CachedAdapter[AlertCandidateResult]):
     vendor = "serpapi"
@@ -170,15 +309,45 @@ class SerpApiClient(CachedAdapter[AlertCandidateResult]):
     fixture = {
         "vendor": "SerpApi",
         "candidate_id": "SYN-ALERT-001",
-        "query": "site:fda.gov neurotoxin warning letter Texas",
-        "matched_entity": "EXAMPLETOX — SYNTHETIC MATCH",
-        "source_url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/pure-indulgence-aesthetics-723267-04012026",
+        "query": "site:fda.gov botulinum toxin safety communication",
+        "matched_entity": "EXAMPLETOX - SYNTHETIC ENCOUNTER SCOPE",
+        "source_url": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
         "published_at": "2026-04-01",
         "status": "CANDIDATE",
         "boundary": "Search result only. A named human must confirm or dismiss it.",
-        "queries": ["site:fda.gov neurotoxin warning letter Texas", "site:tmb.state.tx.us cosmetic procedure disciplinary action"],
+        "queries": ["site:fda.gov botulinum toxin safety communication", "site:tmb.state.tx.us nonsurgical medical cosmetic procedure rules"],
     }
 
+    queries = [
+        "site:fda.gov botulinum toxin safety communication",
+        "site:tmb.state.tx.us nonsurgical medical cosmetic procedure rules",
+    ]
+
+    def _run_operation(self, *, offline: bool) -> AlertCandidateResult:
+        candidates: list[dict[str, Any]] = []
+        for query in self.queries:
+            raw = sponsor_clients.serpapi_search(
+                query,
+                5,
+                offline=offline,
+                cache=self.operation_cache,
+            )
+            candidates.extend(sponsor_clients.alert_candidates(raw, query))
+        candidate = next((item for item in candidates if item.get("source_url")), None)
+        if candidate is None:
+            raise IntegrationError("SerpApi returned no source-backed alert candidate for human review.")
+        source_url = str(candidate["source_url"])
+        return AlertCandidateResult(
+            vendor="SerpApi",
+            candidate_id="SYN-ALERT-" + hashlib.sha256(source_url.encode("utf-8")).hexdigest()[:12].upper(),
+            query=str(candidate["query"]),
+            matched_entity="EXAMPLETOX - SYNTHETIC ENCOUNTER SCOPE",
+            source_url=source_url,
+            published_at=str(candidate.get("published_at") or "UNCONFIRMED"),
+            status="CANDIDATE",
+            boundary="Search result only. A named human must confirm or dismiss it.",
+            queries=list(self.queries),
+        )
 
 class DoctavianClient(CachedAdapter[ConsentResult]):
     vendor = "doctavian"
