@@ -30,20 +30,22 @@
 - Static-host production build 2 serves the landing page, API sandbox, evidence, walkthrough, console, and receipt pages.
 - Verification: 34 repository tests pass; final full workspace dry-run reports no changes.
 
-## External activation still required
+## Sponsor closure status — 24 Aug
 
 | Dependency | Current evidence | Human action required |
 |---|---|---|
 | Xano | Live in workspace 1: 15 tables, four reusable functions, eight public endpoints, production static host | No action required for the implemented spine; preserve dry-run-before-push discipline |
-| Nutrient | Typed cached extraction and review routing pass | Add credentials and map confirmed DWS endpoints |
-| SerpApi | Typed candidate cache and human decision path pass | Add key, run and cache the two configured searches |
-| Doctavian | Template contract and signed-result replay pass | Receive credentials, create template, execute two-party signing |
-| Perfect Corp | SD/14-concern/VTO contract and replay pass | Obtain written approval for this non-diagnostic documentation framing, then add key |
-| Foxit | Agent contract and rendered PDF pass | Add MCP/PDF Services/eSign credentials and reproduce the human handoff live |
-| name.com | Five-operation sandbox contract and replay pass | Add credentials, register a sandbox domain, publish and read the TXT record |
+| Nutrient | Live build/parse proven; offline typed fixture passes | Cache the live typed result and wire named-role Viewer remediation into the encounter |
+| SerpApi | Live FDA results proven; bounded candidate mapper exists | Wire cached candidate → encounter hold → audited human decision |
+| Doctavian | Auth/solution/template/data upload proven | Rotate credentials, authorize Drive, generate branching consent, collect two signatures |
+| Perfect Corp | Live SD analysis and result ZIP proven | Persist the typed baseline and overlays to the encounter and UI; cut or prove VTO |
+| Foxit | Live PDF Services upload proven | Implement prompt → MCP assembly → pause → Medical Director eSign |
+| name.com | Live sandbox registration and TXT create/read proven | Publish and verify the actual sealed receipt hash from the receipt flow |
 
-`.env` remains untracked and no credentials are present in tracked files. Only Xano is claimed live;
-the remaining vendor integrations continue to use bounded cached contracts until activated.
+`.env` remains untracked and no credentials are present in tracked files or
+reachable history. The compromised Doctavian values were removed on 24 Aug;
+fresh rotated credentials are required. Exact closure gates live in
+`tasks/07-release.md`.
 
 ## Commands
 
