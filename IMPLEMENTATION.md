@@ -1,6 +1,6 @@
-# BEFORE implementation status - 20 Aug 2026
+# BEFORE implementation status - 21 Aug 2026
 
-## Code-complete offline reference
+## Code-complete reference and live Xano spine
 
 - Deterministic seven-check Gate with `CLEAR` / `BLOCKED` / `REVIEW`
 - Current architecture state machine with guarded transitions
@@ -20,11 +20,21 @@
 - Public `/`, `/try`, `/api`, `/evidence`, `/how-it-works`, and `/receipt/:id` routes
 - One-command cache seed and one-command verification
 
+## Live Xano deployment
+
+- Production site: `https://before-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io`
+- Public API: `https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1`
+- Workspace 1 contains 15 BEFORE tables, guarded encounter transitions, immutable audit events, and frozen rule snapshots.
+- `POST /v1/encounters/{encounter_id}/evaluate` invokes the deterministic seven-check Gate.
+- Live synthetic proof: `BLOCKED / REMEDIATION` -> documented remediation -> `CLEAR / GATE_EVALUATED`.
+- Static-host production build 2 serves the landing page, API sandbox, evidence, walkthrough, console, and receipt pages.
+- Verification: 34 repository tests pass; final full workspace dry-run reports no changes.
+
 ## External activation still required
 
 | Dependency | Current evidence | Human action required |
 |---|---|---|
-| Xano | Schema and API contracts exist; local reference passes | Enable billing/CLI push, authenticate workspace, reproduce functions, deploy static site |
+| Xano | Live in workspace 1: 15 tables, four reusable functions, eight public endpoints, production static host | No action required for the implemented spine; preserve dry-run-before-push discipline |
 | Nutrient | Typed cached extraction and review routing pass | Add credentials and map confirmed DWS endpoints |
 | SerpApi | Typed candidate cache and human decision path pass | Add key, run and cache the two configured searches |
 | Doctavian | Template contract and signed-result replay pass | Receive credentials, create template, execute two-party signing |
@@ -32,8 +42,8 @@
 | Foxit | Agent contract and rendered PDF pass | Add MCP/PDF Services/eSign credentials and reproduce the human handoff live |
 | name.com | Five-operation sandbox contract and replay pass | Add credentials, register a sandbox domain, publish and read the TXT record |
 
-No `.env` exists and the Xano CLI is unavailable in the current workspace. No live
-vendor or deployment claim is made.
+`.env` remains untracked and no credentials are present in tracked files. Only Xano is claimed live;
+the remaining vendor integrations continue to use bounded cached contracts until activated.
 
 ## Commands
 

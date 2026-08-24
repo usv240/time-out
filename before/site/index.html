@@ -21,10 +21,10 @@
       <nav class="shell nav" aria-label="Primary navigation">
         <a class="wordmark" href="#top" aria-label="BEFORE home"><span class="wordmark-mark" aria-hidden="true"></span>BEFORE</a>
         <div class="nav-links" id="nav-links">
-          <a href="/try">Try</a><a href="/api">API</a><a href="/evidence">Evidence</a><a href="#limits">Limits</a>
+          <a href="/try.html">Try</a><a href="/api.html">API</a><a href="/evidence.html">Evidence</a><a href="#limits">Limits</a>
         </div>
         <div class="nav-actions">
-          <a class="button button-small" href="/try">Try</a>
+          <a class="button button-small" href="/try.html">Try</a>
           <button class="icon-button" id="theme-toggle" type="button" aria-label="Theme: system" title="Theme: system"><span aria-hidden="true">◐</span></button>
           <button class="icon-button menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu"><span aria-hidden="true">☰</span></button>
         </div>
@@ -128,7 +128,7 @@
       <section class="section shell" id="try">
         <div class="section-heading"><p class="eyebrow">Try it yourself</p><h2>Three synthetic encounters. Three outcomes.</h2><p>The complete console is next. The committed Gate already evaluates each path offline.</p></div>
         <div class="card-grid three-up scenario-grid">
-          <a class="card scenario-card" id="reset-demo" href="/try#blocked"><span class="state-label state-blocked">BLOCKED</span><h3>Authority evidence missing</h3><p>Run the landing-page encounter again.</p><span class="link-line">Open seeded encounter →</span></a>
+          <a class="card scenario-card" id="reset-demo" href="/try.html#blocked"><span class="state-label state-blocked">BLOCKED</span><h3>Authority evidence missing</h3><p>Run the landing-page encounter again.</p><span class="link-line">Open seeded encounter →</span></a>
           <article class="card scenario-card"><span class="state-label state-review">REVIEW</span><h3>Low-confidence product evidence</h3><p>A named human must confirm the extracted lot before the encounter advances.</p><span class="pending-label">Console route in progress</span></article>
           <article class="card scenario-card"><span class="state-label state-clear">CLEAR</span><h3>Complete evidence</h3><p>All seven checks pass and the encounter may proceed to receipt assembly.</p><span class="pending-label">Console route in progress</span></article>
         </div>
@@ -146,7 +146,7 @@
             <article class="card"><h3>Foxit</h3><p>The agent assembles the evidence record, stops, and hands attestation to the Medical Director.</p><code>before/app/integrations.py</code></article>
             <article class="card"><h3>name.com</h3><p>The sandbox API publishes and reads the receipt hash with propagation and mutability limits.</p><code>before/app/integrations.py</code></article>
           </div>
-          <p style="margin-top:32px"><a href="/evidence#integrations">Inspect the implementation evidence →</a></p>
+          <p style="margin-top:32px"><a href="/evidence.html#integrations">Inspect the implementation evidence →</a></p>
         </div>
       </section>
       <section class="section limits-section" id="limits">
@@ -166,10 +166,10 @@
       <section class="section api-section shell" id="api">
         <div><p class="eyebrow">Use it as a service</p><h2>Call the Gate from your own system.</h2><p>One endpoint, no signup, a key in one click. Send an encounter, get back a verdict, the exact facts that failed, the citations, and a hash you can reproduce.</p></div>
         <div class="api-preview">
-          <p class="preview-label">Planned call shape</p><pre><code>curl -X POST $XANO_BASE_URL/v1/encounters/demo/evaluate \
-  -H "Authorization: Bearer $BEFORE_KEY"</code></pre>
-          <a class="button button-primary" href="/api" aria-describedby="api-status">Get a sandbox key</a>
-          <p id="api-status" class="muted">Local synthetic sandbox is working. Public Xano deployment awaits workspace provisioning.</p>
+          <p class="preview-label">Live call</p><pre><code>curl -X POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate \
+  -H "Content-Type: application/json" -d '{}'</code></pre>
+          <a class="button button-primary" href="/api.html" aria-describedby="api-status">Open the live API</a>
+          <p id="api-status" class="muted">Live on Xano. No signup or key is required for the synthetic seeded encounter.</p>
         </div>
       </section>
     </main>

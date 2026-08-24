@@ -22,7 +22,7 @@ async function loadReceipt() {
       <p class="muted">Verified through the name.com sandbox API. Sandbox DNS does not propagate publicly, and the record remains mutable by its owner.</p>
       <pre><code>${escapeHtml(JSON.stringify(verification, null, 2))}</code></pre>`;
   } catch (error) {
-    target.innerHTML = `<p class="console-error" role="alert">${escapeHtml(error.message)} Run the complete workflow in <a href="/try">the clinic console</a>, then open its receipt link.</p>`;
+    target.innerHTML = `<p class="console-error" role="alert">${escapeHtml(error.message)} Run the complete workflow in <a href="/try.html">the clinic console</a>, then open its receipt link.</p>`;
   }
 }
 loadReceipt();

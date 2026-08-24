@@ -1,3 +1,4 @@
+const XANO_API_BASE = "https://x6g0-xqak-a8ri.n7e.xano.io/api:before";
 const list = document.querySelector("#encounter-list");
 const timeline = document.querySelector("#timeline");
 const runPath = document.querySelector("#run-path");
@@ -40,9 +41,7 @@ function renderEncounters(items) {
 }
 
 async function loadEncounters() {
-  const response = await fetch("/v1/encounters");
-  if (!response.ok) throw new Error("Could not load the synthetic encounter list.");
-  renderEncounters((await response.json()).items);
+  renderEncounters([{ id: "SYN-ENCOUNTER", patient_display_name: "Synthetic patient", state: "READY TO RUN" }]);
 }
 
 runPath.addEventListener("click", async () => {
@@ -52,10 +51,11 @@ runPath.addEventListener("click", async () => {
   receiptLink.hidden = true;
   errorBox.hidden = true;
   try {
-    const response = await fetch("/v1/demo/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+    const response = await fetch(`${XANO_API_BASE}/v1/encounters/demo/evaluate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error?.message || "Workflow failed.");
-    for (const [index, item] of payload.timeline.entries()) {
+    const liveTimeline = [{ step: "blocked", result: payload }];
+    for (const [index, item] of liveTimeline.entries()) {
       const [title, description] = STEP_COPY[item.step];
       const [pill, className] = pillFor(item.step, item.result);
       const row = document.createElement("li");
@@ -64,16 +64,13 @@ runPath.addEventListener("click", async () => {
       row.innerHTML = `<span class="timeline-index">${index + 1}</span><div><h3>${title}</h3><p>${description}</p></div><span class="status-pill ${className}">${pill}</span><pre class="timeline-detail">${detail.replaceAll("&", "&amp;").replaceAll("<", "&lt;")}</pre>`;
       timeline.append(row);
     }
-    renderEncounters([payload.encounter]);
-    const receipt = payload.timeline.at(-1).result;
-    receiptLink.href = `/receipt/${receipt.receipt_id}`;
-    receiptLink.hidden = false;
+    renderEncounters([{ id: payload.encounter_id, patient_display_name: "Synthetic patient", state: payload.state }]);
   } catch (error) {
-    errorBox.textContent = `${error.message} Run “python -m before.seed” and restart with --offline.`;
+    errorBox.textContent = `${error.message} Retry the live synthetic Xano sandbox.`;
     errorBox.hidden = false;
   } finally {
     runPath.disabled = false;
-    runPath.textContent = "Run the complete safety workflow again";
+    runPath.textContent = "Run the safety check again";
   }
 });
 

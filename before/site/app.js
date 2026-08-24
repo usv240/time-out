@@ -1,4 +1,5 @@
-const DEMO_DECISION_URL = "/v1/encounters/demo/evaluate";
+const XANO_API_BASE = "https://x6g0-xqak-a8ri.n7e.xano.io/api:before";
+const DEMO_DECISION_URL = `${XANO_API_BASE}/v1/encounters/demo/evaluate`;
 const THEME_ORDER = ["system", "light", "dark"];
 
 const runButton = document.querySelector("#run-check");
