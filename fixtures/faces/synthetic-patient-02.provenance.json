@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "contains_real_people": false,
+  "generated_on": "2026-08-24",
+  "generator": "OpenAI built-in image generation tool",
+  "purpose": "Perfect Corp SD skin-analysis baseline demo",
+  "prompt_summary": "Fictional adult, frontal neutral clinical-documentation portrait, hair away from face, even studio lighting, no identifying marks or text.",
+  "source": {
+    "file": "fixtures/faces/synthetic-patient-02-generated.png",
+    "sha256": "9362fd818ef87ba8791255ca3c181df20e9153514b4223c56d84c47218a7c928"
+  },
+  "analysis_input": {
+    "file": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+    "sha256": "344ef916152e9293e17b4117cf7c2082f22a7fa4324ec67dc2b6d3c3b1eeee98",
+    "transformation": "Deterministic tight face crop and resize to 1024 x 1214 JPEG using before.app.live.prepare_face."
+  }
+}

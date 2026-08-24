@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from .cache import OperationCache
 from .integrations import CacheMiss, IntegrationError, seed_all_caches
 from .service import BeforeService, WorkflowError
 
@@ -124,7 +125,7 @@ class BeforeHandler(BaseHTTPRequestHandler):
                 self._serve_file(SITE_ROOT / ROUTE_FILES[path])
             elif path == "/artifacts/synthetic-safety-evidence-record.pdf":
                 self._serve_file(ARTIFACT_ROOT / "synthetic-safety-evidence-record.pdf", ARTIFACT_ROOT)
-            elif path.startswith("/assets/") or path.startswith("/data/") or path in {"/styles.css", "/product.css", "/shell.js", "/app.js", "/console.js", "/api-page.js", "/receipt.js"}:
+            elif path.startswith("/assets/") or path.startswith("/data/") or path in {"/styles.css", "/product.css", "/integration-proof.css", "/shell.js", "/app.js", "/console.js", "/console-v2.js", "/api-page.js", "/receipt.js", "/receipt-v2.js"}:
                 self._serve_file(SITE_ROOT / path.lstrip("/"))
             elif path == "/v1/encounters":
                 self._json(200, {"items": self.service.list_encounters(), "synthetic": True})
@@ -221,7 +222,10 @@ def main() -> None:
     args = parser.parse_args()
     if args.offline:
         seed_all_caches()
-    BeforeHandler.service = BeforeService(offline=args.offline)
+    BeforeHandler.service = BeforeService(
+        offline=args.offline,
+        operation_cache=OperationCache() if args.offline else None,
+    )
     BeforeHandler.service.seed()
     server = ThreadingHTTPServer((args.host, args.port), BeforeHandler)
     print(f"BEFORE running at http://{args.host}:{args.port} (offline={args.offline})")

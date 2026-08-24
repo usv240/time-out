@@ -23,10 +23,11 @@ from .live import (
     _namecom_read_receipt_live,
     _nutrient_build_pdf_live,
     _nutrient_parse_live,
-    _perfectcorp_scores_live,
+    _perfectcorp_result_bundle_live,
     _perfectcorp_skin_analysis_live,
     _perfectcorp_upload_live,
     _serpapi_search_live,
+    parse_perfectcorp_scores,
 )
 
 
@@ -36,6 +37,17 @@ DEFAULT_CACHE = OperationCache()
 def _cache(cache: OperationCache | None) -> OperationCache:
     return cache or DEFAULT_CACHE
 
+
+def _scrub_perfectcorp_task(value: Any) -> Any:
+    """Remove short-lived signed result URLs before persisting task responses."""
+    if isinstance(value, dict):
+        return {
+            key: "[REDACTED_SIGNED_URL]" if key.lower() == "url" else _scrub_perfectcorp_task(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_scrub_perfectcorp_task(item) for item in value]
+    return value
 
 def _scrub_serpapi_payload(value: Any) -> Any:
     """Remove credentials SerpApi may echo inside request and pagination URLs."""
@@ -108,7 +120,7 @@ def namecom_publish_receipt(
     descriptor = {
         "host": host,
         "digest": digest,
-        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "unconfigured"),
+        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com"),
     }
     return _cache(cache).json(
         vendor="namecom",
@@ -127,7 +139,7 @@ def namecom_read_receipt(
 ) -> dict[str, Any] | None:
     descriptor = {
         "host": host,
-        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "unconfigured"),
+        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com"),
     }
     return _cache(cache).json(
         vendor="namecom",
@@ -187,12 +199,29 @@ def perfectcorp_skin_analysis(
     cache: OperationCache | None = None,
 ) -> dict[str, Any]:
     requested_concerns = concerns or SKIN_CONCERNS
-    return _cache(cache).json(
+    operation_cache = _cache(cache)
+    task_descriptor = {"file_id": file_id, "concerns": requested_concerns}
+    bundle_descriptor = {"file_id": file_id, "concerns": requested_concerns, "kind": "raw-result-zip"}
+
+    def capture_task_and_bundle() -> dict[str, Any]:
+        raw = _perfectcorp_skin_analysis_live(file_id, requested_concerns, poll_seconds, max_polls)
+        operation_cache.bytes(
+            vendor="perfectcorp",
+            operation="skin-analysis-result-bundle",
+            request_descriptor=bundle_descriptor,
+            offline=False,
+            live_call=lambda: _perfectcorp_result_bundle_live(raw),
+        )
+        sanitized = _scrub_perfectcorp_task(raw)
+        sanitized["_bundle_descriptor"] = bundle_descriptor
+        return sanitized
+
+    return operation_cache.json(
         vendor="perfectcorp",
         operation="skin-analysis-task",
-        request_descriptor={"file_id": file_id, "concerns": requested_concerns},
+        request_descriptor=task_descriptor,
         offline=offline,
-        live_call=lambda: _perfectcorp_skin_analysis_live(file_id, requested_concerns, poll_seconds, max_polls),
+        live_call=capture_task_and_bundle,
     )
 
 
@@ -202,14 +231,17 @@ def perfectcorp_scores(
     offline: bool = False,
     cache: OperationCache | None = None,
 ) -> dict[str, Any]:
-    return _cache(cache).json(
+    descriptor = task_data.get("_bundle_descriptor")
+    if not isinstance(descriptor, dict):
+        raise ValueError("Perfect Corp task data does not reference a cached result bundle.")
+    blob = _cache(cache).bytes(
         vendor="perfectcorp",
-        operation="skin-analysis-result",
-        request_descriptor={"task_response_sha256": OperationCache.request_sha256(task_data)},
-        offline=offline,
-        live_call=lambda: _perfectcorp_scores_live(task_data),
+        operation="skin-analysis-result-bundle",
+        request_descriptor=descriptor,
+        offline=True,
+        live_call=lambda: (_ for _ in ()).throw(AssertionError("result bundle must already be cached")),
     )
-
+    return parse_perfectcorp_scores(blob)
 
 def foxit_upload(
     document: Path,

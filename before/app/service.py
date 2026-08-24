@@ -210,7 +210,7 @@ class BeforeService:
             "findings": [{**asdict(finding), "status": finding.status.value, "citation_urls": list(finding.citation_urls)} for finding in decision.findings],
             "rule_snapshot_json": decision.rule_snapshot_json,
             "rule_snapshot_sha256": decision.rule_snapshot_sha256,
-            "evaluated_at": now_iso(),
+            "evaluated_at": "2026-08-24T19:55:00+00:00" if self.offline else now_iso(),
         }
         record.gate_decision = serialized
         self._transition(record, EncounterState.GATE_EVALUATED, "gate_evaluated", "Deterministic Gate", decision.determination_scope, serialized)
@@ -382,11 +382,19 @@ class BeforeService:
             "rule_snapshot_sha256": record.gate_decision["rule_snapshot_sha256"],
             "consent_document_id": record.consent["document_id"], "baseline_capture_id": record.baseline["capture_id"],
             "evidence_record_ref": record.evidence_record["document_ref"],
-            "attestation_id": record.attestation["attestation_id"], "cache_manifest": cache_manifest(), "sealed_at": now_iso(),
+            "attestation_id": record.attestation["attestation_id"], "cache_manifest": cache_manifest(),
+            "sealed_at": "2026-08-24T20:00:00+00:00" if self.offline else now_iso(),
         }
         receipt_hash = self._canonical_hash(payload)
-        dns = asdict(NameComClient(self.offline, self.operation_cache).run())
-        dns["txt_value"] = receipt_hash
+        dns_host = f"_before.{payload['receipt_id'].lower()}"
+        dns = asdict(
+            NameComClient(
+                self.offline,
+                self.operation_cache,
+                host=dns_host,
+                digest=receipt_hash,
+            ).run()
+        )
         receipt = {**payload, "receipt_hash": receipt_hash, "dns_verification": dns, "verification_path": f"/receipt/{payload['receipt_id']}"}
         record.receipt = receipt
         self._transition(record, EncounterState.SEALED, "receipt_sealed", "BEFORE Receipt Service", RECEIPT_BOUNDARY, receipt)

@@ -12,7 +12,7 @@ import hashlib
 import json
 import os
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Generic, TypeVar
 
@@ -80,6 +80,11 @@ class BaselineResult:
     overlay_ref: str
     vto_used: bool
     boundary: str
+    overall_score: float | None = None
+    skin_age: int | None = None
+    mask_refs: list[str] = field(default_factory=list)
+    source_ref: str = ""
+    image_ref: str = ""
 
 
 @dataclass(frozen=True)
@@ -102,6 +107,10 @@ class DnsReceiptResult:
     verified_through: str
     mutable: bool
     operations: list[str]
+    published: bool = False
+    matches: bool = False
+    fqdn: str | None = None
+    caveat: str = ""
 
 
 
@@ -197,6 +206,20 @@ def _verify_synthetic_egress_document(source: Path) -> None:
     if manifest.get("artifact_sha256") != hashlib.sha256(source.read_bytes()).hexdigest():
         raise IntegrationError("Synthetic egress manifest digest does not match the document.")
 
+
+def _verify_synthetic_face(source: Path) -> None:
+    manifest_path = source.parent / "synthetic-patient-02.provenance.json"
+    if not manifest_path.exists():
+        raise IntegrationError("Synthetic face provenance manifest is missing; sponsor transmission refused.")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    entry = manifest.get("analysis_input", {})
+    expected_path = str(source.relative_to(ROOT)).replace("\\", "/") if source.is_relative_to(ROOT) else source.name
+    if manifest.get("synthetic") is not True or manifest.get("contains_real_people") is not False:
+        raise IntegrationError("Face provenance does not attest a fictional synthetic subject.")
+    if entry.get("file") != expected_path:
+        raise IntegrationError("Face provenance does not match the selected analysis input.")
+    if entry.get("sha256") != hashlib.sha256(source.read_bytes()).hexdigest():
+        raise IntegrationError("Synthetic face digest does not match its provenance manifest.")
 
 def _typed_packaging_fields(payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, str], dict[str, list[float]]]:
     elements = payload.get("output", {}).get("elements", []) or []
@@ -371,10 +394,64 @@ class PerfectCorpClient(CachedAdapter[BaselineResult]):
         "capture_id": "SYN-BASELINE-001",
         "mode": "SD",
         "concerns": {"acne": 12, "dark_circle": 22, "eye_bag": 14, "firmness": 76, "moisture": 61, "oiliness": 28, "pores": 19, "radiance": 72, "redness": 16, "spots": 18, "texture": 31, "uneven_tone": 23, "wrinkles": 24, "sensitivity": 11},
-        "overlay_ref": "fixtures/synthetic-patient-face.svg",
-        "vto_used": True,
+        "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
+        "vto_used": False,
         "boundary": "Baseline and communication aid only. Not diagnosis.",
+        "overall_score": 68.0,
+        "skin_age": 41,
+        "mask_refs": ["wrinkle", "texture", "pore", "redness", "spots"],
+        "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+        "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg",
     }
+
+    def __init__(
+        self,
+        offline: bool = True,
+        operation_cache: OperationCache | None = None,
+        source_image: Path | None = None,
+    ) -> None:
+        super().__init__(offline=offline, operation_cache=operation_cache)
+        configured = os.getenv("PERFECTCORP_SOURCE_IMAGE", "").strip()
+        self.source_image = source_image or (
+            Path(configured)
+            if configured
+            else ROOT / "fixtures" / "faces" / "synthetic-patient-02-analysis-input.jpg"
+        )
+
+    def _run_operation(self, *, offline: bool) -> BaselineResult:
+        source = self.source_image.resolve()
+        if not source.exists():
+            if offline:
+                raise OperationCacheMiss("Synthetic Perfect Corp source image is missing.")
+            raise IntegrationError(f"Synthetic Perfect Corp source image does not exist: {source}")
+        _verify_synthetic_face(source)
+        file_id = sponsor_clients.perfectcorp_upload(source, offline=offline, cache=self.operation_cache)
+        task = sponsor_clients.perfectcorp_skin_analysis(
+            file_id,
+            offline=offline,
+            cache=self.operation_cache,
+        )
+        scores = sponsor_clients.perfectcorp_scores(task, offline=offline, cache=self.operation_cache)
+        concerns = {
+            name: int(round(float(value)))
+            for name, value in scores.get("scores", {}).items()
+            if isinstance(value, (int, float))
+        }
+        relative_source = str(source.relative_to(ROOT)).replace("\\", "/") if source.is_relative_to(ROOT) else source.name
+        return BaselineResult(
+            vendor="Perfect Corp YouCam",
+            capture_id="SYN-BASELINE-" + hashlib.sha256(source.read_bytes()).hexdigest()[:12].upper(),
+            mode="SD",
+            concerns=concerns,
+            overlay_ref="/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
+            vto_used=False,
+            boundary=str(scores.get("scope") or "Baseline and communication aid. Not a diagnosis."),
+            overall_score=float(scores["overall"]) if isinstance(scores.get("overall"), (int, float)) else None,
+            skin_age=int(scores["skin_age"]) if isinstance(scores.get("skin_age"), (int, float)) else None,
+            mask_refs=list(scores.get("masks", [])),
+            source_ref=relative_source,
+            image_ref="/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg",
+        )
 
 
 class FoxitClient(CachedAdapter[EvidenceRecordResult]):
@@ -396,13 +473,75 @@ class NameComClient(CachedAdapter[DnsReceiptResult]):
     result_type = DnsReceiptResult
     fixture = {
         "vendor": "name.com CORE sandbox",
-        "domain": "before-synthetic.test",
-        "txt_name": "_before.SYN-RECEIPT-001",
+        "domain": "beforereceipts-demo.com",
+        "txt_name": "_before.syn-receipt-001",
         "txt_value": "PENDING_RECEIPT_HASH",
         "verified_through": "name.com sandbox API",
         "mutable": True,
         "operations": ["domain search", "availability check", "sandbox registration", "TXT create", "TXT read-back"],
+        "published": True,
+        "matches": True,
+        "fqdn": "_before.syn-receipt-001.beforereceipts-demo.com.",
+        "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary.",
     }
+
+    def __init__(
+        self,
+        offline: bool = True,
+        operation_cache: OperationCache | None = None,
+        host: str | None = None,
+        digest: str | None = None,
+    ) -> None:
+        super().__init__(offline=offline, operation_cache=operation_cache)
+        self.host = host
+        self.digest = digest
+
+    def replay(self) -> DnsReceiptResult:
+        result = super().replay()
+        if not self.host or not self.digest:
+            return result
+        domain = "beforereceipts-demo.com"
+        return DnsReceiptResult(
+            **{
+                **asdict(result),
+                "domain": domain,
+                "txt_name": self.host,
+                "txt_value": f"before-receipt-v1 sha256={self.digest}",
+                "fqdn": f"{self.host}.{domain}.",
+                "verified_through": "seeded offline replay shaped from the name.com sandbox API",
+            }
+        )
+    def _run_operation(self, *, offline: bool) -> DnsReceiptResult:
+        if not self.host or not self.digest:
+            if offline:
+                raise OperationCacheMiss("Receipt host and digest are required for exact DNS replay.")
+            raise IntegrationError("Receipt host and digest are required for name.com publication.")
+        sponsor_clients.namecom_publish_receipt(
+            self.host,
+            self.digest,
+            offline=offline,
+            cache=self.operation_cache,
+        )
+        verification = sponsor_clients.verify_receipt(
+            self.host,
+            self.digest,
+            offline=offline,
+            cache=self.operation_cache,
+        )
+        domain = os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com")
+        return DnsReceiptResult(
+            vendor="name.com CORE sandbox",
+            domain=domain,
+            txt_name=self.host,
+            txt_value=f"before-receipt-v1 sha256={self.digest}",
+            verified_through="name.com sandbox API read-back",
+            mutable=True,
+            operations=["TXT create", "TXT read-back"],
+            published=bool(verification.get("published")),
+            matches=bool(verification.get("matches")),
+            fqdn=str(verification.get("fqdn") or f"{self.host}.{domain}."),
+            caveat=str(verification.get("caveat") or "Sandbox DNS is owner-mutable and does not propagate publicly; this is not a notary."),
+        )
 
 
 ALL_ADAPTERS = (NutrientClient, SerpApiClient, DoctavianClient, PerfectCorpClient, FoxitClient, NameComClient)

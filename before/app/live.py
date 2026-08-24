@@ -307,25 +307,23 @@ def _perfectcorp_skin_analysis_live(
     raise LiveCallError("Perfect Corp analysis did not resolve within the polling window.")
 
 
-def _perfectcorp_scores_live(task_data: dict[str, Any], cache_dir: Path | None = None) -> dict[str, Any]:
-    """Download the result bundle and return the per-concern scores."""
-    import io
-    import zipfile
-
+def _perfectcorp_result_bundle_live(task_data: dict[str, Any]) -> bytes:
+    """Download the raw analysis result bundle from its short-lived URL."""
     url = (task_data.get("results") or task_data.get("result") or {}).get("url")
     if not url:
         raise LiveCallError("Perfect Corp returned no result bundle.")
-    blob = requests.get(url, timeout=120).content
+    response = requests.get(url, timeout=120)
+    _check(response, "Perfect Corp result bundle")
+    return response.content
 
-    if cache_dir:
-        cache_dir.mkdir(parents=True, exist_ok=True)
-        (cache_dir / "skin-analysis.zip").write_bytes(blob)
+
+def parse_perfectcorp_scores(blob: bytes) -> dict[str, Any]:
+    """Parse a cached Perfect Corp result bundle without network access."""
+    import io
+    import zipfile
 
     archive = zipfile.ZipFile(io.BytesIO(blob))
     payload = json.loads(archive.read("skinanalysisResult/score_info.json"))
-
-    # Per-concern entries carry `ui_score`; `all`, `skin_age` and `resize_image`
-    # are summary keys with different shapes.
     concerns = {
         name: entry["ui_score"]
         for name, entry in payload.items()
@@ -337,10 +335,9 @@ def _perfectcorp_scores_live(task_data: dict[str, Any], cache_dir: Path | None =
         "overall": overall.get("score") if isinstance(overall, dict) else None,
         "skin_age": payload.get("skin_age"),
         "raw": payload,
-        "masks": [n for n in archive.namelist() if n.endswith("_output.png")],
+        "masks": [name for name in archive.namelist() if name.endswith("_output.png")],
         "scope": "Baseline and communication aid. Not a diagnosis.",
     }
-
 
 # --------------------------------------------------------------------- Foxit
 

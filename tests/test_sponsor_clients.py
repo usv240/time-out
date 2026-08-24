@@ -40,7 +40,7 @@ def test_raw_http_transport_functions_are_private() -> None:
         "namecom_read_receipt",
         "perfectcorp_upload",
         "perfectcorp_skin_analysis",
-        "perfectcorp_scores",
+        "perfectcorp_result_bundle",
         "foxit_upload",
     ):
         assert f"def _{operation}_live(" in source

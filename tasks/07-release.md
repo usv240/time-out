@@ -11,7 +11,7 @@ demo, and bounded honestly in copy.
   pruned from the local object database.
 - [x] Exposed Doctavian values cleared; fresh rotated credentials are required.
 - [x] Xano schema, Gate, guarded transitions, public API, and static site live.
-- [x] Core workflow and Xano contract tests pass locally (46 pytest tests, including 29 unittest-style cases).
+- [x] Core workflow and Xano contract tests pass locally (52 pytest tests, including 29 unittest-style cases).
 - [x] Every live vendor operation uses the shared cache envelope and offline
   replay; no direct uncached request remains.
 - [ ] One encounter demonstrates every enabled sponsor consequence without
@@ -47,18 +47,18 @@ demo, and bounded honestly in copy.
 ### Perfect Corp
 
 - [x] Synthetic face upload and SD Skin Analysis completed; result ZIP cached.
-- [x] Fourteen concerns, overlays, overall score, and skin age parsed.
-- [ ] Typed live baseline is persisted to the encounter and rendered in the UI.
-- [ ] Camera framing/failure guidance is visible; VTO is either demonstrated
+- [x] Twelve returned concerns and masks, overall score, and synthetic skin age parsed from the new live SD run.
+- [x] Typed live baseline is persisted to the encounter and rendered in the UI.
+- [x] Camera framing/failure guidance is visible; VTO is either demonstrated
   honestly or cut explicitly.
 
 ### name.com
 
 - [x] Sandbox search, availability, registration, TXT create, and read-back were
   exercised.
-- [ ] The sealed receipt hash is published through the cached client and verified
+- [x] The sealed receipt hash is published through the cached client and verified
   through the sandbox API from the receipt screen.
-- [ ] Copy states sandbox non-propagation and owner mutability beside the result.
+- [x] Copy states sandbox non-propagation and owner mutability beside the result.
 
 ### Doctavian
 
@@ -98,3 +98,12 @@ Director. SerpApi runs FDA and Texas Board queries, removes echoed credentials
 before caching, maps results only to candidates, and replays without network.
 The frozen-response state-machine path and credential hygiene are covered by
 tests; live captures for both vendors were refreshed successfully.
+24 Aug Perfect/name.com closure: replaced the unverifiable face fixture with a
+newly generated fictional adult and a SHA-bound provenance manifest. A live SD
+run returned 12 concern scores and masks; the raw result ZIP is cached while its
+short-lived signed URL is redacted. The console renders the generated face,
+wrinkle mask, returned metrics, framing guidance, diagnostic boundary, and the
+explicit VTO cut. The repeatable hero receipt hash was published to
+`beforereceipts-demo.com`, matched by sandbox API read-back, and replayed with no
+credentials. The receipt shows local hash verification separately from mutable,
+non-propagating DNS verification.
