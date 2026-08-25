@@ -339,6 +339,99 @@ def parse_perfectcorp_scores(blob: bytes) -> dict[str, Any]:
         "scope": "Baseline and communication aid. Not a diagnosis.",
     }
 
+# ----------------------------------------------------------------- Doctavian
+
+
+def _doctavian_headers() -> dict[str, str]:
+    return {
+        "Authorization": f"Bearer {_env('DOCTAVIAN_BEARER')}",
+        "x-api-key": _env("DOCTAVIAN_API_KEY"),
+        "X-Origin": os.getenv("DOCTAVIAN_ORIGIN", "https://app.mavenmule.com"),
+    }
+
+
+def _doctavian_base() -> str:
+    return _env("DOCTAVIAN_BASE_URL").rstrip("/")
+
+
+def _doctavian_upload_live(document: Path, storage_type: str, content_type: str) -> dict[str, Any]:
+    """Upload a synthetic document template or merge-data file."""
+    endpoint = "template" if storage_type == "document-template" else "data"
+    with document.open("rb") as handle:
+        response = requests.post(
+            f"{_doctavian_base()}/v1/documents/{endpoint}/upload",
+            headers={**_doctavian_headers(), "X-Storage-Type": storage_type},
+            files={"file": (document.name, handle, content_type)},
+            timeout=TIMEOUT,
+        )
+    _check(response, f"Doctavian {endpoint} upload")
+    return response.json()
+
+
+def _doctavian_upload_template_live(document: Path) -> dict[str, Any]:
+    return _doctavian_upload_live(
+        document,
+        storage_type="document-template",
+        content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    )
+
+
+def _doctavian_upload_data_live(payload: dict[str, Any]) -> dict[str, Any]:
+    response = requests.post(
+        f"{_doctavian_base()}/v1/documents/data/upload",
+        headers={**_doctavian_headers(), "X-Storage-Type": "document-data"},
+        files={
+            "file": (
+                "consent-data.synthetic.json",
+                json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+                "application/json",
+            )
+        },
+        timeout=TIMEOUT,
+    )
+    _check(response, "Doctavian data upload")
+    return response.json()
+
+
+def _doctavian_generate_live(payload: dict[str, Any]) -> dict[str, Any]:
+    """Generate a synthetic consent into Doctavian Storage."""
+    response = requests.post(
+        f"{_doctavian_base()}/v1/documents/document/generate",
+        headers={**_doctavian_headers(), "Content-Type": "application/json"},
+        json=payload,
+        timeout=TIMEOUT,
+    )
+    _check(response, "Doctavian document generation")
+    return response.json()
+
+
+def _doctavian_create_envelope_live(payload: dict[str, Any]) -> dict[str, Any]:
+    """Create a two-signer envelope; this does not imply either person signed."""
+    response = requests.post(
+        f"{_doctavian_base()}/v1/signatures/envelope/create",
+        headers={**_doctavian_headers(), "Content-Type": "application/json"},
+        json=payload,
+        timeout=TIMEOUT,
+    )
+    _check(response, "Doctavian envelope create")
+    return response.json()
+
+
+def _doctavian_send_envelope_live(envelope_id: str) -> dict[str, Any]:
+    """Send an existing envelope to its treatment-party recipients."""
+    response = requests.get(
+        f"{_doctavian_base()}/v1/signatures/envelope/{envelope_id}/send",
+        headers=_doctavian_headers(),
+        timeout=TIMEOUT,
+    )
+    _check(response, "Doctavian envelope send")
+    if not response.content:
+        return {"envelopeId": envelope_id, "status": "SENT"}
+    try:
+        return response.json()
+    except ValueError:
+        return {"envelopeId": envelope_id, "status": "SENT", "response": response.text[:200]}
+
 # --------------------------------------------------------------------- Foxit
 
 # api.foxit.com sits behind a Cloudflare challenge; the fusion host their own MCP

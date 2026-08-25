@@ -69,6 +69,12 @@ class ConsentResult:
     disclosures: list[str]
     signers: list[str]
     status: str
+    template_urn: str = ""
+    data_urn: str = ""
+    generated_document_urn: str = ""
+    envelope_id: str = ""
+    signature_status: str = "PENDING"
+    boundary: str = "Treatment-party consent only; not a legality or safety certification."
 
 
 @dataclass(frozen=True)
@@ -375,15 +381,115 @@ class SerpApiClient(CachedAdapter[AlertCandidateResult]):
 class DoctavianClient(CachedAdapter[ConsentResult]):
     vendor = "doctavian"
     result_type = ConsentResult
+    template_path = ROOT / "before" / "doctavian" / "tx-neurotoxin-consent-v1.docx"
+    fixture_data_path = ROOT / "before" / "doctavian" / "consent-data.synthetic.json"
     fixture = {
         "vendor": "Doctavian",
         "document_id": "SYN-DOC-CONSENT-001",
         "template_version": "TX-NEUROTOXIN-CONSENT-1",
         "branches": ["NEUROTOXIN_INJECTION", "DELEGATED_RN", "NO_PATIENT_FLAGS"],
-        "disclosures": ["expected temporary effect", "alternatives", "material risks", "who will perform the procedure"],
+        "disclosures": ["temporary effect and alternatives", "material risks", "who will perform the procedure", "unresolved holds"],
         "signers": ["Synthetic Patient", "Synthetic Injector"],
-        "status": "SIGNED",
+        "status": "AWAITING_SIGNATURES",
+        "template_urn": "urn:synthetic:doctavian:template:tx-neurotoxin-consent-1",
+        "data_urn": "urn:synthetic:doctavian:data:syn-enc-clear-001",
+        "generated_document_urn": "urn:synthetic:doctavian:document:syn-doc-consent-001",
+        "envelope_id": "SYN-ENVELOPE-CONSENT-001",
+        "signature_status": "PENDING",
+        "boundary": "Patient and injector consent only. Medical director attestation is a separate Foxit event.",
     }
+
+    def __init__(
+        self,
+        offline: bool = True,
+        operation_cache: OperationCache | None = None,
+        consent_data: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(offline=offline, operation_cache=operation_cache)
+        self.consent_data = consent_data or json.loads(self.fixture_data_path.read_text(encoding="utf-8"))
+
+    @staticmethod
+    def _identifier(payload: Any, names: tuple[str, ...], label: str) -> str:
+        def find(value: Any, target: str) -> str | None:
+            if isinstance(value, dict):
+                for key, item in value.items():
+                    if key.lower() == target and isinstance(item, (str, int)) and str(item):
+                        return str(item)
+                for item in value.values():
+                    match = find(item, target)
+                    if match:
+                        return match
+            elif isinstance(value, list):
+                for item in value:
+                    match = find(item, target)
+                    if match:
+                        return match
+            return None
+
+        for name in names:
+            match = find(payload, name.lower())
+            if match:
+                return match
+        raise IntegrationError(f"Doctavian response did not include {label}.")
+
+    def _run_operation(self, *, offline: bool) -> ConsentResult:
+        if not self.template_path.exists():
+            raise IntegrationError("Generated Doctavian DOCX template is missing. Run `python before/build_doctavian_consent.py`.")
+        encounter = (self.consent_data.get("Encounter") or [{}])[0]
+        encounter_id = str(encounter.get("EncounterId") or "SYN-ENC-CLEAR-001")
+        template_response = sponsor_clients.doctavian_upload_template(
+            self.template_path, offline=offline, cache=self.operation_cache
+        )
+        template_urn = self._identifier(template_response, ("urn", "templateUrn", "template_urn", "id"), "a template URN")
+        data_response = sponsor_clients.doctavian_upload_data(
+            self.consent_data, offline=offline, cache=self.operation_cache
+        )
+        data_urn = self._identifier(data_response, ("urn", "dataUrn", "data_urn", "id"), "a data URN")
+        generated = sponsor_clients.doctavian_generate(
+            template_urn, data_urn, encounter_id, offline=offline, cache=self.operation_cache
+        )
+        document_urn = self._identifier(
+            generated, ("urn", "documentUrn", "document_urn", "id"), "a generated document URN"
+        )
+        patient_email = os.getenv("DOCTAVIAN_PATIENT_EMAIL", "synthetic-patient@example.invalid").strip()
+        injector_email = os.getenv("DOCTAVIAN_INJECTOR_EMAIL", "synthetic-injector@example.invalid").strip()
+        if not offline and (patient_email.endswith(".invalid") or injector_email.endswith(".invalid")):
+            raise IntegrationError("Controlled synthetic Doctavian recipient emails are not configured.")
+        recipients = [
+            {"reference_signer_id": "patient", "name": "Synthetic Patient", "email": patient_email},
+            {"reference_signer_id": "injector", "name": "Synthetic Injector", "email": injector_email},
+        ]
+        envelope = sponsor_clients.doctavian_create_envelope(
+            document_urn, encounter_id, recipients, offline=offline, cache=self.operation_cache
+        )
+        envelope_id = self._identifier(envelope, ("envelopeId", "envelope_id", "id"), "an envelope ID")
+        sponsor_clients.doctavian_send_envelope(
+            envelope_id, offline=offline, cache=self.operation_cache
+        )
+        disclosures = [
+            str(item.get("Title"))
+            for item in encounter.get("RequiredDisclosures", [])
+            if isinstance(item, dict) and item.get("Title")
+        ]
+        branches = [str(encounter.get("ProcedureDisplayName") or "NEUROTOXIN_INJECTION")]
+        if encounter.get("AuthorityPathway") == "DELEGATED":
+            branches.append("DELEGATED")
+        branches.append("PATIENT_FLAG_REVIEW" if encounter.get("PatientFlagReviewRequired") else "NO_PATIENT_FLAGS")
+        return ConsentResult(
+            vendor="Doctavian",
+            document_id="SYN-DOC-" + hashlib.sha256(document_urn.encode("utf-8")).hexdigest()[:12].upper(),
+            template_version="TX-NEUROTOXIN-CONSENT-1",
+            branches=branches,
+            disclosures=disclosures,
+            signers=["Synthetic Patient", "Synthetic Injector"],
+            status="AWAITING_SIGNATURES",
+            template_urn=template_urn,
+            data_urn=data_urn,
+            generated_document_urn=document_urn,
+            envelope_id=envelope_id,
+            signature_status="PENDING",
+            boundary="Patient and injector consent only. Medical director attestation is a separate Foxit event.",
+        )
 
 
 class PerfectCorpClient(CachedAdapter[BaselineResult]):

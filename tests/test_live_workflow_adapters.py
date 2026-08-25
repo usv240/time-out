@@ -6,7 +6,7 @@ from pathlib import Path
 
 from before.app import sponsor_clients
 from before.app.cache import OperationCache
-from before.app.integrations import NutrientClient, SerpApiClient
+from before.app.integrations import DoctavianClient, NutrientClient, SerpApiClient
 
 def _write_synthetic_pdf(path: Path) -> None:
     payload = b"%PDF-1.4 synthetic"
@@ -104,3 +104,77 @@ def test_serpapi_live_results_remain_candidates_and_exactly_replay_offline(
     assert live.candidate_id.startswith("SYN-ALERT-")
     assert "human" in live.boundary.lower()
     assert "SYNTHETIC" in live.matched_entity
+
+
+def test_doctavian_live_chain_is_cached_scrubbed_and_replayed(
+    monkeypatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setenv("DOCTAVIAN_PATIENT_EMAIL", "controlled-patient@example.com")
+    monkeypatch.setenv("DOCTAVIAN_INJECTOR_EMAIL", "controlled-injector@example.com")
+
+    def template_raw(document: Path) -> dict[str, str]:
+        calls.append("template")
+        return {"urn": "urn:synthetic:template:1"}
+
+    def data_raw(payload: dict[str, object]) -> dict[str, str]:
+        calls.append("data")
+        return {"urn": "urn:synthetic:data:1"}
+
+    def generate_raw(payload: dict[str, object]) -> dict[str, str]:
+        calls.append("generate")
+        return {"documentUrn": "urn:synthetic:document:1", "url": "https://signed.invalid/?token=secret"}
+
+    def envelope_raw(payload: dict[str, object]) -> dict[str, object]:
+        calls.append("envelope")
+        return {
+            "envelopeId": "SYN-ENVELOPE-LIVE-001",
+            "recipients": [{"email": "controlled-patient@example.com"}],
+            "signingUrl": "https://sign.invalid/?token=secret",
+        }
+
+    def send_raw(envelope_id: str) -> dict[str, str]:
+        calls.append("send")
+        return {"envelopeId": envelope_id, "status": "SENT"}
+
+    monkeypatch.setattr(sponsor_clients, "_doctavian_upload_template_live", template_raw)
+    monkeypatch.setattr(sponsor_clients, "_doctavian_upload_data_live", data_raw)
+    monkeypatch.setattr(sponsor_clients, "_doctavian_generate_live", generate_raw)
+    monkeypatch.setattr(sponsor_clients, "_doctavian_create_envelope_live", envelope_raw)
+    monkeypatch.setattr(sponsor_clients, "_doctavian_send_envelope_live", send_raw)
+    cache_root = tmp_path / "cache"
+    cache = OperationCache(cache_root)
+    consent_data = {
+        "Encounter": [
+            {
+                "EncounterId": "SYN-ENC-CLEAR-001",
+                "ProcedureDisplayName": "Neurotoxin injection",
+                "AuthorityPathway": "DELEGATED",
+                "PatientFlagReviewRequired": False,
+                "RequiredDisclosures": [{"Title": "Synthetic disclosure"}],
+            }
+        ]
+    }
+    live_result = DoctavianClient(False, cache, consent_data).run()
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("offline replay attempted network")
+
+    for name in (
+        "_doctavian_upload_template_live",
+        "_doctavian_upload_data_live",
+        "_doctavian_generate_live",
+        "_doctavian_create_envelope_live",
+        "_doctavian_send_envelope_live",
+    ):
+        monkeypatch.setattr(sponsor_clients, name, no_network)
+    replay = DoctavianClient(True, cache, consent_data).run()
+
+    assert live_result == replay
+    assert calls == ["template", "data", "generate", "envelope", "send"]
+    assert live_result.status == "AWAITING_SIGNATURES"
+    assert live_result.signature_status == "PENDING"
+    persisted = "".join(path.read_text(encoding="utf-8") for path in cache_root.rglob("*.json"))
+    assert "controlled-patient@example.com" not in persisted
+    assert "token=secret" not in persisted
+    assert "[REDACTED]" in persisted

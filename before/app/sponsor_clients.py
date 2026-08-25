@@ -7,6 +7,7 @@ module; only this module may call the private transports in `live.py`.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 from pathlib import Path
@@ -18,6 +19,11 @@ from .live import (
     LiveCallError,
     alert_candidates,
     summarise_parse,
+    _doctavian_create_envelope_live,
+    _doctavian_generate_live,
+    _doctavian_send_envelope_live,
+    _doctavian_upload_data_live,
+    _doctavian_upload_template_live,
     _foxit_upload_live,
     _namecom_publish_receipt_live,
     _namecom_read_receipt_live,
@@ -242,6 +248,179 @@ def perfectcorp_scores(
         live_call=lambda: (_ for _ in ()).throw(AssertionError("result bundle must already be cached")),
     )
     return parse_perfectcorp_scores(blob)
+
+
+def _scrub_doctavian_payload(value: Any) -> Any:
+    """Do not persist recipient addresses, bearer-like values, or signed URLs."""
+    if isinstance(value, dict):
+        scrubbed: dict[str, Any] = {}
+        for key, item in value.items():
+            lowered = key.lower()
+            if "email" in lowered or "token" in lowered or lowered == "authorization":
+                scrubbed[key] = "[REDACTED]"
+            elif "url" in lowered and isinstance(item, str):
+                scrubbed[key] = "[REDACTED_URL]"
+            else:
+                scrubbed[key] = _scrub_doctavian_payload(item)
+        return scrubbed
+    if isinstance(value, list):
+        return [_scrub_doctavian_payload(item) for item in value]
+    if isinstance(value, str) and value.startswith(("http://", "https://")) and re.search(r"(?i)[?&](?:token|signature|key)=", value):
+        return "[REDACTED_URL]"
+    return value
+
+
+def doctavian_upload_template(
+    document: Path,
+    *,
+    offline: bool = False,
+    cache: OperationCache | None = None,
+) -> dict[str, Any]:
+    descriptor = {"document_sha256": file_sha256(document), "template_version": "TX-NEUROTOXIN-CONSENT-1"}
+    return _cache(cache).json(
+        vendor="doctavian",
+        operation="template-upload",
+        request_descriptor=descriptor,
+        offline=offline,
+        live_call=lambda: _scrub_doctavian_payload(_doctavian_upload_template_live(document)),
+    )
+
+
+def doctavian_upload_data(
+    payload: dict[str, Any],
+    *,
+    offline: bool = False,
+    cache: OperationCache | None = None,
+) -> dict[str, Any]:
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    descriptor = {"payload_sha256": hashlib.sha256(canonical.encode("utf-8")).hexdigest(), "synthetic": True}
+    return _cache(cache).json(
+        vendor="doctavian",
+        operation="data-upload",
+        request_descriptor=descriptor,
+        offline=offline,
+        live_call=lambda: _scrub_doctavian_payload(_doctavian_upload_data_live(payload)),
+    )
+
+
+def doctavian_generate(
+    template_urn: str,
+    data_urn: str,
+    encounter_id: str,
+    *,
+    offline: bool = False,
+    cache: OperationCache | None = None,
+) -> dict[str, Any]:
+    payload = {
+        "externalContext": {"id": encounter_id},
+        "template": {
+            "name": "tx-neurotoxin-consent-v1.docx",
+            "urn": template_urn,
+            "fileFormat": "docx",
+            "loadMethod": "Storage",
+            "options": {},
+        },
+        "data": {"loadMethod": "Storage", "urn": data_urn},
+        "document": {
+            "name": f"BEFORE-{encounter_id}-consent",
+            "fileFormat": "pdf",
+            "deliveryMethod": "Storage",
+            "path": "root",
+            "locale": "en",
+            "timezone": "UTC",
+            "options": {},
+        },
+    }
+    return _cache(cache).json(
+        vendor="doctavian",
+        operation="document-generate",
+        request_descriptor={"template_urn": template_urn, "data_urn": data_urn, "encounter_id": encounter_id},
+        offline=offline,
+        live_call=lambda: _scrub_doctavian_payload(_doctavian_generate_live(payload)),
+    )
+
+
+def doctavian_create_envelope(
+    document_urn: str,
+    encounter_id: str,
+    recipients: list[dict[str, str]],
+    *,
+    offline: bool = False,
+    cache: OperationCache | None = None,
+) -> dict[str, Any]:
+    recipient_payload = [
+        {
+            "referenceSignerId": item["reference_signer_id"],
+            "name": item["name"],
+            "email": item["email"],
+            "role": "signer",
+            "mandatory": True,
+        }
+        for item in recipients
+    ]
+    payload = {
+        "documents": [
+            {
+                "referenceDocumentId": "consent",
+                "name": f"BEFORE-{encounter_id}-consent.pdf",
+                "urn": document_urn,
+                "loadMethod": "Storage",
+            }
+        ],
+        "recipients": recipient_payload,
+        "fields": [
+            {
+                "type": "signature",
+                "required": True,
+                "referenceSignerId": "patient",
+                "referenceDocumentId": "consent",
+                "anchorString": "_SIG_PATIENT_",
+            },
+            {
+                "type": "signature",
+                "required": True,
+                "referenceSignerId": "injector",
+                "referenceDocumentId": "consent",
+                "anchorString": "_SIG_INJECTOR_",
+            },
+        ],
+        "envelope": {
+            "subject": "BEFORE synthetic treatment consent",
+            "message": "Synthetic hackathon demonstration. No real patient or procedure.",
+            "externalContext": {"id": encounter_id},
+        },
+    }
+    recipient_descriptor = [
+        {
+            "reference_signer_id": item["reference_signer_id"],
+            "name": item["name"],
+            "email_sha256": hashlib.sha256(item["email"].encode("utf-8")).hexdigest(),
+        }
+        for item in recipients
+    ]
+    return _cache(cache).json(
+        vendor="doctavian",
+        operation="envelope-create",
+        request_descriptor={"document_urn": document_urn, "encounter_id": encounter_id, "recipients": recipient_descriptor},
+        offline=offline,
+        live_call=lambda: _scrub_doctavian_payload(_doctavian_create_envelope_live(payload)),
+    )
+
+
+def doctavian_send_envelope(
+    envelope_id: str,
+    *,
+    offline: bool = False,
+    cache: OperationCache | None = None,
+) -> dict[str, Any]:
+    return _cache(cache).json(
+        vendor="doctavian",
+        operation="envelope-send",
+        request_descriptor={"envelope_id": envelope_id},
+        offline=offline,
+        live_call=lambda: _scrub_doctavian_payload(_doctavian_send_envelope_live(envelope_id)),
+    )
+
 
 def foxit_upload(
     document: Path,

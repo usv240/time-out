@@ -9,7 +9,7 @@
 - Frozen rule snapshot and byte-identical reproduction
 - Named-role review for low-confidence Nutrient extraction
 - SerpApi alert candidate and reversible ready state
-- Doctavian branch/loop/calculate template contract and two treatment-party signers
+- Reproducible three-page Doctavian DOCX with native conditional/loop/count elements, cached generation/envelope transport, and an explicit Patient + Injector completion gate
 - Versioned teach-back failure, re-explanation, retry, and encounter hold
 - Perfect Corp SD baseline with twelve returned concerns, overall score, synthetic skin age, masks, provenance, and an explicit VTO cut
 - Foxit assembly-agent pause, verified three-page PDF, and Medical Director eSign handoff
@@ -37,10 +37,10 @@
 | Xano | Live in workspace 1: 15 tables, four reusable functions, eight public endpoints, production static host | No action required for the implemented spine; preserve dry-run-before-push discipline |
 | Nutrient | Live parse frozen behind the shared cache; exact offline replay; typed fields/confidence/coordinates; SHA-bound synthetic egress guard; named-role state-machine hold tested | Surface the source page/coordinates and review resolution in the hosted encounter UI |
 | SerpApi | Live FDA + Texas Board queries frozen behind the shared cache; echoed keys scrubbed; candidates revert readiness to human review | Surface the audited confirm/dismiss action in the hosted encounter UI |
-| Doctavian | Auth/solution/template/data upload proven | Rotate credentials, authorize Drive, generate branching consent, collect two signatures |
+| Doctavian | Reproducible native DOCX, branch/loop/count syntax, distinct anchors, cached upload/generate/envelope/send clients, scrubbed replay, and truthful signature hold are implemented and tested | Authorize Drive, supply rotated credentials and controlled synthetic inboxes, then capture one live generation plus Patient + Injector completion |
 | Perfect Corp | Newly generated fictional face; live SD analysis; 12 returned scores/masks; raw ZIP cached; signed URL scrubbed; typed baseline and layered mask rendered | No remaining hero-path integration; conserve credits and keep VTO explicitly out of scope |
 | Foxit | Live PDF Services upload proven | Implement prompt → MCP assembly → pause → Medical Director eSign |
-| name.com | Actual deterministic receipt hash published and matched by sandbox API read-back; exact replay works without credentials | Preserve the explicit sandbox non-propagation, owner-mutability, and notary limits in every receipt view |
+| name.com | Corrected runtime receipt hash published at a digest-versioned TXT host and matched by sandbox API read-back; exact replay works without credentials | Preserve the explicit sandbox non-propagation, owner-mutability, and notary limits in every receipt view |
 
 `.env` remains untracked and no credentials are present in tracked files or
 reachable history. The compromised Doctavian values were removed on 24 Aug;

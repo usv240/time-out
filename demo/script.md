@@ -10,7 +10,7 @@ Until then, use the offline console for rehearsals and do not imply vendor calls
 | 0:45 | Open `/try`; show remediation step | A Medical Director reassigns to an RN with documented delegation, order, protocol, BLS, and supervision evidence. |
 | 1:05 | Show Nutrient review task | Low-confidence lot extraction routes to the Medical Director with page coordinates. No database editing. |
 | 1:35 | Show alert reversal | SerpApi surfaces a candidate. The ready encounter returns to review; the search result makes no conclusion. |
-| 2:00 | Show consent result | Doctavian branches over verified inputs and captures patient plus injector signatures. |
+| 2:00 | Show consent result | Doctavian branches and loops over verified inputs, pauses at envelope send, then records the separate Patient plus Injector completion. |
 | 2:20 | Show teach-back hold and retry | A wrong answer triggers re-explanation. Attempt two passes against the frozen question set. |
 | 2:45 | Show baseline | Perfect Corp SD baseline supports consistent documentation and expectation-setting, never diagnosis. |
 | 3:00 | Open PDF | The Foxit agent assembles the record and stops. The Medical Director completes the irreversible eSign action. |

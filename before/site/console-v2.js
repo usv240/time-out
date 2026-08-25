@@ -12,7 +12,8 @@ const STEP_COPY = {
   gate_clear: ["Human remediation clears the Gate", "A Medical Director supplies the documented delegation, order, protocol, BLS, and supervision evidence."],
   nutrient_review: ["Nutrient routes low confidence", "Required extraction uncertainty goes to a named Medical Director with source coordinates."],
   gate_clear_after_review: ["Gate reruns after review", "The documented human resolution is evaluated against the same frozen rules."],
-  consent: ["Doctavian compiles treatment consent", "The template branches on verified inputs and records patient plus injector signatures."],
+  consent: ["Doctavian sends treatment consent", "The real template branches and loops over verified inputs, then pauses with both signatures still pending."],
+  consent_signed: ["Both treatment parties sign", "Doctavian records Patient plus Injector completion; the Medical Director attestation remains a separate Foxit event."],
   teach_back_held: ["Teach-back holds the encounter", "A wrong answer triggers re-explanation and a named Injector review task."],
   teach_back_passed: ["Teach-back passes on retry", "Versioned answers are bound to the frozen rule snapshot."],
   baseline: ["Perfect Corp captures the SD baseline", "Returned concern scores and masks document the starting point; they are not diagnosis."],
@@ -29,7 +30,8 @@ function escapeHtml(value) {
 
 function pillFor(step, result) {
   if (result?.verdict === "BLOCKED" || step === "teach_back_held") return ["BLOCKED", "blocked"];
-  if (step.includes("review") || step === "alert_reversion" || step === "foxit_pause") return ["REVIEW", "review"];
+  if (step.includes("review") || step === "consent" || step === "alert_reversion" || step === "foxit_pause") return ["REVIEW", "review"];
+  if (step === "consent_signed") return ["SIGNED", "clear"];
   if (result?.verdict === "CLEAR" || step === "receipt") return [step === "receipt" ? "SEALED" : "CLEAR", "clear"];
   return ["RECORDED", ""];
 }

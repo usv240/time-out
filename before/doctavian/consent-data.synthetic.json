@@ -1,0 +1,24 @@
+{
+  "Encounter": [
+    {
+      "EncounterId": "SYN-ENC-CLEAR-001",
+      "PatientDisplayName": "Synthetic Patient",
+      "ProcedureDisplayName": "Neurotoxin injection",
+      "PerformerDisplayName": "Synthetic Injector",
+      "ScheduledOn": "2026-08-28T14:00:00Z",
+      "AuthorityPathway": "DELEGATED",
+      "PatientFlagReviewRequired": false,
+      "RuleId": "TX_NEUROTOXIN_2025_01_09",
+      "RuleSnapshotSha256": "4c27b4268e140f8962f3dfd2cac2e682747a08873d3a45c254e1e98faf00330f",
+      "RequiredDisclosures": [
+        {"Title": "Temporary effect and alternatives", "PlainLanguage": "The expected effect is temporary. Results vary, and no treatment is an alternative.", "Citation": "TX_NEUROTOXIN_2025_01_09"},
+        {"Title": "Who will perform the procedure", "PlainLanguage": "The care team must identify the proposed performer and explain the supervision pathway.", "Citation": "22 TAC 169.26; Texas Occupations Code §157.001"},
+        {"Title": "Teach-back and unresolved holds", "PlainLanguage": "Signing is not enough: the patient must demonstrate understanding, and unresolved safety holds stop progression.", "Citation": "TX-NEUROTOXIN-TEACHBACK-1; TX_NEUROTOXIN_2025_01_09"}
+      ]
+    }
+  ],
+  "Signatures": [
+    {"Name": "Synthetic Patient", "SignedAt": "Provided by Doctavian after signing"},
+    {"Name": "Synthetic Injector", "SignedAt": "Provided by Doctavian after signing"}
+  ]
+}

@@ -20,10 +20,31 @@ class WorkflowTests(unittest.TestCase):
         encounter = result["encounter"]
         receipt = result["timeline"][-1]["result"]
         self.assertEqual("SEALED", encounter["state"])
-        self.assertEqual(13, len(result["timeline"]))
+        self.assertEqual(14, len(result["timeline"]))
         self.assertTrue(all(task["status"] == "RESOLVED" for task in encounter["review_tasks"]))
         self.assertTrue(self.service.verify_receipt(receipt["receipt_hash"])["verified"])
         self.assertIn("does not certify legality", receipt["boundary"])
+
+    def test_consent_waits_for_exactly_two_treatment_party_signatures(self):
+        encounter_id = "SYN-ENC-CLEAR-001"
+        self.assertEqual("CLEAR", self.service.evaluate(encounter_id)["verdict"])
+        consent = self.service.compile_consent(encounter_id)
+        encounter = self.service.get_encounter(encounter_id)
+        self.assertEqual("AWAITING_SIGNATURES", consent["status"])
+        self.assertEqual("PENDING", consent["signature_status"])
+        self.assertEqual("HUMAN_REVIEW", encounter["state"])
+        self.assertEqual("TREATMENT_PARTY_SIGNATURES", encounter["review_tasks"][-1]["kind"])
+        with self.assertRaises(WorkflowError):
+            self.service.record_comprehension(encounter_id, [])
+        with self.assertRaises(WorkflowError):
+            self.service.record_consent_signatures(encounter_id, ["Patient", "Medical Director"])
+        signed = self.service.record_consent_signatures(
+            encounter_id,
+            ["Patient", "Injector"],
+            envelope_id=consent["envelope_id"],
+        )
+        self.assertEqual("COMPLETED", signed["signature_status"])
+        self.assertEqual("CONSENT_COMPILED", self.service.get_encounter(encounter_id)["state"])
 
     def test_every_transition_is_audited_and_sequence_is_reversible(self):
         result = self.service.run_hero_path()

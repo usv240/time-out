@@ -225,8 +225,13 @@
                               },
                               {
                                   "from":  "GATE_EVALUATED",
+                                  "to":  "HUMAN_REVIEW",
+                                  "event":  "consent_envelope_sent"
+                              },
+                              {
+                                  "from":  "HUMAN_REVIEW",
                                   "to":  "CONSENT_COMPILED",
-                                  "event":  "consent_compiled_and_signed"
+                                  "event":  "treatment_party_signatures_captured"
                               },
                               {
                                   "from":  "CONSENT_COMPILED",

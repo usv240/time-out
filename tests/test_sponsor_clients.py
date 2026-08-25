@@ -41,6 +41,11 @@ def test_raw_http_transport_functions_are_private() -> None:
         "perfectcorp_upload",
         "perfectcorp_skin_analysis",
         "perfectcorp_result_bundle",
+        "doctavian_upload_template",
+        "doctavian_upload_data",
+        "doctavian_generate",
+        "doctavian_create_envelope",
+        "doctavian_send_envelope",
         "foxit_upload",
     ):
         assert f"def _{operation}_live(" in source

@@ -186,6 +186,16 @@ class BeforeHandler(BaseHTTPRequestHandler):
                 self._json(200, self.service.resolve_review(match.group(1), match.group(2), resolution=body.get("resolution", "Confirmed from synthetic source"), actor_role=body.get("actor_role", "Medical Director")))
             elif match := re.fullmatch(r"/v1/encounters/([^/]+)/consent", path):
                 self._json(200, self.service.compile_consent(match.group(1)))
+            elif match := re.fullmatch(r"/v1/encounters/([^/]+)/consent/signatures", path):
+                self._json(
+                    200,
+                    self.service.record_consent_signatures(
+                        match.group(1),
+                        body.get("signer_roles", []),
+                        envelope_id=body.get("envelope_id"),
+                        actor_role=body.get("actor_role", "Doctavian Signature Webhook"),
+                    ),
+                )
             elif match := re.fullmatch(r"/v1/encounters/([^/]+)/comprehension", path):
                 self._json(200, self.service.record_comprehension(match.group(1), body.get("answers", []), confidence=body.get("confidence", "HIGH")))
             elif match := re.fullmatch(r"/v1/encounters/([^/]+)/baseline", path):

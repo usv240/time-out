@@ -11,7 +11,7 @@ demo, and bounded honestly in copy.
   pruned from the local object database.
 - [x] Exposed Doctavian values cleared; fresh rotated credentials are required.
 - [x] Xano schema, Gate, guarded transitions, public API, and static site live.
-- [x] Core workflow and Xano contract tests pass locally (52 pytest tests, including 29 unittest-style cases).
+- [x] Core workflow and Xano contract tests pass locally (55 checks: 31 unittest-style cases and 24 pytest-style cases).
 - [x] Every live vendor operation uses the shared cache envelope and offline
   replay; no direct uncached request remains.
 - [ ] One encounter demonstrates every enabled sponsor consequence without
@@ -42,7 +42,7 @@ demo, and bounded honestly in copy.
 - [x] Live FDA search authenticated and returned real public results.
 - [x] Results are mapped only to `CANDIDATE`, never conclusions.
 - [x] Cached candidate reverts `READY_FOR_PROCEDURE` to `HUMAN_REVIEW`.
-- [ ] Named human confirm/dismiss decision is audited and shown in the demo.
+- [x] Named human confirm/dismiss decision is audited and shown in the demo.
 
 ### Perfect Corp
 
@@ -65,10 +65,10 @@ demo, and bounded honestly in copy.
 - [x] Auth, data source, solution, template upload, and data upload were exercised.
 - [ ] User authorizes Google Drive storage and supplies a fresh rotated API key
   and Drive-scoped bearer.
-- [ ] Probe generation succeeds and template expression syntax is fixed.
-- [ ] Real template branches on procedure/authority/patient flags, loops through
-  cited disclosures, and collects patient + injector signatures.
-- [ ] Generated/signed result is cached and attached to the encounter.
+- [x] Native DOCX expression syntax is structurally tested and all three source pages are visually verified.
+- [x] Real template branches on authority/patient flags, loops through cited disclosures, calculates the disclosure count, and exposes distinct Patient + Injector anchors.
+- [x] Cached client implements template/data upload, generation, envelope creation, send, scrubbed offline replay, and an explicit two-signature state-machine pause.
+- [ ] Live generation succeeds after Drive authorization, and an actual Patient + Injector completion is cached and attached to the encounter.
 
 ### Foxit
 
@@ -107,3 +107,4 @@ explicit VTO cut. The repeatable hero receipt hash was published to
 `beforereceipts-demo.com`, matched by sandbox API read-back, and replayed with no
 credentials. The receipt shows local hash verification separately from mutable,
 non-propagating DNS verification.
+24 Aug Doctavian implementation: generated a reproducible, three-page native DOCX using the standard-business-brief design preset and customer-pack header pattern. The template contains real Doctavian conditional paragraphs, a disclosure repeater, a count expression, frozen rule identifiers, and separate patient/injector anchors. The cache-first sponsor boundary now covers template/data upload, generation, envelope creation, and send; cached responses redact recipient addresses and signed URLs. Encounter compilation pauses in `HUMAN_REVIEW`, rejects a Medical Director as a treatment-party substitute, and advances only after an explicit Patient + Injector completion event. The corrected runtime receipt hash was published under a digest-versioned name.com TXT host and matched by API read-back. Live Doctavian generation remains blocked only by the user-controlled Google Drive authorization and fresh credentials; no live-success claim is made.

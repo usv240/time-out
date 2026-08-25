@@ -35,7 +35,7 @@ DETERMINATION_SCOPE = "Pre-procedure safety determination for human review"
 ALLOWED_TRANSITIONS = {
     "DRAFT": {"EVIDENCE_PENDING"},
     "EVIDENCE_PENDING": {"GATE_EVALUATED"},
-    "GATE_EVALUATED": {"REMEDIATION", "HUMAN_REVIEW", "CONSENT_COMPILED"},
+    "GATE_EVALUATED": {"REMEDIATION", "HUMAN_REVIEW"},
     "REMEDIATION": {"EVIDENCE_PENDING"},
     "HUMAN_REVIEW": {"EVIDENCE_PENDING", "CONSENT_COMPILED", "READY_FOR_PROCEDURE"},
     "CONSENT_COMPILED": {"HUMAN_REVIEW", "BASELINE_CAPTURED"},
@@ -262,21 +262,153 @@ class BeforeService:
         self.repository.save(record)
         return task
 
+    def _doctavian_consent_data(self, record: EncounterRecord) -> dict[str, Any]:
+        provider = self.providers[record.provider_id]
+        delegated = provider.credential != "PHYSICIAN"
+        disclosures = [
+            {
+                "Title": "Temporary effect and alternatives",
+                "PlainLanguage": "The expected effect is temporary. Results vary, and delaying or declining treatment is an alternative.",
+                "Citation": self.rule["comprehension_citations"][0],
+            },
+            {
+                "Title": "Performer and supervision pathway",
+                "PlainLanguage": "The care team must identify the proposed performer and explain the documented supervision and escalation pathway.",
+                "Citation": self.rule["citations"]["tmb_chapter_169"],
+            },
+            {
+                "Title": "Material risk and emergency discussion",
+                "PlainLanguage": "The care team must discuss material risks, common complications, serious injury, emergency procedures, and aftercare.",
+                "Citation": self.rule["citations"]["occupations_code_157"],
+            },
+            {
+                "Title": "Understanding and unresolved holds",
+                "PlainLanguage": "Signing does not clear an unresolved safety hold. The patient must complete the separate versioned teach-back step.",
+                "Citation": self.rule["comprehension_citations"][0],
+            },
+        ]
+        return {
+            "Encounter": [
+                {
+                    "EncounterId": record.id,
+                    "PatientDisplayName": record.patient_display_name,
+                    "ProcedureDisplayName": "Neurotoxin injection",
+                    "PerformerDisplayName": "Synthetic Injector",
+                    "ScheduledOn": record.scheduled_on,
+                    "AuthorityPathway": "DELEGATED" if delegated else "DIRECT",
+                    "PatientFlagReviewRequired": any(
+                        task["status"] == "OPEN" and task["kind"] != "TREATMENT_PARTY_SIGNATURES"
+                        for task in record.review_tasks
+                    ),
+                    "RuleId": self.rule["rule_id"],
+                    "RuleSnapshotSha256": record.gate_decision["rule_snapshot_sha256"],
+                    "RequiredDisclosures": disclosures,
+                }
+            ],
+            "Signatures": [
+                {"Name": "Synthetic Patient", "SignedAt": "Provided by Doctavian after signing"},
+                {"Name": "Synthetic Injector", "SignedAt": "Provided by Doctavian after signing"},
+            ],
+        }
+
     def compile_consent(self, encounter_id: str) -> dict[str, Any]:
         record = self.repository.get(encounter_id)
         if not record.gate_decision or record.gate_decision["verdict"] != "CLEAR" or record.state != EncounterState.GATE_EVALUATED.value:
             raise WorkflowError("A CLEAR Gate decision with no unresolved review is required before consent compilation.")
-        result = asdict(DoctavianClient(self.offline, self.operation_cache).run())
+        consent_data = self._doctavian_consent_data(record)
+        result = asdict(
+            DoctavianClient(
+                self.offline,
+                self.operation_cache,
+                consent_data=consent_data,
+            ).run()
+        )
         result["rule_snapshot_sha256"] = record.gate_decision["rule_snapshot_sha256"]
         record.consent = result
-        self._transition(record, EncounterState.CONSENT_COMPILED, "consent_compiled_and_signed", "Patient + Injector", "Doctavian treatment-party signatures captured", result)
+        task = ReviewTask(
+            id=f"SYN-REVIEW-CONSENT-{record.id}",
+            encounter_id=record.id,
+            kind="TREATMENT_PARTY_SIGNATURES",
+            assigned_role="Patient + Injector",
+            status="OPEN",
+            reason="Both treatment parties must sign the generated Doctavian consent",
+            source_ref=result["envelope_id"],
+        )
+        record.review_tasks.append(asdict(task))
+        self._transition(
+            record,
+            EncounterState.HUMAN_REVIEW,
+            "consent_envelope_sent",
+            "Doctavian",
+            "Generated consent sent; progression pauses until patient and injector signatures are recorded",
+            result,
+        )
         self.repository.save(record)
         return result
 
+    def record_consent_signatures(
+        self,
+        encounter_id: str,
+        signer_roles: list[str],
+        *,
+        envelope_id: str | None = None,
+        actor_role: str = "Doctavian Signature Webhook",
+    ) -> dict[str, Any]:
+        record = self.repository.get(encounter_id)
+        if record.state != EncounterState.HUMAN_REVIEW.value or not record.consent:
+            raise WorkflowError("A sent Doctavian consent envelope must be awaiting signatures.")
+        if record.consent.get("signature_status") != "PENDING":
+            raise WorkflowError("The treatment-party signatures have already been recorded.")
+        if envelope_id and envelope_id != record.consent.get("envelope_id"):
+            raise WorkflowError("The signature event does not match this encounter's Doctavian envelope.")
+        normalized = {role.strip().upper() for role in signer_roles}
+        if normalized != {"PATIENT", "INJECTOR"}:
+            raise WorkflowError("Both Patient and Injector signatures are required; a Medical Director cannot substitute.")
+        signed_at = now_iso()
+        signatures = [
+            {"role": "Patient", "status": "SIGNED", "signed_at": signed_at},
+            {"role": "Injector", "status": "SIGNED", "signed_at": signed_at},
+        ]
+        record.consent.update(
+            {
+                "status": "SIGNED",
+                "signature_status": "COMPLETED",
+                "signatures": signatures,
+                "signed_at": signed_at,
+            }
+        )
+        for task in record.review_tasks:
+            if task["kind"] == "TREATMENT_PARTY_SIGNATURES" and task["status"] == "OPEN":
+                task.update({"status": "RESOLVED", "resolved_by": actor_role, "resolved_at": signed_at})
+        self._transition(
+            record,
+            EncounterState.CONSENT_COMPILED,
+            "treatment_party_signatures_captured",
+            actor_role,
+            "Doctavian recorded both patient and injector signatures; medical director attestation remains separate",
+            signatures,
+        )
+        self.repository.save(record)
+        return record.consent
     def record_comprehension(self, encounter_id: str, answers: list[dict[str, Any]], *, confidence: str = "HIGH") -> dict[str, Any]:
         record = self.repository.get(encounter_id)
-        if not record.gate_decision or not record.consent:
-            raise WorkflowError("Consent and a frozen Gate snapshot are required before teach-back.")
+        remediating_comprehension = (
+            record.state == EncounterState.HUMAN_REVIEW.value
+            and any(
+                task["kind"] == "COMPREHENSION_REMEDIATION" and task["status"] == "OPEN"
+                for task in record.review_tasks
+            )
+        )
+        if (
+            not record.gate_decision
+            or not record.consent
+            or record.consent.get("signature_status") != "COMPLETED"
+            or (
+                record.state != EncounterState.CONSENT_COMPILED.value
+                and not remediating_comprehension
+            )
+        ):
+            raise WorkflowError("Both treatment-party signatures and a frozen Gate snapshot are required before teach-back.")
         score = sum(bool(item.get("correct")) for item in answers)
         threshold = len(answers)
         passed = score >= threshold and confidence != "LOW"
@@ -386,7 +518,7 @@ class BeforeService:
             "sealed_at": "2026-08-24T20:00:00+00:00" if self.offline else now_iso(),
         }
         receipt_hash = self._canonical_hash(payload)
-        dns_host = f"_before.{payload['receipt_id'].lower()}"
+        dns_host = f"_before.{payload['receipt_id'].lower()}.{receipt_hash[:12]}"
         dns = asdict(
             NameComClient(
                 self.offline,
@@ -458,6 +590,7 @@ class BeforeService:
         self.resolve_review(encounter_id, f"SYN-REVIEW-NUTRIENT-{encounter_id}", resolution="Lot confirmed from synthetic source document")
         timeline.append({"step": "gate_clear_after_review", "result": self.evaluate(encounter_id)})
         timeline.append({"step": "consent", "result": self.compile_consent(encounter_id)})
+        timeline.append({"step": "consent_signed", "result": self.record_consent_signatures(encounter_id, ["Patient", "Injector"])})
         wrong = [{"question_id": "risk", "answer": "I do not know", "correct": False}, {"question_id": "alternative", "answer": "Delay treatment", "correct": True}]
         timeline.append({"step": "teach_back_held", "result": self.record_comprehension(encounter_id, wrong)})
         correct = [{"question_id": "risk", "answer": "The effect can spread and needs urgent care if breathing is affected", "correct": True}, {"question_id": "alternative", "answer": "I can delay or decline treatment", "correct": True}]

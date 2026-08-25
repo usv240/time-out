@@ -1,52 +1,64 @@
 {
-  "template_id": "TX-NEUROTOXIN-CONSENT-1",
-  "status": "OFFLINE_REFERENCE_NOT_PUSHED",
-  "notice": "Synthetic demonstration template. No clinical dose or uncited cooling-off period is calculated.",
-  "inputs": [
-    "procedure",
-    "authority_pathway",
-    "patient_flags",
-    "performer_display_name",
-    "rule_snapshot_sha256",
-    "required_disclosures"
-  ],
-  "expressions": [
-    {
-      "type": "branch",
-      "when": "procedure == 'NEUROTOXIN_INJECTION'",
-      "render": "texas_neurotoxin_disclosures"
-    },
-    {
-      "type": "branch",
-      "when": "authority_pathway == 'DELEGATED'",
-      "render": "delegation_and_supervision_disclosure"
-    },
-    {
-      "type": "loop",
-      "over": "required_disclosures",
-      "render": "risk_disclosure_item"
-    },
-    {
-      "type": "branch",
-      "when": "patient_flags contains 'PREGNANCY_REVIEW'",
-      "render": "named_human_review_hold"
-    }
-  ],
-  "calculations": [
-    {
-      "name": "disclosure_count",
-      "expression": "length(required_disclosures)",
-      "clinical": false
-    }
-  ],
-  "signers": [
-    {"role": "Patient", "required": true},
-    {"role": "Injector", "required": true}
-  ],
-  "forbidden_outputs": [
-    "legal conclusion",
-    "clinical dose calculation",
-    "uncited cooling-off period",
-    "medical director attestation"
-  ]
+    "template_id":  "TX-NEUROTOXIN-CONSENT-1",
+    "status":  "GENERATED_DOCX_READY_FOR_SPONSOR_UPLOAD",
+    "notice":  "Synthetic demonstration template. Records treatment-party consent only; it does not determine legality, certify safety, prescribe a dose, or replace professional judgment.",
+    "inputs":  [
+                   "procedure",
+                   "authority_pathway",
+                   "patient_flags",
+                   "performer_display_name",
+                   "rule_snapshot_sha256",
+                   "required_disclosures"
+               ],
+    "expressions":  [
+                        {
+                            "type":  "branch",
+                            "when":  "{!$Encounter[0].ProcedureDisplayName == \u0027Neurotoxin injection\u0027}",
+                            "render":  "Texas neurotoxin disclosure section"
+                        },
+                        {
+                            "type":  "branch",
+                            "when":  "{!$Encounter[0].AuthorityPathway == \u0027DELEGATED\u0027}",
+                            "render":  "mdoc:paragraph delegatedAuthority"
+                        },
+                        {
+                            "type":  "loop",
+                            "over":  "Encounter[0].RequiredDisclosures",
+                            "render":  "mdoc:repeater requiredDisclosures"
+                        },
+                        {
+                            "type":  "branch",
+                            "when":  "{!$Encounter[0].PatientFlagReviewRequired == true}",
+                            "render":  "mdoc:paragraph patientFlagReview"
+                        }
+                    ],
+    "calculations":  [
+                         {
+                             "name":  "disclosure_count",
+                             "expression":  "{!$count(Encounter[0].RequiredDisclosures)}",
+                             "clinical":  false
+                         }
+                     ],
+    "signers":  [
+                    {
+                        "role":  "Patient",
+                        "required":  true,
+                        "anchor":  "_SIG_PATIENT_"
+                    },
+                    {
+                        "role":  "Injector",
+                        "required":  true,
+                        "anchor":  "_SIG_INJECTOR_"
+                    }
+                ],
+    "forbidden_outputs":  [
+                              "legal conclusion",
+                              "clinical dose calculation",
+                              "uncited cooling-off period",
+                              "medical director attestation"
+                          ],
+    "docx_path":  "before/doctavian/tx-neurotoxin-consent-v1.docx",
+    "data_fixture_path":  "before/doctavian/consent-data.synthetic.json",
+    "signature_state_boundary":  "Envelope send is PENDING. Only an explicit Patient + Injector completion event may advance to CONSENT_COMPILED.",
+    "live_blocker":  "Doctavian Google Drive storage authorization, rotated API key and Drive-scoped bearer are not configured."
 }
