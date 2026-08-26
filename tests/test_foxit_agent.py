@@ -25,14 +25,27 @@ class FoxitAgentTests(unittest.TestCase):
             if "fileContent" in call.args:  # uploads: content must be redacted, never raw base64
                 self.assertTrue(str(call.args["fileContent"]).startswith("<base64"))
 
-    def test_attestation_dry_run_never_sends(self):
-        import os
-        os.environ.setdefault("FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL", "synthetic@example.test")
-        if not foxit_agent.OUTPUT_PDF.exists():
-            self.skipTest("assembled PDF not present")
-        result = foxit_agent.request_attestation(dry_run=True)
-        self.assertFalse(result["sent"])
-        self.assertEqual(result["prepared"]["signer_role"], "Medical Director")
+    def test_attestation_default_is_draft_and_refuses_without_signer(self):
+        import inspect, os
+        # default must be a no-email draft; sending is an explicit human choice
+        self.assertIs(inspect.signature(foxit_agent.request_attestation).parameters["send"].default, False)
+        saved = os.environ.pop("FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL", None)
+        try:
+            with self.assertRaises(foxit_agent.AgentError):
+                foxit_agent.request_attestation()
+        finally:
+            if saved is not None:
+                os.environ["FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL"] = saved
+
+    def test_esign_draft_fixture_records_handoff_not_signature(self):
+        import json
+        fixture = foxit_agent.ROOT / "fixtures" / "foxit" / "esign-folder.json"
+        if not fixture.exists():
+            self.skipTest("eSign fixture not present")
+        record = json.loads(fixture.read_text(encoding="utf-8"))
+        self.assertFalse(record["sent"])
+        self.assertEqual(record["signer_role"], "Medical Director")
+        self.assertIn("folderId", record["folder"])
 
 
 if __name__ == "__main__":

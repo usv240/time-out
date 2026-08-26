@@ -355,44 +355,75 @@ def run(prompt: str, offline: bool = False) -> AgentRun:
 
 # ------------------------------------------------------------------ eSign
 
-def request_attestation(pdf: Path = OUTPUT_PDF, dry_run: bool = True) -> dict[str, Any]:
-    """Hand the assembled record to the Medical Director for signature.
+ESIGN_HOST = "https://na1.fusion.foxit.com/esign/api/v1"
+ESIGN_CACHE = CACHE_DIR / "esign-folder.json"
 
-    This is the ONE step the agent never performs on its own. `dry_run=True`
-    prepares the request without sending, so the signing email is only ever
-    triggered deliberately by a person.
+
+def request_attestation(pdf: Path = OUTPUT_PDF, send: bool = False) -> dict[str, Any]:
+    """Hand the assembled record to the Medical Director through Foxit eSign.
+
+    This is the ONE step the agent never performs on its own.
+
+    send=False  creates a real DRAFT folder on Foxit eSign — a genuine API call that
+                proves the handoff — but emails nobody.
+    send=True   sends the signing request to the Medical Director's inbox. Only a
+                person should flip this, deliberately, at the moment they want the
+                signature captured.
     """
     signer = os.environ.get("FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL", "").strip()
     if not signer:
         raise AgentError("FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL is not set.")
     if not pdf.exists():
-        raise AgentError("Assemble the record first.")
-    envelope = {
-        "folderName": f"Time-Out attestation — {pdf.stem}",
-        "document": pdf.name,
-        "document_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+        raise AgentError("Assemble the record first: python -m before.foxit_agent")
+
+    from before.app.live import _requests  # noqa: WPS433
+
+    digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    body = {
+        "folderName": f"Time-Out attestation — {pdf.stem} — SYNTHETIC",
+        "inputType": "base64",
+        "base64FileString": [base64.b64encode(pdf.read_bytes()).decode("ascii")],
+        "fileNames": [pdf.name],
+        "parties": [{
+            "firstName": "Medical", "lastName": "Director (synthetic role)",
+            "emailId": signer, "permission": "FILL_FIELDS_AND_SIGN", "sequence": 1,
+        }],
+        # one signature field on the attestation page (page 3 of the assembled record)
+        "fields": [{
+            "type": "signature", "x": 108, "y": 640, "width": 220, "height": 40,
+            "documentNumber": 1, "pageNumber": 3, "tabOrder": 1, "party": 1, "required": True,
+        }],
+        "processTextTags": False, "processAcroFields": False,
+        "createEmbeddedSigningSession": False, "createEmbeddedSendingSession": False,
+        "sendNow": bool(send),
+    }
+    response = _requests().post(
+        f"{ESIGN_HOST}/folders/createfolder",
+        headers={"client_id": os.environ["FOXIT_CLOUD_API_CLIENT_ID"],
+                 "client_secret": os.environ["FOXIT_CLOUD_API_CLIENT_SECRET"],
+                 "Content-Type": "application/json"},
+        json=body, timeout=120,
+    )
+    if response.status_code >= 400:
+        raise AgentError(f"eSign createfolder failed HTTP {response.status_code}: {response.text[:300]}")
+    payload = response.json()
+    record = {
+        "sent": bool(send),
+        "mode": "SENT to signer" if send else "DRAFT created, nobody emailed",
         "signer_role": "Medical Director",
         "signer_email": signer,
-        "action": "SIGN",
-        "note": "Synthetic encounter. Attestation confirms the checks recorded before treatment; it certifies nothing about safety or outcome.",
+        "document_sha256": digest,
+        "folder": (payload.get("folder") or {}),
+        "message": payload.get("message"),
+        "result": payload.get("result"),
+        "boundary_note": (
+            "The agent assembled the record and stopped. Creating this folder is the handoff; "
+            "the signature itself can only be applied by the named human."
+        ),
     }
-    if dry_run:
-        return {"sent": False, "prepared": envelope}
-
-    from before.app.live import _requests, _env, _check  # noqa: WPS433
-
-    headers = {"client_id": _env("FOXIT_CLIENT_ID"), "client_secret": _env("FOXIT_CLIENT_SECRET")}
-    with pdf.open("rb") as handle:
-        response = _requests().post(
-            "https://api.foxit.com/esign/api/folders",
-            headers=headers,
-            data={"folderName": envelope["folderName"], "signerEmail": signer, "signerRole": "Medical Director"},
-            files={"file": (pdf.name, handle, "application/pdf")},
-            timeout=90,
-        )
-    _check(response, "Foxit eSign create folder")
-    payload = response.json()
-    return {"sent": True, "prepared": envelope, "response": payload}
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    ESIGN_CACHE.write_text(json.dumps(record, indent=2), encoding="utf-8")
+    return record
 
 
 # ------------------------------------------------------------------- CLI
