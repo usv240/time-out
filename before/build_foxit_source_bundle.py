@@ -41,7 +41,7 @@ def build() -> Path:
         writer.add_metadata(
             {
                 "/Title": title,
-                "/Author": "BEFORE synthetic demonstration",
+                "/Author": "Time-Out synthetic demonstration",
                 "/Subject": "Foxit MCP assembly input - synthetic only",
             }
         )

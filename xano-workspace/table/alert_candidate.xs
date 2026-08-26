@@ -8,12 +8,14 @@ table alert_candidate {
     int encounter_id? {
       table = "encounter"
     }
+  
     text source_url filters=trim
     timestamp published_at?
     text matched_entity filters=trim
     enum status {
       values = ["CANDIDATE", "CONFIRMED", "DISMISSED"]
     }
+  
     text confirmed_by? filters=trim
     timestamp confirmed_at?
   }

@@ -8,8 +8,8 @@ decision document (why this idea, prize tiers, cut order). Work from `tasks/*.md
 
 Two projects for the DevNetwork [API + Cloud + AI] Hackathon 2026. Submit **3 Sep 2026, 10:00 AM PST**.
 
-**BEFORE** (`/before`) — the pre-procedure safety proof for cosmetic treatments. Before an
-injection or laser treatment begins, BEFORE verifies the provider's authority, checks product
+**Time-Out** (`/before`) — the pre-procedure safety proof for cosmetic treatments. Before an
+injection or laser treatment begins, Time-Out verifies the provider's authority, checks product
 provenance and active alerts, confirms the patient actually *understands* the consent, captures a
 standardized clinical baseline, and produces a signed, independently verifiable safety receipt.
 

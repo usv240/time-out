@@ -5,23 +5,23 @@
   "contains_prohibited_identifiers": false,
   "agent_prompt": "assemble the safety record for encounter SYN-ENC-BLOCKED-002",
   "source_document": "output/pdf/synthetic-safety-evidence-record.pdf",
-  "source_document_sha256": "7d79d8418fb0e3adc1eb726d7d8d53578e688ba05b0b0b097138759dcf8b7950",
+  "source_document_sha256": "aa3acd0e9f8b62c0e92b0fadc313b35abbe48c31e83a7d477bca1feea5dd325c",
   "documents": [
     {
       "path": "output/pdf/foxit-source/01-encounter-and-boundary.pdf",
-      "sha256": "5fc5ae60d43e0ed92e5c526bc8ade228e93ebd3716adfb7fc644309a51b13642",
+      "sha256": "1a5ae9253fed8a07e38004e4054f640bfa1e7ec44d21339fb401d5c5de75c58b",
       "pages": 1,
       "section": "Encounter summary and human-signature boundary"
     },
     {
       "path": "output/pdf/foxit-source/02-gate-and-rule-snapshot.pdf",
-      "sha256": "5bdc8c947c92a0c2c1dc8fbd4701dc234db6bc598761fc04c183f2dddfc31292",
+      "sha256": "b5ec013431e3ad3a195718927c07a5427815f225d69399e153e4e57821e29c4c",
       "pages": 1,
       "section": "Deterministic Gate and frozen rule snapshot"
     },
     {
       "path": "output/pdf/foxit-source/03-sources-and-attestation.pdf",
-      "sha256": "effce4f85e997b04a408619540e4c9190a51b0a90c62688b0e268ee32a932309",
+      "sha256": "ba6f65f837cf75748b884a91e65b440a396e6fe45ae2ff880c80c27e71b574e7",
       "pages": 1,
       "section": "Sources, bounded receipt language, and attestation handoff"
     }

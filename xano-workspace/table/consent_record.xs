@@ -8,6 +8,7 @@ table consent_record {
     int encounter_id {
       table = "encounter"
     }
+  
     text doctavian_doc_id? filters=trim
     text template_version filters=trim
     json signers
@@ -16,7 +17,10 @@ table consent_record {
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "encounter_id", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "encounter_id", op: "asc"}]
+    }
   ]
 
   tags = ["before", "consent"]

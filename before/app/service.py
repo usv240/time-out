@@ -1,4 +1,4 @@
-"""End-to-end synthetic BEFORE workflow.
+"""End-to-end synthetic Time-Out workflow.
 
 This module is the executable reference for the business logic intended to live
 in Xano. It never determines legality and never infers ambiguous evidence.
@@ -529,7 +529,7 @@ class BeforeService:
         )
         receipt = {**payload, "receipt_hash": receipt_hash, "dns_verification": dns, "verification_path": f"/receipt/{payload['receipt_id']}"}
         record.receipt = receipt
-        self._transition(record, EncounterState.SEALED, "receipt_sealed", "BEFORE Receipt Service", RECEIPT_BOUNDARY, receipt)
+        self._transition(record, EncounterState.SEALED, "receipt_sealed", "Time-Out Receipt Service", RECEIPT_BOUNDARY, receipt)
         self.repository.save(record)
         return receipt
 

@@ -1,4 +1,4 @@
-# BEFORE public site
+# Time-Out public site
 
 Zero-dependency public UI served by the local reference API. Run from repository
 root:

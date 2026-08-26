@@ -8,9 +8,11 @@ table safety_receipt {
     int encounter_id {
       table = "encounter"
     }
+  
     int gate_decision_id {
       table = "gate_decision"
     }
+  
     text payload_sha256 filters=trim|lower
     text dns_txt_name? filters=trim
     timestamp published_at?
@@ -20,8 +22,14 @@ table safety_receipt {
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "encounter_id", op: "asc"}]}
-    {type: "btree|unique", field: [{name: "payload_sha256", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "encounter_id", op: "asc"}]
+    }
+    {
+      type : "btree|unique"
+      field: [{name: "payload_sha256", op: "asc"}]
+    }
   ]
 
   tags = ["before", "receipt", "human-review"]

@@ -25,7 +25,7 @@ def build(output: Path = OUTPUT) -> Path:
     output.parent.mkdir(parents=True, exist_ok=True)
     page = canvas.Canvas(str(output), pagesize=letter, invariant=1)
     page.setTitle("Synthetic neurotoxin product packaging")
-    page.setAuthor("BEFORE synthetic demonstration")
+    page.setAuthor("Time-Out synthetic demonstration")
     width, height = letter
 
     page.setFillColor(colors.HexColor("#0F1A21"))

@@ -19,6 +19,7 @@ table jurisdiction_rule {
     enum confidence {
       values = ["HIGH", "MEDIUM", "LOW"]
     }
+  
     json rule_snapshot
     text canonical_rule_snapshot
     text rule_snapshot_sha256 filters=trim|lower
@@ -28,7 +29,13 @@ table jurisdiction_rule {
   index = [
     {type: "primary", field: [{name: "id"}]}
     {type: "btree|unique", field: [{name: "rule_id", op: "asc"}]}
-    {type: "btree", field: [{name: "state", op: "asc"}, {name: "procedure_category", op: "asc"}]}
+    {
+      type : "btree"
+      field: [
+        {name: "state", op: "asc"}
+        {name: "procedure_category", op: "asc"}
+      ]
+    }
   ]
 
   tags = ["before", "rules-as-code"]

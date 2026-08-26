@@ -1,4 +1,4 @@
-# BEFORE implementation status - 24 Aug 2026
+# Time-Out implementation status - 24 Aug 2026
 
 ## Code-complete reference and live Xano spine
 
@@ -22,9 +22,9 @@
 
 ## Live Xano deployment
 
-- Production site: `https://before-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io`
+- Production site: `https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io`
 - Public API: `https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1`
-- Workspace 1 contains 15 BEFORE tables, guarded encounter transitions, immutable audit events, and frozen rule snapshots.
+- Workspace 1 contains 15 Time-Out tables, guarded encounter transitions, immutable audit events, and frozen rule snapshots.
 - `POST /v1/encounters/{encounter_id}/evaluate` invokes the deterministic seven-check Gate.
 - Live synthetic proof: `BLOCKED / REMEDIATION` -> documented remediation -> `CLEAR / GATE_EVALUATED`.
 - Static-host production build 2 serves the landing page, API sandbox, evidence, walkthrough, console, and receipt pages.

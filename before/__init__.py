@@ -1,2 +1,2 @@
-"""BEFORE clinic and patient-facing application package."""
+"""Time-Out clinic and patient-facing application package."""
 

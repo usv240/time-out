@@ -12,12 +12,16 @@ table clinic {
     int medical_director_id? {
       table = "provider"
     }
+  
     bool synthetic
   }
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "synthetic_key", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "synthetic_key", op: "asc"}]
+    }
     {type: "btree", field: [{name: "created_at", op: "desc"}]}
   ]
 

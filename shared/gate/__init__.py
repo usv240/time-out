@@ -1,4 +1,4 @@
-"""Public contract for the BEFORE pre-procedure Gate."""
+"""Public contract for the Time-Out pre-procedure Gate."""
 
 from .evaluator import evaluate_gate
 from .models import (

@@ -1,4 +1,4 @@
-"""Local reference implementation of the BEFORE Xano API contract."""
+"""Local reference implementation of the Time-Out Xano API contract."""
 
 from .service import BeforeService
 

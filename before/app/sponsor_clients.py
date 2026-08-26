@@ -126,7 +126,7 @@ def namecom_publish_receipt(
     descriptor = {
         "host": host,
         "digest": digest,
-        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com"),
+        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "timeout-receipts-demo.com"),
     }
     return _cache(cache).json(
         vendor="namecom",
@@ -145,7 +145,7 @@ def namecom_read_receipt(
 ) -> dict[str, Any] | None:
     descriptor = {
         "host": host,
-        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com"),
+        "registry_domain": os.getenv("NAMECOM_REGISTRY_DOMAIN", "timeout-receipts-demo.com"),
     }
     return _cache(cache).json(
         vendor="namecom",
@@ -322,7 +322,7 @@ def doctavian_generate(
         },
         "data": {"loadMethod": "Storage", "urn": data_urn},
         "document": {
-            "name": f"BEFORE-{encounter_id}-consent",
+            "name": f"Time-Out-{encounter_id}-consent",
             "fileFormat": "pdf",
             "deliveryMethod": "Storage",
             "path": "root",
@@ -362,7 +362,7 @@ def doctavian_create_envelope(
         "documents": [
             {
                 "referenceDocumentId": "consent",
-                "name": f"BEFORE-{encounter_id}-consent.pdf",
+                "name": f"Time-Out-{encounter_id}-consent.pdf",
                 "urn": document_urn,
                 "loadMethod": "Storage",
             }
@@ -385,7 +385,7 @@ def doctavian_create_envelope(
             },
         ],
         "envelope": {
-            "subject": "BEFORE synthetic treatment consent",
+            "subject": "Time-Out synthetic treatment consent",
             "message": "Synthetic hackathon demonstration. No real patient or procedure.",
             "externalContext": {"id": encounter_id},
         },

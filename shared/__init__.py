@@ -1,2 +1,2 @@
-"""Shared, deterministic domain logic for BEFORE."""
+"""Shared, deterministic domain logic for Time-Out."""
 

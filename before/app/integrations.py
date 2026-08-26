@@ -579,7 +579,7 @@ class NameComClient(CachedAdapter[DnsReceiptResult]):
     result_type = DnsReceiptResult
     fixture = {
         "vendor": "name.com CORE sandbox",
-        "domain": "beforereceipts-demo.com",
+        "domain": "timeout-receipts-demo.com",
         "txt_name": "_before.syn-receipt-001",
         "txt_value": "PENDING_RECEIPT_HASH",
         "verified_through": "name.com sandbox API",
@@ -587,7 +587,7 @@ class NameComClient(CachedAdapter[DnsReceiptResult]):
         "operations": ["domain search", "availability check", "sandbox registration", "TXT create", "TXT read-back"],
         "published": True,
         "matches": True,
-        "fqdn": "_before.syn-receipt-001.beforereceipts-demo.com.",
+        "fqdn": "_before.syn-receipt-001.timeout-receipts-demo.com.",
         "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary.",
     }
 
@@ -606,7 +606,7 @@ class NameComClient(CachedAdapter[DnsReceiptResult]):
         result = super().replay()
         if not self.host or not self.digest:
             return result
-        domain = "beforereceipts-demo.com"
+        domain = "timeout-receipts-demo.com"
         return DnsReceiptResult(
             **{
                 **asdict(result),
@@ -634,7 +634,7 @@ class NameComClient(CachedAdapter[DnsReceiptResult]):
             offline=offline,
             cache=self.operation_cache,
         )
-        domain = os.getenv("NAMECOM_REGISTRY_DOMAIN", "beforereceipts-demo.com")
+        domain = os.getenv("NAMECOM_REGISTRY_DOMAIN", "timeout-receipts-demo.com")
         return DnsReceiptResult(
             vendor="name.com CORE sandbox",
             domain=domain,

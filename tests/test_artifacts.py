@@ -30,7 +30,7 @@ class ArtifactTests(unittest.TestCase):
             "RuleSnapshotSha256",
         ):
             self.assertIn(token, document_xml)
-        self.assertIn("BEFORE synthetic demo", core_xml)
+        self.assertIn("Time-Out synthetic demo", core_xml)
         self.assertEqual({(2026, 8, 18, 0, 0, 0)}, timestamps)
     def test_doctavian_template_and_vendor_contracts_are_present(self):
         for relative in (

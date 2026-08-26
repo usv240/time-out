@@ -8,6 +8,7 @@ table intake_doc {
     int encounter_id {
       table = "encounter"
     }
+  
     text kind filters=trim|upper
     text dws_file_id? filters=trim
     text cache_key? filters=trim
@@ -17,6 +18,7 @@ table intake_doc {
     enum review_status {
       values = ["PENDING", "HUMAN_REVIEW", "APPROVED", "REJECTED"]
     }
+  
     text reviewer_id? filters=trim
     timestamp reviewed_at?
   }

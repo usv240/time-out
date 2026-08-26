@@ -1,11 +1,11 @@
-# BEFORE demo script
+# Time-Out demo script
 
 Record only after the Xano deployment and live sponsor activations are complete.
 Until then, use the offline console for rehearsals and do not imply vendor calls are live.
 
 | Time | Screen action | Caption / narration |
 |---|---|---|
-| 0:00 | Open `/` | BEFORE prevents a cosmetic encounter from becoming procedure-ready until the evidence is complete and reviewable. |
+| 0:00 | Open `/` | Time-Out prevents a cosmetic encounter from becoming procedure-ready until the evidence is complete and reviewable. |
 | 0:15 | Run the hero Gate | The encounter is BLOCKED. Show the exact missing authority facts, source, snapshot, and remedy. |
 | 0:45 | Open `/try`; show remediation step | A Medical Director reassigns to an RN with documented delegation, order, protocol, BLS, and supervision evidence. |
 | 1:05 | Show Nutrient review task | Low-confidence lot extraction routes to the Medical Director with page coordinates. No database editing. |

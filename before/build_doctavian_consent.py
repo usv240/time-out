@@ -145,7 +145,7 @@ def configure_page(document: Document) -> None:
     header = section.header
     paragraph = header.paragraphs[0]
     paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    title = paragraph.add_run("BEFORE  /  TEXAS NEUROTOXIN CONSENT")
+    title = paragraph.add_run("Time-Out  /  TEXAS NEUROTOXIN CONSENT")
     title.bold = True
     title.font.color.rgb = TEAL
     title.font.size = Pt(9)
@@ -156,7 +156,7 @@ def configure_page(document: Document) -> None:
     footer = section.footer
     paragraph = footer.paragraphs[0]
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = paragraph.add_run("BEFORE • Treatment-party consent • Not a legality or safety certification")
+    run = paragraph.add_run("Time-Out • Treatment-party consent • Not a legality or safety certification")
     run.font.size = Pt(8)
     run.font.color.rgb = MUTED
 
@@ -165,9 +165,9 @@ def build() -> Path:
     document = Document()
     configure_page(document)
     configure_styles(document)
-    document.core_properties.title = "BEFORE Texas Neurotoxin Consent — Synthetic Template"
+    document.core_properties.title = "Time-Out Texas Neurotoxin Consent — Synthetic Template"
     document.core_properties.subject = "Doctavian conditional consent and treatment-party signatures"
-    document.core_properties.author = "BEFORE synthetic demo"
+    document.core_properties.author = "Time-Out synthetic demo"
     document.core_properties.keywords = "synthetic, Texas, neurotoxin, consent, Doctavian"
     document.core_properties.comments = "Contains synthetic demonstration fields only."
 

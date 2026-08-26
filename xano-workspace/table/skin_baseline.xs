@@ -8,6 +8,7 @@ table skin_baseline {
     int encounter_id {
       table = "encounter"
     }
+  
     json capture_meta
     json concerns
     text overlay_url? filters=trim
@@ -16,7 +17,10 @@ table skin_baseline {
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "encounter_id", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "encounter_id", op: "asc"}]
+    }
   ]
 
   tags = ["before", "evidence", "synthetic-only"]

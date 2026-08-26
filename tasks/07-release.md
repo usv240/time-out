@@ -1,4 +1,4 @@
-# BEFORE release closure
+# Time-Out release closure
 
 Status source for the 24 Aug–3 Sep release push. A sponsor is not "live" merely
 because an isolated request returned 2xx; it is complete only when its result is
@@ -23,7 +23,7 @@ demo, and bounded honestly in copy.
 
 ### Xano
 
-- [x] Fifteen BEFORE domain tables plus workspace support tables deployed.
+- [x] Fifteen Time-Out domain tables plus workspace support tables deployed.
 - [x] Deterministic Gate and state transitions execute in Xano.
 - [x] Static site and instant synthetic sandbox are public.
 - [ ] Final integrated endpoints pushed only after the mandated full dry-run.
@@ -104,7 +104,7 @@ run returned 12 concern scores and masks; the raw result ZIP is cached while its
 short-lived signed URL is redacted. The console renders the generated face,
 wrinkle mask, returned metrics, framing guidance, diagnostic boundary, and the
 explicit VTO cut. The repeatable hero receipt hash was published to
-`beforereceipts-demo.com`, matched by sandbox API read-back, and replayed with no
+`timeout-receipts-demo.com`, matched by sandbox API read-back, and replayed with no
 credentials. The receipt shows local hash verification separately from mutable,
 non-propagating DNS verification.
 24 Aug Doctavian implementation: generated a reproducible, three-page native DOCX using the standard-business-brief design preset and customer-pack header pattern. The template contains real Doctavian conditional paragraphs, a disclosure repeater, a count expression, frozen rule identifiers, and separate patient/injector anchors. The cache-first sponsor boundary now covers template/data upload, generation, envelope creation, and send; cached responses redact recipient addresses and signed URLs. Encounter compilation pauses in `HUMAN_REVIEW`, rejects a Medical Director as a treatment-party substitute, and advances only after an explicit Patient + Injector completion event. The corrected runtime receipt hash was published under a digest-versioned name.com TXT host and matched by API read-back. Live Doctavian generation remains blocked only by the user-controlled Google Drive authorization and fresh credentials; no live-success claim is made.

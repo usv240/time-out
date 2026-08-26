@@ -1,4 +1,4 @@
-"""Dependency-free HTTP server for the BEFORE public site and API contract."""
+"""Dependency-free HTTP server for the Time-Out public site and API contract."""
 
 from __future__ import annotations
 
@@ -225,7 +225,7 @@ class BeforeHandler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Serve the BEFORE synthetic site and API.")
+    parser = argparse.ArgumentParser(description="Serve the Time-Out synthetic site and API.")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=4173)
     parser.add_argument("--offline", action="store_true", help="Replay all sponsor integrations from .cache only.")
@@ -238,7 +238,7 @@ def main() -> None:
     )
     BeforeHandler.service.seed()
     server = ThreadingHTTPServer((args.host, args.port), BeforeHandler)
-    print(f"BEFORE running at http://{args.host}:{args.port} (offline={args.offline})")
+    print(f"Time-Out running at http://{args.host}:{args.port} (offline={args.offline})")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

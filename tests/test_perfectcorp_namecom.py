@@ -96,7 +96,7 @@ def test_namecom_publishes_actual_digest_then_reads_back_and_replays(monkeypatch
             "host": receipt_host,
             "type": "TXT",
             "answer": f"before-receipt-v1 sha256={digest}",
-            "fqdn": f"{receipt_host}.beforereceipts-demo.com.",
+            "fqdn": f"{receipt_host}.timeout-receipts-demo.com.",
         }
 
     monkeypatch.setattr(sponsor_clients, "_namecom_publish_receipt_live", publish)

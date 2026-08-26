@@ -1,6 +1,6 @@
-# BEFORE
+# Time-Out
 
-BEFORE is a pre-procedure safety proof for cosmetic treatment. The current hero
+Time-Out is a pre-procedure safety proof for cosmetic treatment. The current hero
 path is deliberately narrow: **Texas + neurotoxin + synthetic data only**.
 
 The Phase 1 Gate is a pure, offline Python function. It evaluates seven evidence

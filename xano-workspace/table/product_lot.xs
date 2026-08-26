@@ -8,22 +8,33 @@ table product_lot {
     int encounter_id {
       table = "encounter"
     }
+  
     text brand filters=trim
     text lot_no filters=trim
     date expiry
     enum alert_status {
-      values = ["MATCHED_TO_NO_CAPTURED_ALERT", "ALERT_CANDIDATE", "CONFIRMED_ALERT", "UNKNOWN"]
+      values = [
+        "MATCHED_TO_NO_CAPTURED_ALERT"
+        "ALERT_CANDIDATE"
+        "CONFIRMED_ALERT"
+        "UNKNOWN"
+      ]
     }
+  
     enum confidence {
       values = ["HIGH", "MEDIUM", "LOW"]
     }
+  
     timestamp checked_at?
     json source_refs
   }
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "encounter_id", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "encounter_id", op: "asc"}]
+    }
     {type: "btree", field: [{name: "lot_no", op: "asc"}]}
   ]
 

@@ -1,4 +1,4 @@
-"""Typed workflow records for the synthetic BEFORE reference backend."""
+"""Typed workflow records for the synthetic Time-Out reference backend."""
 
 from __future__ import annotations
 

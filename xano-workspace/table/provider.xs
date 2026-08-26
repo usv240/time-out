@@ -9,6 +9,7 @@ table provider {
     int clinic_id {
       table = "clinic"
     }
+  
     text name filters=trim
     text credential_type filters=trim|upper
     text license_no? filters=trim
@@ -19,12 +20,16 @@ table provider {
     enum evidence_confidence {
       values = ["HIGH", "MEDIUM", "LOW"]
     }
+  
     bool synthetic
   }
 
   index = [
     {type: "primary", field: [{name: "id"}]}
-    {type: "btree|unique", field: [{name: "synthetic_key", op: "asc"}]}
+    {
+      type : "btree|unique"
+      field: [{name: "synthetic_key", op: "asc"}]
+    }
     {type: "btree", field: [{name: "clinic_id", op: "asc"}]}
   ]
 

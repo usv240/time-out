@@ -5,7 +5,7 @@ drafts deliberately distinguish the passing offline reference from unactivated l
 
 ## Xano
 
-Xano is the intended production system for BEFORE's state machine, approval gates,
+Xano is the intended production system for Time-Out's state machine, approval gates,
 append-only decisions, audit trail, auth, and REST API. We replaced the paper-and-PDF
 pre-procedure checklist clinics keep in binders with a cited, reproducible encounter
 hold reviewed before production. Claude Code and Codex helped implement and test the
@@ -21,7 +21,7 @@ confirms or dismisses every candidate, and the decision is audited.
 ## Perfect Corp
 
 Perfect Corp YouCam provides an SD standardized skin baseline with fourteen concern
-outputs and a VTO expectation-setting aid. BEFORE uses this as documentation and
+outputs and a VTO expectation-setting aid. Time-Out uses this as documentation and
 communication support, never diagnosis or medical-results interpretation. Production
 activation remains subject to written confirmation of this framing and required consent.
 
