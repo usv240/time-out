@@ -10,28 +10,19 @@ pre-procedure safety determination for human review, not a legal opinion.
 
 ## Run locally
 
-Python 3.11+ is sufficient; Phase 1 has no third-party dependencies.
-
 ```bash
-python -m unittest discover -s tests -v
-python -m before.gate_demo
+git clone https://github.com/usv240/time-out.git && cd time-out
+python -m pip install -r requirements.txt
+cp .env.example .env          # optional — only needed for live sponsor calls
+python -m before.seed         # writes the synthetic cache
+python -m before.verify       # runs the whole hero path offline, prints the receipt
+python -m pytest tests -q     # 55 checks
 ```
 
-The demo runs three committed scenarios: a fully documented RN path, an
-aesthetician encounter missing delegation evidence, and a low-confidence product
-document routed to review. All people, organizations, licences, lots, and records
-under `fixtures/` are visibly fictional.
-
-## Structure
-
-- `before/` — clinic app and patient view (currently the offline Gate demo)
-- `shared/gate/` — typed, deterministic Gate
-- `fixtures/` — synthetic corpus and source-backed Texas rule snapshot
-- `research/` — primary-source rule notes and competitive audit
-- `tasks/` — implementation briefs and completion notes
-
-Copy `.env.example` to `.env` only when external integrations begin. Never commit
-credentials. Phase 1 makes no external calls and needs no environment variables.
+Everything above runs with **no network and no credentials**. Live sponsor calls
+(Nutrient, SerpApi, name.com, Perfect Corp, Foxit, Doctavian) activate only when
+the matching keys are present in `.env`; otherwise the same typed, cached responses
+replay. The demo is recorded network-disabled on purpose.
 
 ## Run the complete synthetic product
 

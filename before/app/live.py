@@ -17,7 +17,6 @@ import os
 from pathlib import Path
 from typing import Any
 
-import requests
 
 ROOT = Path(__file__).resolve().parents[2]
 TIMEOUT = 45
@@ -30,6 +29,15 @@ class LiveCallError(RuntimeError):
 class NotConfigured(LiveCallError):
     """Required credentials are absent from the environment."""
 
+def _requests():
+    """Import lazily so the offline demo never needs a network library installed."""
+    try:
+        import requests  # noqa: WPS433
+    except ImportError as exc:  # pragma: no cover
+        raise NotConfigured("Live sponsor calls need `pip install requests`.") from exc
+    return requests
+
+
 
 def _env(name: str) -> str:
     value = os.environ.get(name, "").strip()
@@ -38,7 +46,7 @@ def _env(name: str) -> str:
     return value
 
 
-def _check(response: requests.Response, vendor: str) -> None:
+def _check(response, vendor: str) -> None:
     if response.status_code >= 400:
         raise LiveCallError(
             f"{vendor} returned HTTP {response.status_code}: {response.text[:300]}"
@@ -55,7 +63,7 @@ def _nutrient_parse_live(document: Path) -> dict[str, Any]:
     """
     key = _env("NUTRIENT_EXTRACTION_API_KEY")
     with document.open("rb") as handle:
-        response = requests.post(
+        response = _requests().post(
             "https://api.nutrient.io/extraction/parse",
             headers={"Authorization": f"Bearer {key}"},
             files={"file": (document.name, handle, "application/pdf")},
@@ -68,7 +76,7 @@ def _nutrient_parse_live(document: Path) -> dict[str, Any]:
 def _nutrient_build_pdf_live(html: str, filename: str = "index.html") -> bytes:
     """Render HTML to PDF through the DWS Processor API."""
     key = _env("NUTRIENT_PROCESSOR_API_KEY")
-    response = requests.post(
+    response = _requests().post(
         "https://api.nutrient.io/build",
         headers={"Authorization": f"Bearer {key}"},
         files={
@@ -120,7 +128,7 @@ def _serpapi_search_live(query: str, num: int = 5) -> dict[str, Any]:
     A hit never establishes that a product is counterfeit, that a licence is
     invalid, or that the law has changed. A named human confirms or dismisses.
     """
-    response = requests.get(
+    response = _requests().get(
         "https://serpapi.com/search",
         params={
             "engine": "google",
@@ -165,7 +173,7 @@ def _namecom_publish_receipt_live(host: str, digest: str) -> dict[str, Any]:
     """
     base = _env("NAMECOM_BASE_URL")
     domain = _env("NAMECOM_REGISTRY_DOMAIN")
-    response = requests.post(
+    response = _requests().post(
         f"{base}/core/v1/domains/{domain}/records",
         auth=_namecom_auth(),
         json={
@@ -184,7 +192,7 @@ def _namecom_read_receipt_live(host: str) -> dict[str, Any] | None:
     """Read a published receipt record back through the sandbox API."""
     base = _env("NAMECOM_BASE_URL")
     domain = _env("NAMECOM_REGISTRY_DOMAIN")
-    response = requests.get(
+    response = _requests().get(
         f"{base}/core/v1/domains/{domain}/records",
         auth=_namecom_auth(),
         timeout=TIMEOUT,
@@ -257,7 +265,7 @@ def prepare_face(source: Path, destination: Path) -> tuple[int, int]:
 def _perfectcorp_upload_live(image: Path) -> str:
     """Reserve an upload slot and PUT the bytes. Returns their file id."""
     size = image.stat().st_size
-    response = requests.post(
+    response = _requests().post(
         f"{PERFECTCORP_BASE}/file/skin-analysis",
         headers=_perfectcorp_headers(),
         json={"files": [{"content_type": "image/jpeg", "file_name": image.name, "file_size": size}]},
@@ -266,7 +274,7 @@ def _perfectcorp_upload_live(image: Path) -> str:
     _check(response, "Perfect Corp upload slot")
     entry = response.json()["data"]["files"][0]
     slot = entry["requests"][0]
-    put = requests.put(slot["url"], data=image.read_bytes(), headers=slot["headers"], timeout=180)
+    put = _requests().put(slot["url"], data=image.read_bytes(), headers=slot["headers"], timeout=180)
     _check(put, "Perfect Corp S3 upload")
     return entry["file_id"]
 
@@ -279,7 +287,7 @@ def _perfectcorp_skin_analysis_live(
     Returns the raw task payload. Scores are a documentation and communication
     aid — never a diagnosis, and never an input to the Gate's legal reasoning.
     """
-    submit = requests.post(
+    submit = _requests().post(
         f"{PERFECTCORP_BASE}/task/skin-analysis",
         headers=_perfectcorp_headers(),
         json={"src_file_id": file_id, "dst_actions": concerns or SKIN_CONCERNS},
@@ -292,7 +300,7 @@ def _perfectcorp_skin_analysis_live(
 
     for _ in range(max_polls):
         time.sleep(poll_seconds)
-        poll = requests.get(
+        poll = _requests().get(
             f"{PERFECTCORP_BASE}/task/skin-analysis/{task_id}",
             headers=_perfectcorp_headers(),
             timeout=TIMEOUT,
@@ -312,7 +320,7 @@ def _perfectcorp_result_bundle_live(task_data: dict[str, Any]) -> bytes:
     url = (task_data.get("results") or task_data.get("result") or {}).get("url")
     if not url:
         raise LiveCallError("Perfect Corp returned no result bundle.")
-    response = requests.get(url, timeout=120)
+    response = _requests().get(url, timeout=120)
     _check(response, "Perfect Corp result bundle")
     return response.content
 
@@ -358,7 +366,7 @@ def _doctavian_upload_live(document: Path, storage_type: str, content_type: str)
     """Upload a synthetic document template or merge-data file."""
     endpoint = "template" if storage_type == "document-template" else "data"
     with document.open("rb") as handle:
-        response = requests.post(
+        response = _requests().post(
             f"{_doctavian_base()}/v1/documents/{endpoint}/upload",
             headers={**_doctavian_headers(), "X-Storage-Type": storage_type},
             files={"file": (document.name, handle, content_type)},
@@ -377,7 +385,7 @@ def _doctavian_upload_template_live(document: Path) -> dict[str, Any]:
 
 
 def _doctavian_upload_data_live(payload: dict[str, Any]) -> dict[str, Any]:
-    response = requests.post(
+    response = _requests().post(
         f"{_doctavian_base()}/v1/documents/data/upload",
         headers={**_doctavian_headers(), "X-Storage-Type": "document-data"},
         files={
@@ -395,7 +403,7 @@ def _doctavian_upload_data_live(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _doctavian_generate_live(payload: dict[str, Any]) -> dict[str, Any]:
     """Generate a synthetic consent into Doctavian Storage."""
-    response = requests.post(
+    response = _requests().post(
         f"{_doctavian_base()}/v1/documents/document/generate",
         headers={**_doctavian_headers(), "Content-Type": "application/json"},
         json=payload,
@@ -407,7 +415,7 @@ def _doctavian_generate_live(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _doctavian_create_envelope_live(payload: dict[str, Any]) -> dict[str, Any]:
     """Create a two-signer envelope; this does not imply either person signed."""
-    response = requests.post(
+    response = _requests().post(
         f"{_doctavian_base()}/v1/signatures/envelope/create",
         headers={**_doctavian_headers(), "Content-Type": "application/json"},
         json=payload,
@@ -419,7 +427,7 @@ def _doctavian_create_envelope_live(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _doctavian_send_envelope_live(envelope_id: str) -> dict[str, Any]:
     """Send an existing envelope to its treatment-party recipients."""
-    response = requests.get(
+    response = _requests().get(
         f"{_doctavian_base()}/v1/signatures/envelope/{envelope_id}/send",
         headers=_doctavian_headers(),
         timeout=TIMEOUT,
@@ -449,7 +457,7 @@ def _foxit_headers() -> dict[str, str]:
 def _foxit_upload_live(document: Path) -> str:
     """Upload a document for assembly. Returns Foxit's document id."""
     with document.open("rb") as handle:
-        response = requests.post(
+        response = _requests().post(
             f"{FOXIT_BASE}/api/documents/upload",
             headers=_foxit_headers(),
             files={"file": (document.name, handle, "application/pdf")},
