@@ -165,27 +165,30 @@ def _namecom_auth() -> tuple[str, str]:
 
 
 def _namecom_publish_receipt_live(host: str, digest: str) -> dict[str, Any]:
-    """Publish a receipt digest as a DNS TXT record.
+    """Publish a receipt digest as a DNS TXT record — idempotently.
 
-    Sandbox DNS does not propagate publicly, so verification reads the record
-    back through the API. A TXT record is mutable by its owner: this is a
+    If a TXT record already exists for `host`, it is updated in place rather than
+    duplicated. Sandbox DNS does not propagate publicly, so verification reads the
+    record back through the API. A TXT record is mutable by its owner: this is a
     verification channel, not an immutable notary.
     """
     base = _env("NAMECOM_BASE_URL")
     domain = _env("NAMECOM_REGISTRY_DOMAIN")
+    body = {"host": host, "type": "TXT", "answer": f"before-receipt-v1 sha256={digest}", "ttl": 300}
+    existing = _namecom_read_receipt_live(host)
+    if existing and existing.get("id"):
+        response = _requests().put(
+            f"{base}/core/v1/domains/{domain}/records/{existing['id']}",
+            auth=_namecom_auth(), json=body, timeout=TIMEOUT,
+        )
+        _check(response, "name.com update record")
+        payload = response.json(); payload["operation"] = "updated"; return payload
     response = _requests().post(
         f"{base}/core/v1/domains/{domain}/records",
-        auth=_namecom_auth(),
-        json={
-            "host": host,
-            "type": "TXT",
-            "answer": f"before-receipt-v1 sha256={digest}",
-            "ttl": 300,
-        },
-        timeout=TIMEOUT,
+        auth=_namecom_auth(), json=body, timeout=TIMEOUT,
     )
     _check(response, "name.com create record")
-    return response.json()
+    payload = response.json(); payload["operation"] = "created"; return payload
 
 
 def _namecom_read_receipt_live(host: str) -> dict[str, Any] | None:
@@ -197,6 +200,10 @@ def _namecom_read_receipt_live(host: str) -> dict[str, Any] | None:
         auth=_namecom_auth(),
         timeout=TIMEOUT,
     )
+    if response.status_code == 401:
+        raise NotConfigured(
+            "name.com token is not active yet (sandbox tokens take 15+ minutes). Retry later."
+        )
     _check(response, "name.com list records")
     for record in response.json().get("records", []):
         if record.get("host") == host and record.get("type") == "TXT":
