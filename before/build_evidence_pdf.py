@@ -43,7 +43,7 @@ def build(output: Path = OUTPUT) -> Path:
     styles.add(ParagraphStyle(name="Mono", parent=styles["BodyText"], fontName="Courier", fontSize=7.5, leading=11, textColor=INK, wordWrap="CJK"))
     styles.add(ParagraphStyle(name="Boundary", parent=styles["BodyText"], fontSize=9, leading=14, textColor=INK, borderColor=RULE, borderWidth=1, borderPadding=12, backColor=WASH))
 
-    doc = SimpleDocTemplate(str(output), pagesize=letter, rightMargin=0.7 * inch, leftMargin=0.7 * inch, topMargin=0.65 * inch, bottomMargin=0.75 * inch, title="Synthetic BEFORE Safety Evidence Record", author="BEFORE synthetic demonstration")
+    doc = SimpleDocTemplate(str(output), pagesize=letter, rightMargin=0.7 * inch, leftMargin=0.7 * inch, topMargin=0.65 * inch, bottomMargin=0.75 * inch, title="Synthetic BEFORE Safety Evidence Record", author="BEFORE synthetic demonstration", invariant=1)
     story = [
         Spacer(1, 0.55 * inch),
         Paragraph("BEFORE / EVIDENCE RECORD", styles["Eyebrow"]),
