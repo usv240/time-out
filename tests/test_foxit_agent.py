@@ -22,7 +22,8 @@ class FoxitAgentTests(unittest.TestCase):
         self.assertTrue(any(t.startswith("REST pdf-combine") for t in tools))
         self.assertTrue(any(t.startswith("REST pdf-watermark") for t in tools))
         for call in run.calls:
-            self.assertNotIn("fileContent", str(call.args).replace("<base64", ""))  # redacted
+            if "fileContent" in call.args:  # uploads: content must be redacted, never raw base64
+                self.assertTrue(str(call.args["fileContent"]).startswith("<base64"))
 
     def test_attestation_dry_run_never_sends(self):
         import os
