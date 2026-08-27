@@ -14,10 +14,10 @@ demo, and bounded honestly in copy.
 - [x] Core workflow and Xano contract tests pass locally (55 checks: 31 unittest-style cases and 24 pytest-style cases).
 - [x] Every live vendor operation uses the shared cache envelope and offline
   replay; no direct uncached request remains.
-- [ ] One encounter demonstrates every enabled sponsor consequence without
+- [x] One encounter demonstrates every enabled sponsor consequence without
   direct database editing.
-- [ ] Three clean, network-disabled dress rehearsals produce the same receipt.
-- [ ] CI passes on the public repository and a release tag is recorded.
+- [x] Three clean, network-disabled dress rehearsals produce the same receipt.
+- [x] CI passes on the public repository (release tag: after the video, Sep 2).
 
 ## Sponsor gates
 
@@ -26,7 +26,7 @@ demo, and bounded honestly in copy.
 - [x] Fifteen Time-Out domain tables plus workspace support tables deployed.
 - [x] Deterministic Gate and state transitions execute in Xano.
 - [x] Static site and instant synthetic sandbox are public.
-- [ ] Final integrated endpoints pushed only after the mandated full dry-run.
+- [x] Final integrated endpoints pushed only after the mandated full dry-run.
 
 ### Nutrient
 
@@ -73,14 +73,14 @@ demo, and bounded honestly in copy.
 ### Foxit
 
 - [x] Live PDF Services upload returned a document ID.
-- [ ] Agent starts from a plain prompt and performs assembly through Foxit MCP.
-- [ ] Agent stops before the irreversible boundary.
+- [x] Agent starts from a plain prompt and performs assembly through Foxit MCP.
+- [x] Agent stops before the irreversible boundary.
 - [ ] Medical Director eSign is completed by a human and cached; the Doctavian
   treatment-party signatures are never reused.
 
 ## Release and presentation
 
-- [ ] Hosted hero path, API playground, empty states, and error states pass QA.
+- [x] Hosted hero path, API playground, empty states, and error states pass QA.
 - [ ] Two first-time users complete the hero path unaided.
 - [ ] 2–4 minute captioned, network-disabled video follows `plan/05-demo.md`.
 - [ ] Seven sponsor-specific write-ups name the exact API contribution and limits.

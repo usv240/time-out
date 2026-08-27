@@ -1,4 +1,4 @@
-# Time-Out implementation status - 24 Aug 2026
+# Time-Out implementation status - 27 Aug 2026
 
 ## Code-complete reference and live Xano spine
 
@@ -30,6 +30,15 @@
 - Static-host production build 2 serves the landing page, API sandbox, evidence, walkthrough, console, and receipt pages.
 - Verification: repository tests pass locally; the Xano dry-run discipline remains mandatory before the next push.
 
+## Hosted site — 27 Aug
+
+- `/try`: step 1 runs the Gate live on Xano against a fresh per-visitor encounter; sponsor steps replay cached live responses (badged CACHED · 26 Aug); every step has an `i` (what / why / source); **Break it yourself** — six attacks, each the complete evidence set with one thing broken, sent to `remediate` + `evaluate` live; reset; audit log from `GET /v1/encounters/{id}`; Foxit MCP trace + eSign folderId.
+- `/receipt`: the committed hero receipt — seven checks with sources, the patient's baseline (14 scores, overlay masks), DNS read-back + limits, the watermarked record, bounded language.
+- `/how-it-works`: fetch a live verdict, SHA-256 the canonical ruleset with WebCrypto, compare — REPRODUCED.
+- Fixed: the previous console and receipt called `/v1/demo/run` and `/v1/receipts/verify`, which exist only in the local reference server; both pages were broken on the hosted site.
+- Dress rehearsals: three network-disabled runs, identical receipt hash (`demo/rehearsals.md`).
+- Submission text ready: `submission/devpost.md`, `submission/sponsor-writeups.md`, seven screenshots, `demo/script.md` (≤3:00).
+
 ## Sponsor closure status — 24 Aug
 
 | Dependency | Current evidence | Remaining closure |
@@ -37,9 +46,9 @@
 | Xano | Live in workspace 1: 15 tables, four reusable functions, eight public endpoints, production static host | No action required for the implemented spine; preserve dry-run-before-push discipline |
 | Nutrient | Live parse frozen behind the shared cache; exact offline replay; typed fields/confidence/coordinates; SHA-bound synthetic egress guard; named-role state-machine hold tested | Surface the source page/coordinates and review resolution in the hosted encounter UI |
 | SerpApi | Live FDA + Texas Board queries frozen behind the shared cache; echoed keys scrubbed; candidates revert readiness to human review | Surface the audited confirm/dismiss action in the hosted encounter UI |
-| Doctavian | Reproducible native DOCX, branch/loop/count syntax, distinct anchors, cached upload/generate/envelope/send clients, scrubbed replay, and truthful signature hold are implemented and tested | Authorize Drive, supply rotated credentials and controlled synthetic inboxes, then capture one live generation plus Patient + Injector completion |
+| Doctavian | Auth, data source, solution, template upload, data upload live. Native branch/loop/count DOCX built and tested. Generation fails at delivery: `COPY_FILE_GOOGLEDRIVE_FAILED` — the demo account defaulted to Drive output and we declined full Drive access. Asked Doctavian for an internal-storage option. | Live generation only if a non-Drive delivery is provided |
 | Perfect Corp | Newly generated fictional face; live SD analysis; 12 returned scores/masks; raw ZIP cached; signed URL scrubbed; typed baseline and layered mask rendered | No remaining hero-path integration; conserve credits and keep VTO explicitly out of scope |
-| Foxit | Live PDF Services upload proven | Implement prompt → MCP assembly → pause → Medical Director eSign |
+| Foxit | Agent live: prompt → 5 MCP calls (upload ×3, properties, download) + merge/watermark via PDF Services REST because the TypeScript MCP server mis-maps `documents`→`documentInfos` and watermark `opacity`/`text`; both recorded in the run log. 3/3 pages watermarked SYNTHETIC. Real eSign draft folder 35585692 for the Medical Director (nobody emailed until a person chooses `send`). | Human eSign completion during the recording |
 | name.com | Corrected runtime receipt hash published at a digest-versioned TXT host and matched by sandbox API read-back; exact replay works without credentials | Preserve the explicit sandbox non-propagation, owner-mutability, and notary limits in every receipt view |
 
 `.env` remains untracked and no credentials are present in tracked files or
