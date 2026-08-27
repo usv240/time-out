@@ -133,6 +133,24 @@ function findingsTable(result) {
   return `<table class="findings"><thead><tr><th>Check</th><th>Result</th><th>What was found</th><th>Cited</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+
+function nutrientProof(result) {
+  const conf = Object.entries(result.confidence || {});
+  const low = conf.filter(([, v]) => String(v).toUpperCase() === "LOW").map(([k]) => k);
+  const rows = conf.map(([field, level]) => {
+    const cls = String(level).toUpperCase() === "LOW" ? "blocked" : String(level).toUpperCase() === "MEDIUM" ? "review" : "clear";
+    return `<tr class="finding ${cls}"><td><code>${escapeHtml(field)}</code></td><td><span class="status-pill ${cls}">${escapeHtml(level)}</span></td><td>${escapeHtml(String((result.fields || {})[field] ?? ""))}</td></tr>`;
+  }).join("");
+  return `<section class="nutrient-proof" aria-label="Nutrient extraction review">
+    <p class="integration-kicker">NUTRIENT DWS / EXTRACTION REVIEW</p>
+    <div class="nutrient-split">
+      <figure><img src="/assets/nutrient/low-confidence-lot.png" alt="Source document with the low-confidence lot field outlined"><figcaption>The source page, with <code>${escapeHtml(low.join(", ") || "the uncertain field")}</code> boxed at the coordinates DWS returned.</figcaption></figure>
+      <div><table class="findings"><thead><tr><th>Field</th><th>Confidence</th><th>Extracted</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="evidence-boundary">Routed to <strong>${escapeHtml(result.assigned_role || "a named reviewer")}</strong>. The encounter cannot advance until a person confirms it. The confidence floor lives in code, never in a prompt.</p></div>
+    </div>
+  </section>`;
+}
+
 function baselineProof(result) {
   const scores = Object.entries(result.concerns || {}).sort((a, b) => a[0].localeCompare(b[0]));
   const scoreGrid = scores.map(([name, score]) => `<div class="score-row"><span>${escapeHtml(name.replaceAll("_", " "))}</span><meter min="0" max="100" value="${Number(score)}">${Number(score)}</meter><code>${Number(score)}</code></div>`).join("");
@@ -187,6 +205,7 @@ function renderTimeline(items, liveIndexes = new Set([0])) {
     row.className = "timeline-item";
     let specialized = "";
     if (item.step === "baseline") specialized = baselineProof(item.result);
+    else if (item.step === "nutrient_review") specialized = nutrientProof(item.result);
     else if (item.step === "receipt") specialized = dnsProof(item.result);
     else if (item.step === "foxit_pause") specialized = foxitProof();
     else if (item.result?.findings) specialized = findingsTable(item.result);

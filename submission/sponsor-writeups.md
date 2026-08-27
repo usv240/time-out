@@ -77,7 +77,7 @@ A patient handed a Time-Out receipt can check that the record they hold matches 
 
 ## Nutrient — Turn documents into something people trust
 
-**Nutrient DWS reads the evidence and decides who has to look at it.** Credential, intake, and product documents go through the Data Extraction API and come back as typed fields with **per-element confidence and page coordinates**. Any required field below the confidence floor — the floor lives in code, never in a prompt — routes to a named Medical Director in the DWS Viewer before the encounter can advance. Processor-side semantic redaction runs before anything leaves the vault.
+**Nutrient DWS reads the evidence and decides who has to look at it.** Credential, intake, and product documents go through the Data Extraction API and come back as typed fields with **per-element confidence and page coordinates**. Any required field below the confidence floor — the floor lives in code, never in a prompt — routes to a named Medical Director — shown the source page with the uncertain field boxed at the coordinates DWS returned — before the encounter can advance. Processor-side semantic redaction runs before anything leaves the vault.
 
 In our first live run on a three-page evidence record, 3 of 29 elements fell below the 0.80 floor and the review path fired — on real output, not a staged fixture.
 

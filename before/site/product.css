@@ -128,3 +128,8 @@
 .verifier{margin-top:3rem;padding-top:1.5rem;border-top:2px solid var(--ink,#0F1A21)}
 
 .receipt-header .synthetic-chip{border-radius:999px;width:auto;height:auto;padding:4px 12px;white-space:nowrap}
+.nutrient-proof{margin:.75rem 0;padding:.9rem 1rem;border:1px solid var(--rule,#D5DEE2);background:var(--surface,#fff)}
+.nutrient-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:1rem;align-items:start}
+.nutrient-split figure{margin:0}.nutrient-split img{width:100%;border:1px solid var(--rule,#D5DEE2);border-radius:3px}
+.nutrient-split figcaption{font-size:.8rem;color:var(--ink-3,#64777F);margin-top:.35rem}
+@media (max-width:820px){.nutrient-split{grid-template-columns:1fr}}
