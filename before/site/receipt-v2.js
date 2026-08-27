@@ -6,6 +6,13 @@ const target = document.querySelector("#receipt-body");
 const params = new URLSearchParams(location.search);
 const requestedId = params.get("id") || decodeURIComponent(location.pathname.split("/").filter(Boolean).at(-1) || "");
 
+const MASK_FILES = new Set(["wrinkle","texture","pore","redness","firmness"]);
+function maskSrc(ref) {
+  if (!ref) return null;
+  if (String(ref).includes("/")) return ref;                       // already a path
+  return MASK_FILES.has(ref) ? `/assets/perfectcorp/synthetic-patient-02-${ref}-overlay.png` : null;
+}
+
 function escapeHtml(value) {
   return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
 }
@@ -19,10 +26,13 @@ const CHECK_COPY = {
   provider_license: "Licence active, in-state, unexpired",
   authority_pathway: "Authorised to perform this — directly or under documented delegation",
   delegation_and_supervision: "Patient-specific order, signed protocol, BLS, supervisor available",
-  good_faith_exam: "Required examination recorded",
+  preprocedure_assessment: "Pre-procedure assessment recorded",
+  good_faith_exam: "Pre-procedure assessment recorded",
+  product_lot: "Product lot captured; no confirmed alert",
   product_evidence: "Product lot captured; no confirmed alert",
   comprehension: "Patient passed teach-back for this ruleset",
   board_status: "No disciplinary finding",
+  disciplinary_status: "No disciplinary finding",
 };
 
 function checksTable(findings) {
@@ -37,7 +47,7 @@ function baselineBlock(b) {
   if (!b) return "";
   const scores = Object.entries(b.concerns || {}).sort((x, y) => x[0].localeCompare(y[0]));
   const grid = scores.map(([name, score]) => `<div class="score-row"><span>${escapeHtml(name.replaceAll("_", " "))}</span><meter min="0" max="100" value="${Number(score)}">${Number(score)}</meter><code>${Number(score)}</code></div>`).join("");
-  const masks = (b.mask_refs || []).map((m) => `<img class="analysis-mask" src="${escapeHtml(m)}" alt="">`).join("");
+  const masks = (b.mask_refs || []).map(maskSrc).filter(Boolean).map((m) => `<img class="analysis-mask" src="${escapeHtml(m)}" alt="">`).join("");
   return `<section class="perfect-proof" aria-label="Your skin baseline">
     <div class="baseline-portrait"><img src="${escapeHtml(b.image_ref)}" alt="AI-generated fictional adult used for the synthetic baseline">${masks}</div>
     <div class="baseline-data"><p class="integration-kicker">YOUR BASELINE — BEFORE TREATMENT ${info("i-baseline", "A standardized skin analysis taken before anything was done, with scored concerns and overlays.", "An objective starting point you keep. If something looks different later, this is what it looked like first.", "Perfect Corp YouCam Skin Analysis (SD) · synthetic face")}</p>

@@ -87,6 +87,13 @@ const ATTACKS = [
     patch: { bls_current: false, supervisor_onsite: false, supervisor_immediately_available: false, physician_emergency_appointment_available: false } },
 ];
 
+const MASK_FILES = new Set(["wrinkle","texture","pore","redness","firmness"]);
+function maskSrc(ref) {
+  if (!ref) return null;
+  if (String(ref).includes("/")) return ref;                       // already a path
+  return MASK_FILES.has(ref) ? `/assets/perfectcorp/synthetic-patient-02-${ref}-overlay.png` : null;
+}
+
 function escapeHtml(value) {
   return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
 }
@@ -129,7 +136,7 @@ function findingsTable(result) {
 function baselineProof(result) {
   const scores = Object.entries(result.concerns || {}).sort((a, b) => a[0].localeCompare(b[0]));
   const scoreGrid = scores.map(([name, score]) => `<div class="score-row"><span>${escapeHtml(name.replaceAll("_", " "))}</span><meter min="0" max="100" value="${Number(score)}">${Number(score)}</meter><code>${Number(score)}</code></div>`).join("");
-  const masks = (result.mask_refs || []).map((m) => `<img class="analysis-mask" src="${escapeHtml(m)}" alt="">`).join("");
+  const masks = (result.mask_refs || []).map(maskSrc).filter(Boolean).map((m) => `<img class="analysis-mask" src="${escapeHtml(m)}" alt="">`).join("");
   return `<section class="perfect-proof" aria-label="Perfect Corp baseline evidence">
     <div class="baseline-portrait"><img src="${escapeHtml(result.image_ref)}" alt="AI-generated fictional adult used for the synthetic baseline">${masks || `<img class="analysis-mask" src="${escapeHtml(result.overlay_ref)}" alt="">`}</div>
     <div class="baseline-data"><p class="integration-kicker">PERFECT CORP / SD SKIN ANALYSIS</p><div class="metric-pair"><div><span>Overall</span><strong>${Number(result.overall_score).toFixed(1)}</strong></div><div><span>Synthetic skin age</span><strong>${escapeHtml(result.skin_age)}</strong></div></div><div class="score-grid">${scoreGrid}</div><p class="capture-guidance"><strong>Capture contract:</strong> frontal face, even light, hair clear of the face, neutral expression, ~1024px wide. Larger images are rejected by the detector.</p><p class="evidence-boundary">${escapeHtml(result.boundary)}</p></div>

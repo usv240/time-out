@@ -50,8 +50,8 @@ If an FDA warning letter or a state board action lands *after* an encounter is r
 | `provider_license` | Is the licence active, in-state, and unexpired? |
 | `authority_pathway` | May this person perform this procedure — directly, or under documented delegation? A job title alone is never an answer. |
 | `delegation_and_supervision` | Is there a patient-specific order, a signed protocol, current BLS, and an available supervisor? |
-| `good_faith_exam` | Was the required examination recorded? |
-| `product_evidence` | Is the lot captured, and does it match any current alert candidate? |
+| `preprocedure_assessment` | Was the required pre-procedure assessment recorded? |
+| `product_lot` | Is the lot captured, and is it free of any confirmed alert? |
 | `comprehension` | Did the patient pass a teach-back, versioned to this exact ruleset? |
 | `board_status` | Any disciplinary finding? |
 
