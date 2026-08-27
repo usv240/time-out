@@ -1,0 +1,14 @@
+{
+ "source": "GET/POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate",
+ "captured_at": "2026-08-27",
+ "note": "The deployed Xano Gate is the contract the hosted pages consume. The local Python reference names one check disciplinary_status where Xano names it board_status; the pages follow Xano. Kept as a fixture so the drift is caught in CI instead of on the live site.",
+ "check_ids": [
+  "authority_pathway",
+  "board_status",
+  "comprehension",
+  "delegation_and_supervision",
+  "preprocedure_assessment",
+  "product_lot",
+  "provider_license"
+ ]
+}

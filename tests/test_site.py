@@ -36,23 +36,23 @@ if __name__ == "__main__":
     unittest.main()
 
 
-def test_hero_check_rows_match_the_live_gate_check_ids():
-    """The landing hero renders one row per check. If a row's data-check does not
-    match a Gate check_id, that row sits on WAITING forever for every visitor —
-    which is exactly what happened with disciplinary_status vs board_status."""
+def test_hero_check_rows_match_the_deployed_gate_contract():
+    """Every check row on the landing page must correspond to a check_id the
+    deployed Xano Gate actually returns. A row whose key does not match sits on
+    WAITING forever for every visitor — which is what happened when the row was
+    keyed disciplinary_status while Xano returns board_status."""
+    import json
     import re
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
     html = (root / "before" / "site" / "index.html").read_text(encoding="utf-8")
     rows = set(re.findall(r'data-check="([a-z_]+)"', html))
-    gate = (root / "shared" / "gate" / "evaluator.py").read_text(encoding="utf-8")
-    known = set(re.findall(r'check_id="([a-z_]+)"', gate)) | set(
-        re.findall(r'"check_id":\s*"([a-z_]+)"', gate)
+    contract = json.loads(
+        (root / "fixtures" / "xano-gate-contract.json").read_text(encoding="utf-8")
     )
-    if not known:  # evaluator names them differently; fall back to the committed decision
-        import json
-        decision = json.loads((root / "before" / "site" / "data" / "demo-decision.json").read_text(encoding="utf-8"))
-        known = {f["check_id"] for f in decision["findings"]}
+    known = set(contract["check_ids"])
+
     assert rows, "no check rows found on the landing page"
-    assert rows <= known, f"landing rows not produced by the Gate: {sorted(rows - known)}"
+    assert rows <= known, f"landing rows the deployed Gate never returns: {sorted(rows - known)}"
+    assert known <= rows, f"Gate checks with no row on the page: {sorted(known - rows)}"
