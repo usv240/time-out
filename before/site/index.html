@@ -12,7 +12,7 @@
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/product.css">
     <script src="./app.js" defer></script>
   </head>
   <body>
@@ -149,7 +149,47 @@
           <p style="margin-top:32px"><a href="/evidence.html#integrations">Inspect the implementation evidence →</a></p>
         </div>
       </section>
-      <section class="section limits-section" id="limits">
+      
+  <section class="section shell what-why-how" aria-labelledby="wwh-title">
+    <p class="eyebrow">What it is · Why it exists · How it works</p>
+    <h2 id="wwh-title">The whole thing in ninety seconds.</h2>
+
+    <div class="wwh-grid">
+      <article>
+        <h3>What</h3>
+        <p>Time-Out is a checkpoint that sits between booking a cosmetic procedure and performing it. It asks seven questions about the <em>record</em> — never about the patient — and returns one of three answers: <strong>CLEAR</strong>, <strong>BLOCKED</strong>, or <strong>REVIEW</strong>.</p>
+        <p>If anything required is missing, no safety receipt is produced. The encounter stops until a named person fixes it.</p>
+      </article>
+
+      <article>
+        <h3>Why</h3>
+        <p>Surgeons pause before every incision to confirm the patient, the site, and the procedure. The WHO checklist containing that pause is associated with roughly a third fewer complications. Med spas — about 13,000 in the US, injecting thousands of times a day — have no equivalent.</p>
+        <p>Of twenty med-spa malpractice cases reviewed, thirteen ended in verdicts for the patient, averaging near $2.5M. The leading causes were not bad technique. They were <strong>absent informed consent, failure to communicate risk, and liability for the actions of delegates</strong> — paperwork failures, all of them before the needle.</p>
+      </article>
+
+      <article>
+        <h3>How</h3>
+        <p>Rules live as code with a citation on every one. Documents are read by models into typed fields with confidence scores; anything uncertain goes to a named human before an irreversible step. <strong>No model decides what is legal and no model does arithmetic</strong> — every verdict comes from deterministic code over a cited rules table.</p>
+        <p>Each decision freezes the exact ruleset it used and fingerprints it, so it still explains itself years later. The result is hashed, published, and handed to the patient.</p>
+      </article>
+    </div>
+
+    <h3 class="wwh-sub">What actually happens, step by step</h3>
+    <ol class="wwh-steps">
+      <li><strong>Book</strong> — a patient, a procedure, and the person who will perform it.</li>
+      <li><strong>Read the evidence</strong> — credential, intake, and product documents are extracted with per-field confidence and page coordinates. A field below the floor is routed to a named Medical Director, who sees the uncertain value boxed on the source page.</li>
+      <li><strong>Run seven checks</strong> — licence, authority pathway, delegation and supervision, pre-procedure assessment, product lot, comprehension, board status. All seven run every time; findings are collected, never short-circuited.</li>
+      <li><strong>Refuse, or proceed</strong> — a block names the exact missing fact, cites the rule, and offers a remedy. A person attaches what is missing and re-runs. Nobody edits a database.</li>
+      <li><strong>Check understanding</strong> — the patient says the risks back in their own words. A wrong answer holds the encounter and triggers re-explanation.</li>
+      <li><strong>Record the starting point</strong> — a standardized skin baseline, captured before treatment, that the patient keeps.</li>
+      <li><strong>Assemble and stop</strong> — an agent builds the evidence record and pauses. A licensed human signs the attestation. The agent never signs.</li>
+      <li><strong>Seal and publish</strong> — the record is hashed and the fingerprint published as a DNS record the patient can verify without trusting us.</li>
+    </ol>
+
+    <p class="wwh-reverse"><strong>And it runs backwards when it has to.</strong> If an FDA warning letter or a board action appears after an encounter is already prepared, it returns to human review. Ready is reversible — that is the point of a hold rather than a checkbox.</p>
+  </section>
+
+  <section class="section limits-section" id="limits">
         <div class="shell limits-grid">
           <div class="section-heading"><p class="eyebrow">What this is not</p><h2>We'd rather you trust the parts that work.</h2></div>
           <ul class="limits-list">
