@@ -28,7 +28,7 @@ def test_current_plan_entities_are_defined_in_xano_workspace() -> None:
 
 
 def test_transition_is_guarded_idempotent_and_audited() -> None:
-    source = (WORKSPACE / "function" / "before" / "00_transition.xs").read_text(encoding="utf-8")
+    source = (WORKSPACE / "function" / "before_transition.xs").read_text(encoding="utf-8")
     assert "Encounter state transition is not allowed" in source
     assert "if ($is_retry == false)" in source
     assert "db.add audit_event" in source
@@ -37,9 +37,9 @@ def test_transition_is_guarded_idempotent_and_audited() -> None:
 
 
 def test_evaluate_route_uses_the_shared_deterministic_gate() -> None:
-    route = (WORKSPACE / "api" / "before" / "encounters" / "evaluate_POST.xs").read_text(encoding="utf-8")
-    evaluator = (WORKSPACE / "function" / "before" / "02_evaluate_encounter.xs").read_text(encoding="utf-8")
-    gate = (WORKSPACE / "function" / "before" / "01_gate.xs").read_text(encoding="utf-8")
+    route = (WORKSPACE / "api" / "time_out_public_api" / "v_1" / "encounters" / "encounter_id" / "evaluate_POST.xs").read_text(encoding="utf-8")
+    evaluator = (WORKSPACE / "function" / "before_v_1_evaluate_encounter.xs").read_text(encoding="utf-8")
+    gate = (WORKSPACE / "function" / "before_v_1_gate.xs").read_text(encoding="utf-8")
 
     assert 'function.run before_v1_evaluate_encounter' in route
     assert 'function.run before_v1_gate' in evaluator
@@ -61,15 +61,16 @@ def test_evaluate_route_uses_the_shared_deterministic_gate() -> None:
 
 
 def test_required_encounter_rest_surface_exists() -> None:
-    encounters = WORKSPACE / "api" / "before" / "encounters"
+    encounters = WORKSPACE / "api" / "time_out_public_api" / "v_1"
     expected = {
-        "create_POST.xs",
+        "encounters_POST.xs",   # create
         "evidence_POST.xs",
         "evaluate_POST.xs",
         "remediate_POST.xs",
         "rerun_POST.xs",
+        "encounter_id_GET.xs",
     }
-    assert {path.name for path in encounters.glob("*.xs")} >= expected
+    assert {path.name for path in encounters.rglob("*.xs")} >= expected
 
 
 def test_hosted_site_targets_xano_not_localhost() -> None:

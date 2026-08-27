@@ -144,10 +144,10 @@
     "status": "RESOLVED",
     "reason": "Required product lot field is low-confidence",
     "source_ref": "fixtures/documents/05-product-packaging-low-confidence.json",
-    "created_at": "2026-08-27T04:34:55.671714+00:00",
+    "created_at": "2026-08-27T05:35:55.251409+00:00",
     "resolution": "Lot confirmed from synthetic source document",
     "resolved_by": "Medical Director",
-    "resolved_at": "2026-08-27T04:34:55.671714+00:00"
+    "resolved_at": "2026-08-27T05:35:55.253422+00:00"
    },
    {
     "id": "SYN-REVIEW-CONSENT-SYN-ENC-BLOCKED-002",
@@ -157,9 +157,9 @@
     "status": "RESOLVED",
     "reason": "Both treatment parties must sign the generated Doctavian consent",
     "source_ref": "SYN-ENVELOPE-CONSENT-001",
-    "created_at": "2026-08-27T04:34:55.673710+00:00",
+    "created_at": "2026-08-27T05:35:55.261456+00:00",
     "resolved_by": "Doctavian Signature Webhook",
-    "resolved_at": "2026-08-27T04:34:55.674710+00:00"
+    "resolved_at": "2026-08-27T05:35:55.262126+00:00"
    },
    {
     "id": "SYN-REVIEW-COMPREHENSION-1-SYN-ENC-BLOCKED-002",
@@ -169,9 +169,9 @@
     "status": "RESOLVED",
     "reason": "Teach-back did not meet the versioned threshold or was low-confidence",
     "source_ref": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
-    "created_at": "2026-08-27T04:34:55.674710+00:00",
+    "created_at": "2026-08-27T05:35:55.263636+00:00",
     "resolved_by": "Injector",
-    "resolved_at": "2026-08-27T04:34:55.675713+00:00"
+    "resolved_at": "2026-08-27T05:35:55.265173+00:00"
    },
    {
     "id": "SYN-REVIEW-ALERT-SYN-ENC-BLOCKED-002",
@@ -181,10 +181,10 @@
     "status": "RESOLVED",
     "reason": "A live-data candidate may be material to the prepared encounter",
     "source_ref": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
-    "created_at": "2026-08-27T04:34:55.679739+00:00",
+    "created_at": "2026-08-27T05:35:55.370428+00:00",
     "resolution": "DISMISSED",
     "resolved_by": "Medical Director",
-    "resolved_at": "2026-08-27T04:34:55.680750+00:00"
+    "resolved_at": "2026-08-27T05:35:55.382007+00:00"
    }
   ],
   "alert_candidates": [
@@ -234,15 +234,15 @@
     {
      "role": "Patient",
      "status": "SIGNED",
-     "signed_at": "2026-08-27T04:34:55.674710+00:00"
+     "signed_at": "2026-08-27T05:35:55.262126+00:00"
     },
     {
      "role": "Injector",
      "status": "SIGNED",
-     "signed_at": "2026-08-27T04:34:55.674710+00:00"
+     "signed_at": "2026-08-27T05:35:55.262126+00:00"
     }
    ],
-   "signed_at": "2026-08-27T04:34:55.674710+00:00"
+   "signed_at": "2026-08-27T05:35:55.262126+00:00"
   },
   "comprehension": {
    "question_set_version": "TX-NEUROTOXIN-TEACHBACK-1",
@@ -264,42 +264,62 @@
    "threshold": 2,
    "confidence": "HIGH",
    "passed": true,
-   "recorded_at": "2026-08-27T04:34:55.675713+00:00"
+   "recorded_at": "2026-08-27T05:35:55.265173+00:00"
   },
   "baseline": {
    "vendor": "Perfect Corp YouCam",
    "capture_id": "SYN-BASELINE-001",
    "mode": "SD",
    "concerns": {
-    "acne": 12,
-    "dark_circle": 22,
-    "eye_bag": 14,
+    "radiance": 78,
+    "pore": 68,
+    "oiliness": 64,
+    "moisture": 72,
+    "redness": 78,
+    "texture": 77,
     "firmness": 76,
-    "moisture": 61,
-    "oiliness": 28,
-    "pores": 19,
-    "radiance": 72,
-    "redness": 16,
-    "spots": 18,
-    "texture": 31,
-    "uneven_tone": 23,
-    "wrinkles": 24,
-    "sensitivity": 11
+    "wrinkle": 77,
+    "acne": 92,
+    "droopy_lower_eyelid": 70,
+    "eye_bag": 70,
+    "droopy_upper_eyelid": 83
    },
    "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
    "vto_used": false,
    "boundary": "Baseline and communication aid only. Not diagnosis.",
-   "overall_score": 68.0,
-   "skin_age": 41,
+   "overall_score": 75.4,
+   "skin_age": 43,
    "mask_refs": [
+    "acne",
+    "droopy_lower_eyelid",
+    "droopy_upper_eyelid",
+    "eye_bag",
+    "firmness",
+    "moisture",
+    "oiliness",
+    "pore",
+    "radiance",
+    "redness",
+    "texture",
+    "wrinkle"
+   ],
+   "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+   "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg",
+   "recorded_at": "2026-08-27T05:34:59Z",
+   "actions": [
     "wrinkle",
     "texture",
     "pore",
     "redness",
-    "spots"
-   ],
-   "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
-   "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg"
+    "oiliness",
+    "eye_bag",
+    "firmness",
+    "acne",
+    "moisture",
+    "radiance",
+    "droopy_upper_eyelid",
+    "droopy_lower_eyelid"
+   ]
   },
   "evidence_record": {
    "vendor": "Foxit PDF Services + eSign",
@@ -321,7 +341,7 @@
    "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
    "signed_by_role": "Medical Director",
    "status": "SIGNED",
-   "signed_at": "2026-08-27T04:34:55.678231+00:00"
+   "signed_at": "2026-08-27T05:35:55.320786+00:00"
   },
   "receipt": {
    "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
@@ -338,17 +358,17 @@
     "nutrient": "07cdea71d017be2ab81353ed32d4b8c2715270de47d09f532ecc6be53b80b509",
     "serpapi": "31230256234f866afa38ee1c09e623c9c1b9d2713748332bd20200c4bbd83f0b",
     "doctavian": "104a040c28db4d2c5315fe694a560d7b1bdeaafb3759b10cf47a45993b0ebf04",
-    "perfectcorp": "84861bbf6eac1294609136577836017b1091a731496ec08cb04a225bb407005f",
+    "perfectcorp": "26e2ac365b744703b1f87257168f32cf9cb0e2ac02f5109cc22951af6abffa8f",
     "foxit": "dc62275f0c5e3259f307545c50ad200d07f4e97ab8f56759789dc3287d426909",
     "namecom": "06dd2ccf8d264064dc053e99e02c1fcd124e90f5f9711724509bc1d5dc80c878"
    },
    "sealed_at": "2026-08-24T20:00:00+00:00",
-   "receipt_hash": "0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+   "receipt_hash": "dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab",
    "dns_verification": {
     "vendor": "name.com CORE sandbox",
     "domain": "timeout-receipts-demo.com",
-    "txt_name": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219",
-    "txt_value": "before-receipt-v1 sha256=0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+    "txt_name": "_before.syn-receipt-syn-enc-blocked-002.dbb4241ce3e2",
+    "txt_value": "before-receipt-v1 sha256=dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab",
     "verified_through": "seeded offline replay shaped from the name.com sandbox API",
     "mutable": true,
     "operations": [
@@ -360,7 +380,7 @@
     ],
     "published": true,
     "matches": true,
-    "fqdn": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219.timeout-receipts-demo.com.",
+    "fqdn": "_before.syn-receipt-syn-enc-blocked-002.dbb4241ce3e2.timeout-receipts-demo.com.",
     "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary."
    },
    "verification_path": "/receipt/SYN-RECEIPT-SYN-ENC-BLOCKED-002"
@@ -375,7 +395,7 @@
     "actor_role": "Clinic Operator",
     "reason": "Synthetic encounter seeded",
     "payload_hash": "aea82b8ae8b4d9f868d08ecff83982f88efd0608725f09fc44b9ea025bcb8bb0",
-    "created_at": "2026-08-27T04:34:55.669703+00:00"
+    "created_at": "2026-08-27T05:35:55.220598+00:00"
    },
    {
     "id": "SYN-AUDIT-002-SYN-ENC-BLOCKED-002",
@@ -386,7 +406,7 @@
     "actor_role": "Deterministic Gate",
     "reason": "Pre-procedure safety determination for human review",
     "payload_hash": "26d5816461e10de790e6687a9d7105de9924009bd98af24965014d855590e18c",
-    "created_at": "2026-08-27T04:34:55.669703+00:00"
+    "created_at": "2026-08-27T05:35:55.229101+00:00"
    },
    {
     "id": "SYN-AUDIT-003-SYN-ENC-BLOCKED-002",
@@ -397,7 +417,7 @@
     "actor_role": "Deterministic Gate",
     "reason": "One or more deterministic checks blocked the safety record",
     "payload_hash": "26d5816461e10de790e6687a9d7105de9924009bd98af24965014d855590e18c",
-    "created_at": "2026-08-27T04:34:55.669703+00:00"
+    "created_at": "2026-08-27T05:35:55.229101+00:00"
    },
    {
     "id": "SYN-AUDIT-004-SYN-ENC-BLOCKED-002",
@@ -408,7 +428,7 @@
     "actor_role": "Medical Director",
     "reason": "Documented remediation attached; source fixture remains unchanged",
     "payload_hash": "984671e8c2d01235eebc7cbd868b9ce49dae96f07d684b36ae8ab6ec983f9bbb",
-    "created_at": "2026-08-27T04:34:55.670712+00:00"
+    "created_at": "2026-08-27T05:35:55.235642+00:00"
    },
    {
     "id": "SYN-AUDIT-005-SYN-ENC-BLOCKED-002",
@@ -419,7 +439,7 @@
     "actor_role": "Deterministic Gate",
     "reason": "Pre-procedure safety determination for human review",
     "payload_hash": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
-    "created_at": "2026-08-27T04:34:55.670712+00:00"
+    "created_at": "2026-08-27T05:35:55.238166+00:00"
    },
    {
     "id": "SYN-AUDIT-006-SYN-ENC-BLOCKED-002",
@@ -430,7 +450,7 @@
     "actor_role": "Nutrient DWS",
     "reason": "Low-confidence required field routed to Medical Director",
     "payload_hash": "35d945f244f4359829cfeca3f2198581ac7e63da0f8f29ac111c787cb25c9ab8",
-    "created_at": "2026-08-27T04:34:55.671714+00:00"
+    "created_at": "2026-08-27T05:35:55.251409+00:00"
    },
    {
     "id": "SYN-AUDIT-007-SYN-ENC-BLOCKED-002",
@@ -440,8 +460,8 @@
     "to_state": "EVIDENCE_PENDING",
     "actor_role": "Medical Director",
     "reason": "Named human resolved the evidence uncertainty",
-    "payload_hash": "293963d2e5e3a778c2595a378959417a6ff64b09132b65e10d7012bf3301b7e1",
-    "created_at": "2026-08-27T04:34:55.671714+00:00"
+    "payload_hash": "bbcdb28087cf224bda25221d650ae53178d89ef608e99a96e0efe3fd3702cd4c",
+    "created_at": "2026-08-27T05:35:55.253422+00:00"
    },
    {
     "id": "SYN-AUDIT-008-SYN-ENC-BLOCKED-002",
@@ -452,7 +472,7 @@
     "actor_role": "Deterministic Gate",
     "reason": "Pre-procedure safety determination for human review",
     "payload_hash": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
-    "created_at": "2026-08-27T04:34:55.672710+00:00"
+    "created_at": "2026-08-27T05:35:55.255474+00:00"
    },
    {
     "id": "SYN-AUDIT-009-SYN-ENC-BLOCKED-002",
@@ -463,7 +483,7 @@
     "actor_role": "Doctavian",
     "reason": "Generated consent sent; progression pauses until patient and injector signatures are recorded",
     "payload_hash": "e86a765bdf62431033d25f668aeab8c4fe7b1b89d9e312f035a30ba53339b1dd",
-    "created_at": "2026-08-27T04:34:55.673710+00:00"
+    "created_at": "2026-08-27T05:35:55.261456+00:00"
    },
    {
     "id": "SYN-AUDIT-010-SYN-ENC-BLOCKED-002",
@@ -473,8 +493,8 @@
     "to_state": "CONSENT_COMPILED",
     "actor_role": "Doctavian Signature Webhook",
     "reason": "Doctavian recorded both patient and injector signatures; medical director attestation remains separate",
-    "payload_hash": "44ce3a32969f1953dc841e5ffc72f8ee3bb969899847e764c5bc9e31bc5f90c5",
-    "created_at": "2026-08-27T04:34:55.674710+00:00"
+    "payload_hash": "eb998c20b96e45f8b11a55c96d68e79618208fa918977066600bb7ab54e10e1f",
+    "created_at": "2026-08-27T05:35:55.262126+00:00"
    },
    {
     "id": "SYN-AUDIT-011-SYN-ENC-BLOCKED-002",
@@ -484,8 +504,8 @@
     "to_state": "HUMAN_REVIEW",
     "actor_role": "Teach-back Gate",
     "reason": "Failed or uncertain teach-back requires explanation and re-ask",
-    "payload_hash": "a451477986b66c795c9ab0ffcd0620bf89de647651baba4b8470c8f3b53e886b",
-    "created_at": "2026-08-27T04:34:55.674710+00:00"
+    "payload_hash": "8dff9ddee5014042cb9aa24f606f22f28e304a4eb76e9b66401fa7d6fab8c2ce",
+    "created_at": "2026-08-27T05:35:55.263636+00:00"
    },
    {
     "id": "SYN-AUDIT-012-SYN-ENC-BLOCKED-002",
@@ -495,8 +515,8 @@
     "to_state": "CONSENT_COMPILED",
     "actor_role": "Injector",
     "reason": "Risks re-explained and teach-back passed",
-    "payload_hash": "ea1530d93c3d1a579758c7e777e3b5fe54416b7dcb07430ac4fb9d485497510c",
-    "created_at": "2026-08-27T04:34:55.675713+00:00"
+    "payload_hash": "019c0515964a907fa09cf0c1e4f6a16364bec8a2a3225d81362e36b5b73956f2",
+    "created_at": "2026-08-27T05:35:55.265173+00:00"
    },
    {
     "id": "SYN-AUDIT-013-SYN-ENC-BLOCKED-002",
@@ -506,8 +526,8 @@
     "to_state": "BASELINE_CAPTURED",
     "actor_role": "Clinic Operator",
     "reason": "Standardized SD baseline captured; not diagnosis",
-    "payload_hash": "377c255864021d2f4e331643d74601b7fdb43d9819f5349957cb181940d0d621",
-    "created_at": "2026-08-27T04:34:55.677221+00:00"
+    "payload_hash": "64156c57e81093b7058c7bfe0f9854d9826477cb5224f0bd226e05ff4508b3a7",
+    "created_at": "2026-08-27T05:35:55.271244+00:00"
    },
    {
     "id": "SYN-AUDIT-014-SYN-ENC-BLOCKED-002",
@@ -518,7 +538,7 @@
     "actor_role": "Foxit Assembly Agent",
     "reason": "Reversible assembly complete; agent stopped before human signature",
     "payload_hash": "cddabcc512c660ef987712dbf12bd5715ea894a350f349857b92efc5d3314fe0",
-    "created_at": "2026-08-27T04:34:55.678231+00:00"
+    "created_at": "2026-08-27T05:35:55.312506+00:00"
    },
    {
     "id": "SYN-AUDIT-015-SYN-ENC-BLOCKED-002",
@@ -528,8 +548,8 @@
     "to_state": "READY_FOR_PROCEDURE",
     "actor_role": "Medical Director",
     "reason": "Human eSign completed at the irreversible boundary",
-    "payload_hash": "7d78c6ce11176d483b9e8ac97c067bbdf05b167889555ea36eb229f68f00374f",
-    "created_at": "2026-08-27T04:34:55.678231+00:00"
+    "payload_hash": "18e3449739b69b6f10e352f9c92fc84bcc75723a3ecfb86cc88a1d186167a902",
+    "created_at": "2026-08-27T05:35:55.322296+00:00"
    },
    {
     "id": "SYN-AUDIT-016-SYN-ENC-BLOCKED-002",
@@ -540,7 +560,7 @@
     "actor_role": "SerpApi",
     "reason": "Candidate only; no automated conclusion",
     "payload_hash": "55bb6fce73f5b114e585a5918eb4464e045152b5257a619db0fd511ba4a5a959",
-    "created_at": "2026-08-27T04:34:55.679739+00:00"
+    "created_at": "2026-08-27T05:35:55.370428+00:00"
    },
    {
     "id": "SYN-AUDIT-017-SYN-ENC-BLOCKED-002",
@@ -550,8 +570,8 @@
     "to_state": "READY_FOR_PROCEDURE",
     "actor_role": "Medical Director",
     "reason": "Named human dismissed the search candidate",
-    "payload_hash": "c02ff7955b753bb7f26fe1816b121fce66ef25e7a4048c7b3ef08b1d9e518960",
-    "created_at": "2026-08-27T04:34:55.680750+00:00"
+    "payload_hash": "7275856b4cca468624e6508cc6062cd3e10f8389d9c52e71693f5f044d498767",
+    "created_at": "2026-08-27T05:35:55.382007+00:00"
    },
    {
     "id": "SYN-AUDIT-018-SYN-ENC-BLOCKED-002",
@@ -561,8 +581,8 @@
     "to_state": "SEALED",
     "actor_role": "Time-Out Receipt Service",
     "reason": "This receipt records which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.",
-    "payload_hash": "df878498d9fb225b7e3d58887d8af71bd8bc3e1583ebd5016906b3a6c5d17221",
-    "created_at": "2026-08-27T04:34:55.684752+00:00"
+    "payload_hash": "d5894a1cd4104f02b7375b79c318af513c99482c847f31a5b734b4aff1f5a315",
+    "created_at": "2026-08-27T05:35:55.398782+00:00"
    }
   ]
  },
@@ -1030,15 +1050,15 @@
      {
       "role": "Patient",
       "status": "SIGNED",
-      "signed_at": "2026-08-27T04:34:55.674710+00:00"
+      "signed_at": "2026-08-27T05:35:55.262126+00:00"
      },
      {
       "role": "Injector",
       "status": "SIGNED",
-      "signed_at": "2026-08-27T04:34:55.674710+00:00"
+      "signed_at": "2026-08-27T05:35:55.262126+00:00"
      }
     ],
-    "signed_at": "2026-08-27T04:34:55.674710+00:00"
+    "signed_at": "2026-08-27T05:35:55.262126+00:00"
    }
   },
   {
@@ -1063,7 +1083,7 @@
     "threshold": 2,
     "confidence": "HIGH",
     "passed": false,
-    "recorded_at": "2026-08-27T04:34:55.674710+00:00"
+    "recorded_at": "2026-08-27T05:35:55.263636+00:00"
    }
   },
   {
@@ -1088,7 +1108,7 @@
     "threshold": 2,
     "confidence": "HIGH",
     "passed": true,
-    "recorded_at": "2026-08-27T04:34:55.675713+00:00"
+    "recorded_at": "2026-08-27T05:35:55.265173+00:00"
    }
   },
   {
@@ -1098,35 +1118,55 @@
     "capture_id": "SYN-BASELINE-001",
     "mode": "SD",
     "concerns": {
-     "acne": 12,
-     "dark_circle": 22,
-     "eye_bag": 14,
+     "radiance": 78,
+     "pore": 68,
+     "oiliness": 64,
+     "moisture": 72,
+     "redness": 78,
+     "texture": 77,
      "firmness": 76,
-     "moisture": 61,
-     "oiliness": 28,
-     "pores": 19,
-     "radiance": 72,
-     "redness": 16,
-     "spots": 18,
-     "texture": 31,
-     "uneven_tone": 23,
-     "wrinkles": 24,
-     "sensitivity": 11
+     "wrinkle": 77,
+     "acne": 92,
+     "droopy_lower_eyelid": 70,
+     "eye_bag": 70,
+     "droopy_upper_eyelid": 83
     },
     "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
     "vto_used": false,
     "boundary": "Baseline and communication aid only. Not diagnosis.",
-    "overall_score": 68.0,
-    "skin_age": 41,
+    "overall_score": 75.4,
+    "skin_age": 43,
     "mask_refs": [
+     "acne",
+     "droopy_lower_eyelid",
+     "droopy_upper_eyelid",
+     "eye_bag",
+     "firmness",
+     "moisture",
+     "oiliness",
+     "pore",
+     "radiance",
+     "redness",
+     "texture",
+     "wrinkle"
+    ],
+    "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+    "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg",
+    "recorded_at": "2026-08-27T05:34:59Z",
+    "actions": [
      "wrinkle",
      "texture",
      "pore",
      "redness",
-     "spots"
-    ],
-    "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
-    "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg"
+     "oiliness",
+     "eye_bag",
+     "firmness",
+     "acne",
+     "moisture",
+     "radiance",
+     "droopy_upper_eyelid",
+     "droopy_lower_eyelid"
+    ]
    }
   },
   {
@@ -1154,7 +1194,7 @@
     "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
     "signed_by_role": "Medical Director",
     "status": "SIGNED",
-    "signed_at": "2026-08-27T04:34:55.678231+00:00"
+    "signed_at": "2026-08-27T05:35:55.320786+00:00"
    }
   },
   {
@@ -1184,10 +1224,10 @@
     "status": "RESOLVED",
     "reason": "A live-data candidate may be material to the prepared encounter",
     "source_ref": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
-    "created_at": "2026-08-27T04:34:55.679739+00:00",
+    "created_at": "2026-08-27T05:35:55.370428+00:00",
     "resolution": "DISMISSED",
     "resolved_by": "Medical Director",
-    "resolved_at": "2026-08-27T04:34:55.680750+00:00"
+    "resolved_at": "2026-08-27T05:35:55.382007+00:00"
    }
   },
   {
@@ -1207,17 +1247,17 @@
      "nutrient": "07cdea71d017be2ab81353ed32d4b8c2715270de47d09f532ecc6be53b80b509",
      "serpapi": "31230256234f866afa38ee1c09e623c9c1b9d2713748332bd20200c4bbd83f0b",
      "doctavian": "104a040c28db4d2c5315fe694a560d7b1bdeaafb3759b10cf47a45993b0ebf04",
-     "perfectcorp": "84861bbf6eac1294609136577836017b1091a731496ec08cb04a225bb407005f",
+     "perfectcorp": "26e2ac365b744703b1f87257168f32cf9cb0e2ac02f5109cc22951af6abffa8f",
      "foxit": "dc62275f0c5e3259f307545c50ad200d07f4e97ab8f56759789dc3287d426909",
      "namecom": "06dd2ccf8d264064dc053e99e02c1fcd124e90f5f9711724509bc1d5dc80c878"
     },
     "sealed_at": "2026-08-24T20:00:00+00:00",
-    "receipt_hash": "0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+    "receipt_hash": "dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab",
     "dns_verification": {
      "vendor": "name.com CORE sandbox",
      "domain": "timeout-receipts-demo.com",
-     "txt_name": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219",
-     "txt_value": "before-receipt-v1 sha256=0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+     "txt_name": "_before.syn-receipt-syn-enc-blocked-002.dbb4241ce3e2",
+     "txt_value": "before-receipt-v1 sha256=dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab",
      "verified_through": "seeded offline replay shaped from the name.com sandbox API",
      "mutable": true,
      "operations": [
@@ -1229,7 +1269,7 @@
      ],
      "published": true,
      "matches": true,
-     "fqdn": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219.timeout-receipts-demo.com.",
+     "fqdn": "_before.syn-receipt-syn-enc-blocked-002.dbb4241ce3e2.timeout-receipts-demo.com.",
      "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary."
     },
     "verification_path": "/receipt/SYN-RECEIPT-SYN-ENC-BLOCKED-002"
@@ -1237,6 +1277,6 @@
   }
  ],
  "offline": true,
- "recorded_at": "2026-08-26",
- "replay_note": "Sponsor steps replay cached live responses recorded 2026-08-26. The Gate, remediation, and audit log run live on Xano."
+ "recorded_at": "2026-08-27",
+ "replay_note": "Sponsor steps replay cached live responses (Perfect Corp baseline recorded 2026-08-27; others 2026-08-26). The Gate, remediation, and audit log run live on Xano."
 }

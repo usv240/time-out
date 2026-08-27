@@ -1,0 +1,50 @@
+{
+ "concerns": {
+  "radiance": 78,
+  "pore": 68,
+  "oiliness": 64,
+  "moisture": 72,
+  "redness": 78,
+  "texture": 77,
+  "firmness": 76,
+  "wrinkle": 77,
+  "acne": 92,
+  "droopy_lower_eyelid": 70,
+  "eye_bag": 70,
+  "droopy_upper_eyelid": 83
+ },
+ "overall": 75.41666666666667,
+ "skin_age": 43,
+ "masks": [
+  "acne",
+  "droopy_lower_eyelid",
+  "droopy_upper_eyelid",
+  "eye_bag",
+  "firmness",
+  "moisture",
+  "oiliness",
+  "pore",
+  "radiance",
+  "redness",
+  "texture",
+  "wrinkle"
+ ],
+ "recorded_at": "2026-08-27T05:34:59Z",
+ "face": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+ "mode": "SD",
+ "actions": [
+  "wrinkle",
+  "texture",
+  "pore",
+  "redness",
+  "oiliness",
+  "eye_bag",
+  "firmness",
+  "acne",
+  "moisture",
+  "radiance",
+  "droopy_upper_eyelid",
+  "droopy_lower_eyelid"
+ ],
+ "boundary": "Baseline and communication aid only. Not diagnosis."
+}

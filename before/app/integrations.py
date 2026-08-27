@@ -91,6 +91,8 @@ class BaselineResult:
     mask_refs: list[str] = field(default_factory=list)
     source_ref: str = ""
     image_ref: str = ""
+    recorded_at: str = ""
+    actions: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -499,13 +501,15 @@ class PerfectCorpClient(CachedAdapter[BaselineResult]):
         "vendor": "Perfect Corp YouCam",
         "capture_id": "SYN-BASELINE-001",
         "mode": "SD",
-        "concerns": {"acne": 12, "dark_circle": 22, "eye_bag": 14, "firmness": 76, "moisture": 61, "oiliness": 28, "pores": 19, "radiance": 72, "redness": 16, "spots": 18, "texture": 31, "uneven_tone": 23, "wrinkles": 24, "sensitivity": 11},
+        "recorded_at": "2026-08-27T05:34:59Z",
+        "actions": ["wrinkle", "texture", "pore", "redness", "oiliness", "eye_bag", "firmness", "acne", "moisture", "radiance", "droopy_upper_eyelid", "droopy_lower_eyelid"],
+        "concerns": {"radiance": 78, "pore": 68, "oiliness": 64, "moisture": 72, "redness": 78, "texture": 77, "firmness": 76, "wrinkle": 77, "acne": 92, "droopy_lower_eyelid": 70, "eye_bag": 70, "droopy_upper_eyelid": 83},
         "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
         "vto_used": False,
         "boundary": "Baseline and communication aid only. Not diagnosis.",
-        "overall_score": 68.0,
-        "skin_age": 41,
-        "mask_refs": ["wrinkle", "texture", "pore", "redness", "spots"],
+        "overall_score": 75.4,
+        "skin_age": 43,
+        "mask_refs": ["acne", "droopy_lower_eyelid", "droopy_upper_eyelid", "eye_bag", "firmness", "moisture", "oiliness", "pore", "radiance", "redness", "texture", "wrinkle"],
         "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
         "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg",
     }

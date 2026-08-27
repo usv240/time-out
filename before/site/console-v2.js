@@ -87,7 +87,7 @@ const ATTACKS = [
     patch: { bls_current: false, supervisor_onsite: false, supervisor_immediately_available: false, physician_emergency_appointment_available: false } },
 ];
 
-const MASK_FILES = new Set(["wrinkle","texture","pore","redness","firmness"]);
+const MASK_FILES = new Set(["acne", "droopy_lower_eyelid", "droopy_upper_eyelid", "eye_bag", "firmness", "moisture", "oiliness", "pore", "radiance", "redness", "texture", "wrinkle"]);
 function maskSrc(ref) {
   if (!ref) return null;
   if (String(ref).includes("/")) return ref;                       // already a path

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import json
+
 import unittest
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
 
 from before.app.integrations import (
     IntegrationError,
@@ -44,10 +48,12 @@ class IntegrationBoundaryTests(unittest.TestCase):
         self.assertEqual("CANDIDATE", result.status)
         self.assertIn("human", result.boundary.lower())
 
-    def test_perfect_corp_uses_sd_and_fourteen_concerns(self):
+    def test_perfect_corp_uses_sd_and_matches_the_live_run(self):
         result = PerfectCorpClient().run()
         self.assertEqual("SD", result.mode)
-        self.assertEqual(14, len(result.concerns))
+        live = json.loads((ROOT / "fixtures" / "perfectcorp-live-run.json").read_text(encoding="utf-8"))
+        self.assertEqual(sorted(live["concerns"]), sorted(result.concerns))  # real API output, not invented names
+        self.assertEqual(12, len(result.concerns))
         self.assertIn("Not diagnosis", result.boundary)
 
     def test_namecom_contract_covers_four_surfaces_and_limits(self):
