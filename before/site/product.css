@@ -281,7 +281,7 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
 .page-hero{ padding-block: 36px 16px !important; }
 
 /* headings and lead can run wider than body prose without hurting readability */
-.section h2, .surface-section h2{ max-width: 26ch; }
+.section h2, .surface-section h2{ max-width: 38ch; }
 .section > .shell > .lead, .section.shell > .lead,
 .surface-section > .shell > .lead{ max-width: 76ch; }
 
@@ -308,3 +308,18 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
   color: var(--ink-3); text-decoration: none; white-space: nowrap; padding: .2rem 0; border-bottom: 2px solid transparent; }
 .section-nav a:hover, .section-nav a[aria-current="true"]{ color: var(--accent-ink); border-bottom-color: var(--accent); }
 @media (max-width: 48rem){ .section-nav{ display: none; } }
+
+/* hero: tighter stack, and the check list is compact before it runs */
+.hero .eyebrow{ margin-bottom: .35rem; }
+.hero h1{ margin-bottom: .5rem; }
+.hero .lead{ margin-bottom: 1.25rem; max-width: 62ch; }
+.check-row{ padding-block: .42rem !important; }
+.recorded-banner{ font-size: var(--step--1); padding: .5rem .9rem; }
+
+/* pull the verdict up toward the fold: the refusal is the point of the page */
+.hero{ padding-block: 36px 28px !important; }
+.hero h1{ margin-bottom: .4rem; }
+.hero .lead{ margin-bottom: .9rem; }
+.hero .encounter-card, .hero .demo-card{ margin-top: .5rem; }
+.check-row{ padding-block: .34rem !important; }
+.recorded-banner.is-done{ background: var(--accent-wash); color: var(--accent-ink); }

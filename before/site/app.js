@@ -40,6 +40,9 @@ function populateBlockedResult(decision) {
 }
 
 async function runEvaluation() {
+  const banner = document.querySelector("#run-banner");
+  const startedAt = performance.now();
+  if (banner) banner.innerHTML = '<span aria-hidden="true">●</span> Calling the live Gate on Xano…';
   runButton.disabled = true;
   runButton.textContent = "Evaluating evidence…";
   try {
@@ -140,3 +143,38 @@ for (const link of navLinks.querySelectorAll("a")) {
     navLinks.classList.remove("is-open");
   });
 }
+
+
+// Run the check automatically once the hero is in view. A judge should see the
+// refusal happen, not have to discover a button. Respects reduced-motion by
+// simply resolving faster; the network call is identical either way.
+(() => {
+  const hero = document.querySelector("#run-check")?.closest("section");
+  if (!hero || !("IntersectionObserver" in window)) return;
+  let fired = false;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting || fired) continue;
+      fired = true; io.disconnect();
+      const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 550;
+      setTimeout(() => runEvaluation(), delay);
+    }
+  }, { threshold: 0.35 });
+  io.observe(hero);
+})();
+
+
+// Once the checks have resolved, say what actually happened rather than leaving
+// the "calling" state on screen.
+(() => {
+  const banner = document.querySelector("#run-banner");
+  if (!banner) return;
+  const done = () => [...document.querySelectorAll(".check-status")].every(e => !/WAITING/i.test(e.textContent));
+  const io = new MutationObserver(() => {
+    if (!done()) return;
+    io.disconnect();
+    banner.innerHTML = '<span aria-hidden="true">●</span> <strong>Live call to Xano.</strong> Seven checks against the frozen Texas ruleset. Synthetic patient — no real person, clinic, or licence appears anywhere.';
+    banner.classList.add("is-done");
+  });
+  io.observe(document.body, { subtree: true, childList: true, characterData: true });
+})();
