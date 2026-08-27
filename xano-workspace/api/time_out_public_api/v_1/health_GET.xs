@@ -1,5 +1,5 @@
 query "v1/health" verb=GET {
-  api_group = "BEFORE Public API"
+  api_group = "Time-Out Public API"
 
   input {
   }

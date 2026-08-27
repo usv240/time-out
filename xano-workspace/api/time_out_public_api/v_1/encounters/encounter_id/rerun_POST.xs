@@ -5,7 +5,7 @@
 // Compiled after reusable BEFORE functions.
 // Rerun the same Gate only after remediation has returned the encounter to EVIDENCE_PENDING.
 query "v1/encounters/{encounter_id}/rerun" verb=POST {
-  api_group = "BEFORE Public API"
+  api_group = "Time-Out Public API"
 
   input {
     text encounter_id filters=trim
@@ -16,13 +16,17 @@ query "v1/encounters/{encounter_id}/rerun" verb=POST {
       field_name = "public_id"
       field_value = $input.encounter_id
     } as $encounter
+  
     precondition ($encounter != null && $encounter.synthetic) {
       error_type = "notfound"
       error = "Synthetic encounter not found."
     }
-
+  
     function.run before_v1_evaluate_encounter {
-      input = {encounter_id: $encounter.id, actor: "Public synthetic API rerun"}
+      input = {
+        encounter_id: $encounter.id
+        actor       : "Public synthetic API rerun"
+      }
     } as $result
   }
 

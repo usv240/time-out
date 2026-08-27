@@ -158,7 +158,8 @@ MERGE_WORKAROUND_NOTE = (
     "pdf_merge in the TypeScript Foxit MCP server sends `documents` where the PDF "
     "Services API requires `documentInfos` (server returns VALIDATION_ERROR). Merge is "
     "routed through the same host's REST endpoint until upstream fixes the mapping. "
-    "All other operations run through MCP."
+    "All other operations run through MCP. Reported upstream: "
+    "https://github.com/foxitsoftware/foxit-pdf-api-mcp-server/issues/4"
 )
 
 

@@ -5,7 +5,7 @@
 // Compiled after reusable BEFORE functions.
 // Create a synthetic encounter and apply DRAFT -> EVIDENCE_PENDING through the audited state machine.
 query "v1/encounters" verb=POST {
-  api_group = "BEFORE Public API"
+  api_group = "Time-Out Public API"
 
   input {
     int clinic_id

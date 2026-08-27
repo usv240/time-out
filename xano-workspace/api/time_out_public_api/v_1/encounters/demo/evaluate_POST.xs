@@ -5,15 +5,13 @@
 // Compiled after reusable BEFORE functions.
 // One-click public hero. It uses the real persisted state machine and Gate with synthetic evidence.
 query "v1/encounters/demo/evaluate" verb=POST {
-  api_group = "BEFORE Public API"
+  api_group = "Time-Out Public API"
 
   input {
   }
 
   stack {
-    function.run before_v1_demo_evaluate {
-      input = {}
-    } as $result
+    function.run before_v1_demo_evaluate as $result
   }
 
   response = $result

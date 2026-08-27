@@ -5,7 +5,7 @@
 // Compiled after reusable BEFORE functions.
 // Attach a typed, cached document extraction result. Low confidence routes to human review.
 query "v1/encounters/{encounter_id}/evidence" verb=POST {
-  api_group = "BEFORE Public API"
+  api_group = "Time-Out Public API"
 
   input {
     text encounter_id filters=trim
@@ -18,6 +18,7 @@ query "v1/encounters/{encounter_id}/evidence" verb=POST {
     enum review_status {
       values = ["PENDING", "HUMAN_REVIEW", "APPROVED", "REJECTED"]
     }
+  
     text actor? filters=trim
   }
 
@@ -26,16 +27,17 @@ query "v1/encounters/{encounter_id}/evidence" verb=POST {
       field_name = "public_id"
       field_value = $input.encounter_id
     } as $encounter
+  
     precondition ($encounter != null && $encounter.synthetic) {
       error_type = "notfound"
       error = "Synthetic encounter not found."
     }
-
+  
     precondition ($encounter.state == "EVIDENCE_PENDING" || $encounter.state == "DRAFT") {
       error_type = "inputerror"
       error = "Evidence can only be attached while the encounter is DRAFT or EVIDENCE_PENDING."
     }
-
+  
     db.add intake_doc {
       data = {
         created_at   : "now"
@@ -49,7 +51,7 @@ query "v1/encounters/{encounter_id}/evidence" verb=POST {
         review_status: $input.review_status
       }
     } as $document
-
+  
     conditional {
       if ($encounter.state == "DRAFT") {
         function.run before_v1_transition {
@@ -59,12 +61,15 @@ query "v1/encounters/{encounter_id}/evidence" verb=POST {
             actor       : $input.actor
             action      : "evidence_attached"
             reason      : "Typed extraction attached to the synthetic encounter."
-            payload     : {intake_doc_id: $document.id, review_status: $input.review_status}
+            payload     : {
+            intake_doc_id: $document.id
+            review_status: $input.review_status
+          }
           }
         } as $pending_transition
       }
     }
-
+  
     conditional {
       if ($input.review_status == "HUMAN_REVIEW") {
         function.run before_v1_transition {
@@ -79,13 +84,10 @@ query "v1/encounters/{encounter_id}/evidence" verb=POST {
         } as $review_transition
       }
     }
-
+  
     db.get encounter {
-
       field_name = "id"
-
       field_value = $encounter.id
-
     } as $current_encounter
   }
 
