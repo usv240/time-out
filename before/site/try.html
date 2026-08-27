@@ -22,6 +22,16 @@
         <ol class="timeline" id="timeline" aria-live="polite"></ol>
         <a class="button button-primary receipt-link" id="receipt-link" href="#" hidden>Open the patient receipt</a>
 
+
+        <section class="live-now" aria-labelledby="live-title">
+          <p class="eyebrow">Live, right now</p>
+          <h2 id="live-title">Call the sponsor APIs yourself.</h2>
+          <p class="lead">These two buttons run from the Xano backend, not from cached data. Click and watch a third-party API answer in real time.</p>
+          <div class="live-grid">
+            <div><button class="button button-primary" id="live-serp" type="button">Search FDA warning letters now</button><p class="muted">SerpApi, executed by Xano</p><div class="attack-result" id="live-serp-out" hidden></div></div>
+            <div><button class="button button-primary" id="live-dns" type="button">Verify the receipt against DNS now</button><p class="muted">name.com CORE sandbox read-back, executed by Xano</p><div class="attack-result" id="live-dns-out" hidden></div></div>
+          </div>
+        </section>
         <section class="break-it" aria-labelledby="break-title" hidden>
           <p class="eyebrow">Break it yourself</p>
           <h2 id="break-title">Try to get an unsafe procedure through.</h2>

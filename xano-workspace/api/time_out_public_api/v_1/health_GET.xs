@@ -9,7 +9,7 @@ query "v1/health" verb=GET {
 
   response = {
     ok                 : true
-    product            : "BEFORE"
+    product            : "Time-Out"
     scope              : "Texas neurotoxin synthetic sandbox"
     determination_scope: "Pre-procedure safety determination for human review"
   }

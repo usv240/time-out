@@ -362,3 +362,34 @@ if (density) {
 renderEncounters([{ id: "new synthetic encounter", patient_display_name: "Synthetic patient", state: "READY TO RUN" }]);
 renderAttackGrid();
 loadStatic().catch(() => {});
+
+
+// ---------------------------------------------------------------- live sponsor calls
+const RECEIPT_DIGEST = "dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab";
+
+async function liveCall(button, out, path, body, render) {
+  button.disabled = true; const label = button.textContent; button.textContent = "Calling…";
+  out.hidden = false; out.className = "attack-result"; out.textContent = "Waiting for the sponsor API…";
+  try {
+    const r = await fetch(`${V1}${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || "The sponsor API did not answer.");
+    out.className = "attack-result clear"; out.innerHTML = render(d);
+  } catch (e) {
+    out.className = "attack-result review";
+    out.innerHTML = `<p>${escapeHtml(e.message)}</p><p class="muted">The cached result recorded 26 Aug remains on this page — the demo never depends on a third party answering.</p>`;
+  } finally { button.disabled = false; button.textContent = label; }
+}
+
+document.querySelector("#live-serp")?.addEventListener("click", (e) =>
+  liveCall(e.target, document.querySelector("#live-serp-out"), "/live/serpapi-scan", {}, (d) => `
+    <div class="attack-head"><span class="status-pill clear">${d.count} CANDIDATES</span> <span class="src-badge live">LIVE · SerpApi via Xano</span></div>
+    <p class="muted">Query <code>${escapeHtml(d.query)}</code></p>
+    <ul>${(d.candidates || []).map((c) => `<li><a href="${escapeHtml(c.source_url)}" target="_blank" rel="noopener">${escapeHtml(c.title)}</a></li>`).join("")}</ul>
+    <p class="muted">${escapeHtml(d.boundary)}</p>`));
+
+document.querySelector("#live-dns")?.addEventListener("click", (e) =>
+  liveCall(e.target, document.querySelector("#live-dns-out"), "/live/receipt-verify", { digest: RECEIPT_DIGEST }, (d) => `
+    <div class="attack-head"><span class="status-pill ${d.matches ? "clear" : "blocked"}">${d.matches ? "TXT MATCHED" : "NO MATCH"}</span> <span class="src-badge live">LIVE · name.com via Xano</span></div>
+    <p><code>${escapeHtml(d.fqdn || "")}</code></p><p><code>${escapeHtml(d.answer || "")}</code></p>
+    <p class="muted">${escapeHtml(d.caveat)}</p>`));
