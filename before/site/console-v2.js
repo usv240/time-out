@@ -23,6 +23,7 @@ let liveEncounterId = null;
 let heroTimeline = null;
 let foxitRun = null;
 let esignFolder = null;
+let tamperCompare = null;
 
 const STEP_COPY = {
   blocked: ["Gate blocks the encounter", "Missing authority and pre-procedure evidence produces a deterministic hold."],
@@ -181,6 +182,7 @@ function foxitProof() {
     <ol class="tool-calls">${calls}</ol>
     <p><strong>Output</strong> <code>${escapeHtml(foxitRun.output_pdf)}</code> · SHA-256 <code>${escapeHtml((foxitRun.output_sha256 || "").slice(0, 16))}…</code> · 3/3 pages watermarked</p>
     <p class="boundary"><strong>Paused at the boundary.</strong> ${escapeHtml(foxitRun.boundary_note)}</p>
+    ${tamperCompare ? `<div class="tamper-proof"><p class="integration-kicker">TAMPER CHECK — FOXIT PDF-COMPARE</p><p>We altered one line of the sealed record and asked Foxit to compare the two. It found ${tamperCompare.differences.length} difference on page ${tamperCompare.differences[0]?.page} of ${tamperCompare.pages_compared} — the attestation page: <code>${escapeHtml(tamperCompare.differences[0]?.text || "")}</code></p><p class="muted">The receipt fingerprint catches any change; this shows a reviewer <em>where</em> it happened.</p></div>` : ""}
     <p><strong>eSign handoff</strong> — draft folder <code>${escapeHtml(folder.folderId)}</code> for the ${escapeHtml(esignFolder?.signer_role || "Medical Director")}. ${escapeHtml(esignFolder?.mode || "")}</p>
   </section>`;
 }
@@ -236,12 +238,13 @@ async function renderAudit(encounterId) {
 function badgeText(kind) { return kind === "live" ? "LIVE · Xano" : "CACHED"; }
 
 async function loadStatic() {
-  const [hero, foxit, esign] = await Promise.all([
+  const [hero, foxit, esign, tamper] = await Promise.all([
     fetch("/data/hero-timeline.json").then((r) => r.json()),
     fetch("/data/foxit-run.json").then((r) => r.json()).catch(() => null),
     fetch("/data/esign-folder.json").then((r) => r.json()).catch(() => null),
+    fetch("/data/tamper-compare.json").then((r) => r.json()).catch(() => null),
   ]);
-  heroTimeline = hero; foxitRun = foxit; esignFolder = esign;
+  heroTimeline = hero; foxitRun = foxit; esignFolder = esign; tamperCompare = tamper;
 }
 
 async function runHeroPath() {

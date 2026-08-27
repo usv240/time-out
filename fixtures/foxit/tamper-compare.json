@@ -1,0 +1,19 @@
+{
+ "sealed_document_id": "6a903e9f4448d7775c657395",
+ "tampered_document_id": "6a903ea06107c945baaed152",
+ "compare": {
+  "result_document_id": "6a903edaefe54d2a0583aa48",
+  "request_shape": "baseDocument/compareDocument",
+  "via": "REST /api/documents/analyze/pdf-compare \u2014 the MCP tool sends documentId1/documentId2; the API requires baseDocument/compareDocument"
+ },
+ "recorded_at": "2026-08-27T13:43:14Z",
+ "differences": [
+  {
+   "page": 3,
+   "type": "InsertText",
+   "text": "Attestation page altered after sealing"
+  }
+ ],
+ "pages_compared": 3,
+ "finding": "Foxit pdf-compare located the alteration on page 3 of 3 \u2014 the attestation page."
+}
