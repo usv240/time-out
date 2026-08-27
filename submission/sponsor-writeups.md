@@ -103,7 +103,7 @@ In our first live run on a three-page evidence record, 3 of 29 elements fell bel
 
 **A Foxit agent assembles the safety record and stops before the irreversible step.** It starts from the prompt *"assemble the safety record for encounter SYN-ENC-BLOCKED-002"*, merges the three source sections through the Foxit MCP server, watermarks the result *SYNTHETIC — NOT FOR CLINICAL USE*, reads its properties into the manifest, and then **pauses**. The Medical Director's attestation is handed to Foxit eSign as a human action.
 
-**Live status, stated honestly:** PDF Services upload is verified live. The MCP assembly agent is the current work item; the offline reference already performs the assembly, the pause, and the eSign handoff against cached responses.
+**Live status:** the agent runs live. Three `upload_document` calls, `get_pdf_properties`, and `download_document` go through the official Foxit MCP server; merge and watermark are routed through PDF Services REST on the same host because the TypeScript MCP server mis-maps `documents`→`documentInfos` and the watermark `opacity`/`text` fields — both workarounds are recorded in the run log with the reason. The assembled record is watermarked SYNTHETIC on all three pages, and a real eSign draft folder (`folderId 35585692`) exists for the Medical Director. Nobody is emailed until a person chooses `send`.
 
 **The pause is the point.** The agent does everything reversible. A licensed person takes the one action that can't be undone. The treatment-party signatures collected by Doctavian are never reused here.
 

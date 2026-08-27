@@ -26,16 +26,31 @@ def test_perfectcorp_face_provenance_is_digest_bound_and_ui_assets_exist() -> No
 
 
 def test_complete_ui_contract_exposes_baseline_and_dns_proof() -> None:
+    """The hosted pages must only call endpoints that exist on Xano, label every
+    step LIVE or CACHED, and surface the sponsor proofs."""
     console = (ROOT / "before" / "site" / "console-v2.js").read_text(encoding="utf-8")
     receipt = (ROOT / "before" / "site" / "receipt-v2.js").read_text(encoding="utf-8")
-    assert "/v1/demo/run" in console
-    assert "perfect-proof" in console
-    assert "result.image_ref" in console
-    assert "result.overlay_ref" in console
+    # live Gate on a per-visitor encounter; never the local-only /v1/demo/run
+    assert "/encounters/demo/evaluate" in console
+    assert "/v1/demo/run" not in console
+    assert "/v1/receipts/verify" not in receipt
+    # honesty labels on every step
+    assert "LIVE · Xano" in console and "CACHED" in console
+    # sponsor proofs
+    assert "perfect-proof" in console and "result.image_ref" in console and "mask_refs" in console
     assert "dns.matches" in console
-    assert "NAME.COM TXT MATCHED" in receipt
-    assert "Boolean(verification.verified)" in receipt
-    assert "dns.caveat" in receipt
+    assert "foxit-proof" in console and "folderId" in console
+    # break it yourself: real remediate + evaluate, plus reset
+    assert "/remediate" in console and "/evaluate" in console
+    assert "const ATTACKS" in console and "attack-reset" in console
+    # audit log from the live GET
+    assert "audit_events" in console
+    # patient receipt: static committed artifact, bounded language, verification limits
+    assert "/data/receipt.json" in receipt
+    assert "TXT READ-BACK MATCHED" in receipt
+    assert "caveat" in receipt
+    assert "/artifacts/time-out-safety-record.pdf" in receipt
+    assert "What this proves" in receipt
 
 
 def test_offline_hero_receipt_is_repeatable_and_txt_matches_actual_hash() -> None:

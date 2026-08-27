@@ -1,0 +1,1242 @@
+{
+ "encounter": {
+  "id": "SYN-ENC-BLOCKED-002",
+  "fixture_id": "aesthetician-blocked",
+  "patient_display_name": "Ava Chen",
+  "provider_id": "SYN-PROV-RN-002",
+  "procedure": "NEUROTOXIN_INJECTION",
+  "jurisdiction": "TX",
+  "scheduled_on": "2026-08-20",
+  "state": "SEALED",
+  "version": 18,
+  "evidence_overrides": {
+   "delegation_document_present": true,
+   "protocol_signed_and_dated": true,
+   "delegating_physician_active": true,
+   "patient_specific_order_present": true,
+   "order_contains_drug_dose_strength_route": true,
+   "practitioner_patient_relationship_established": true,
+   "adequate_medical_record_present": true,
+   "performer_identity_disclosed": true,
+   "bls_person_present": true,
+   "supervisor_immediately_available": true,
+   "physician_emergency_appointment_available": true
+  },
+  "gate_decision": {
+   "encounter_id": "SYN-ENC-BLOCKED-002",
+   "verdict": "CLEAR",
+   "determination_scope": "Pre-procedure safety determination for human review",
+   "findings": [
+    {
+     "check_id": "provider_license",
+     "status": "PASS",
+     "summary": "Provider licence evidence is active, in-state, and unexpired.",
+     "citation_urls": [
+      "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+     ],
+     "facts": {
+      "state": "TX",
+      "license_status": "ACTIVE",
+      "expires_on": "2027-12-31",
+      "scheduled_on": "2026-08-20",
+      "confidence": "HIGH"
+     }
+    },
+    {
+     "check_id": "authority_pathway",
+     "status": "PASS",
+     "summary": "Delegated-performer training evidence is documented.",
+     "citation_urls": [
+      "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+      "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+     ],
+     "facts": {
+      "credential": "RN",
+      "training_documented": true,
+      "complication_training_documented": true
+     }
+    },
+    {
+     "check_id": "delegation_and_supervision",
+     "status": "PASS",
+     "summary": "Delegation, order, BLS, and availability evidence is complete.",
+     "citation_urls": [
+      "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+      "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+      "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+     ],
+     "facts": {
+      "delegation_required": true,
+      "delegation_document_present": true,
+      "protocol_signed_and_dated": true,
+      "delegating_physician_active": true,
+      "patient_specific_order_present": true,
+      "order_contains_drug_dose_strength_route": true,
+      "supervisor_onsite": false,
+      "supervisor_immediately_available": true,
+      "physician_emergency_appointment_available": true,
+      "bls_person_present": true
+     }
+    },
+    {
+     "check_id": "preprocedure_assessment",
+     "status": "PASS",
+     "summary": "The explicit Chapter 169 pre-procedure evidence is present.",
+     "citation_urls": [
+      "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+     ],
+     "facts": {
+      "practitioner_patient_relationship_established": true,
+      "adequate_medical_record_present": true,
+      "performer_identity_disclosed": true,
+      "good_faith_exam_label_status": "REVIEW"
+     }
+    },
+    {
+     "check_id": "product_lot",
+     "status": "PASS",
+     "summary": "Product lot is verified and has no captured alert.",
+     "citation_urls": [
+      "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+     ],
+     "facts": {
+      "verified": true,
+      "alerted": false,
+      "confidence": "HIGH"
+     }
+    },
+    {
+     "check_id": "comprehension",
+     "status": "PASS",
+     "summary": "Comprehension evidence meets the configured threshold.",
+     "citation_urls": [
+      "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+     ],
+     "facts": {
+      "recorded": true,
+      "score": 4,
+      "threshold": 4,
+      "confidence": "HIGH"
+     }
+    },
+    {
+     "check_id": "disciplinary_status",
+     "status": "PASS",
+     "summary": "Captured disciplinary status is clear.",
+     "citation_urls": [
+      "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+     ],
+     "facts": {
+      "disciplinary_status": "CLEAR"
+     }
+    }
+   ],
+   "rule_snapshot_json": "{\"citations\":{\"bon_aprn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_practice_aprn.asp.html\",\"bon_rn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\",\"occupations_code_157\":\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\",\"tmb_chapter_169\":\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\"},\"comprehension_citations\":[\"https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html\"],\"confidence\":\"HIGH\",\"credential_interpretation_review\":[\"AESTHETICIAN\",\"OTHER\"],\"credential_rule_note\":\"Texas Occupations Code 157.001 and 22 TAC 169.25 use a qualified-and-properly-trained delegation standard, not a closed credential whitelist. A nonmedical title alone is not authority; interaction with that person's other licensing law requires human review.\",\"delegated_path_credentials\":[\"PHYSICIAN_ASSISTANT\",\"APRN\",\"RN\",\"LVN\",\"OTHER_QUALIFIED_TRAINED_DELEGATE\"],\"direct_performer_credentials\":[\"PHYSICIAN\"],\"effective_on\":\"2025-01-09\",\"good_faith_exam_note\":\"Current 22 TAC 169.26 expressly requires a practitioner-patient relationship, an adequate medical record, performer disclosure, BLS presence, and availability. It does not use the phrase good-faith exam in this rule. Do not infer a separate named requirement without counsel review.\",\"jurisdiction\":\"TX\",\"procedure\":\"NEUROTOXIN_INJECTION\",\"product_safety_citations\":[\"https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states\"],\"requires_delegation_doc\":true,\"requires_good_faith_exam\":\"REVIEW\",\"requires_medical_director\":false,\"rn_additional_evidence\":[\"individual_scope_decision\",\"education_knowledge_competence\",\"appropriate_patient_order\",\"drug_dose_strength_route\",\"appropriate_medical_supervision\"],\"rule_id\":\"TX_NEUROTOXIN_2025_01_09\",\"source\":\"Texas Medical Board; Texas Board of Nursing; Texas Occupations Code\",\"supervision_model\":\"ONSITE_OR_IMMEDIATELY_AVAILABLE\",\"verified_at\":\"2026-08-18\",\"written_order_minimum\":[\"delegating_physician_identity\",\"patient_selection_criteria\",\"description_of_appropriate_care\",\"common_complication_serious_injury_and_emergency_procedures\",\"communication_or_feedback_to_physician_or_pa_or_aprn\"]}",
+   "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+   "evaluated_at": "2026-08-24T19:55:00+00:00"
+  },
+  "review_tasks": [
+   {
+    "id": "SYN-REVIEW-NUTRIENT-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "kind": "LOW_CONFIDENCE_EXTRACTION",
+    "assigned_role": "Medical Director",
+    "status": "RESOLVED",
+    "reason": "Required product lot field is low-confidence",
+    "source_ref": "fixtures/documents/05-product-packaging-low-confidence.json",
+    "created_at": "2026-08-27T04:34:55.671714+00:00",
+    "resolution": "Lot confirmed from synthetic source document",
+    "resolved_by": "Medical Director",
+    "resolved_at": "2026-08-27T04:34:55.671714+00:00"
+   },
+   {
+    "id": "SYN-REVIEW-CONSENT-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "kind": "TREATMENT_PARTY_SIGNATURES",
+    "assigned_role": "Patient + Injector",
+    "status": "RESOLVED",
+    "reason": "Both treatment parties must sign the generated Doctavian consent",
+    "source_ref": "SYN-ENVELOPE-CONSENT-001",
+    "created_at": "2026-08-27T04:34:55.673710+00:00",
+    "resolved_by": "Doctavian Signature Webhook",
+    "resolved_at": "2026-08-27T04:34:55.674710+00:00"
+   },
+   {
+    "id": "SYN-REVIEW-COMPREHENSION-1-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "kind": "COMPREHENSION_REMEDIATION",
+    "assigned_role": "Injector",
+    "status": "RESOLVED",
+    "reason": "Teach-back did not meet the versioned threshold or was low-confidence",
+    "source_ref": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "created_at": "2026-08-27T04:34:55.674710+00:00",
+    "resolved_by": "Injector",
+    "resolved_at": "2026-08-27T04:34:55.675713+00:00"
+   },
+   {
+    "id": "SYN-REVIEW-ALERT-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "kind": "ALERT_CANDIDATE",
+    "assigned_role": "Medical Director",
+    "status": "RESOLVED",
+    "reason": "A live-data candidate may be material to the prepared encounter",
+    "source_ref": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
+    "created_at": "2026-08-27T04:34:55.679739+00:00",
+    "resolution": "DISMISSED",
+    "resolved_by": "Medical Director",
+    "resolved_at": "2026-08-27T04:34:55.680750+00:00"
+   }
+  ],
+  "alert_candidates": [
+   {
+    "vendor": "SerpApi",
+    "candidate_id": "SYN-ALERT-001",
+    "query": "site:fda.gov botulinum toxin safety communication",
+    "matched_entity": "EXAMPLETOX - SYNTHETIC ENCOUNTER SCOPE",
+    "source_url": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
+    "published_at": "2026-04-01",
+    "status": "CANDIDATE",
+    "boundary": "Search result only. A named human must confirm or dismiss it.",
+    "queries": [
+     "site:fda.gov botulinum toxin safety communication",
+     "site:tmb.state.tx.us nonsurgical medical cosmetic procedure rules"
+    ]
+   }
+  ],
+  "consent": {
+   "vendor": "Doctavian",
+   "document_id": "SYN-DOC-CONSENT-001",
+   "template_version": "TX-NEUROTOXIN-CONSENT-1",
+   "branches": [
+    "NEUROTOXIN_INJECTION",
+    "DELEGATED_RN",
+    "NO_PATIENT_FLAGS"
+   ],
+   "disclosures": [
+    "temporary effect and alternatives",
+    "material risks",
+    "who will perform the procedure",
+    "unresolved holds"
+   ],
+   "signers": [
+    "Synthetic Patient",
+    "Synthetic Injector"
+   ],
+   "status": "SIGNED",
+   "template_urn": "urn:synthetic:doctavian:template:tx-neurotoxin-consent-1",
+   "data_urn": "urn:synthetic:doctavian:data:syn-enc-clear-001",
+   "generated_document_urn": "urn:synthetic:doctavian:document:syn-doc-consent-001",
+   "envelope_id": "SYN-ENVELOPE-CONSENT-001",
+   "signature_status": "COMPLETED",
+   "boundary": "Patient and injector consent only. Medical director attestation is a separate Foxit event.",
+   "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+   "signatures": [
+    {
+     "role": "Patient",
+     "status": "SIGNED",
+     "signed_at": "2026-08-27T04:34:55.674710+00:00"
+    },
+    {
+     "role": "Injector",
+     "status": "SIGNED",
+     "signed_at": "2026-08-27T04:34:55.674710+00:00"
+    }
+   ],
+   "signed_at": "2026-08-27T04:34:55.674710+00:00"
+  },
+  "comprehension": {
+   "question_set_version": "TX-NEUROTOXIN-TEACHBACK-1",
+   "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+   "attempt": 2,
+   "answers": [
+    {
+     "question_id": "risk",
+     "answer": "The effect can spread and needs urgent care if breathing is affected",
+     "correct": true
+    },
+    {
+     "question_id": "alternative",
+     "answer": "I can delay or decline treatment",
+     "correct": true
+    }
+   ],
+   "score": 2,
+   "threshold": 2,
+   "confidence": "HIGH",
+   "passed": true,
+   "recorded_at": "2026-08-27T04:34:55.675713+00:00"
+  },
+  "baseline": {
+   "vendor": "Perfect Corp YouCam",
+   "capture_id": "SYN-BASELINE-001",
+   "mode": "SD",
+   "concerns": {
+    "acne": 12,
+    "dark_circle": 22,
+    "eye_bag": 14,
+    "firmness": 76,
+    "moisture": 61,
+    "oiliness": 28,
+    "pores": 19,
+    "radiance": 72,
+    "redness": 16,
+    "spots": 18,
+    "texture": 31,
+    "uneven_tone": 23,
+    "wrinkles": 24,
+    "sensitivity": 11
+   },
+   "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
+   "vto_used": false,
+   "boundary": "Baseline and communication aid only. Not diagnosis.",
+   "overall_score": 68.0,
+   "skin_age": 41,
+   "mask_refs": [
+    "wrinkle",
+    "texture",
+    "pore",
+    "redness",
+    "spots"
+   ],
+   "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+   "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg"
+  },
+  "evidence_record": {
+   "vendor": "Foxit PDF Services + eSign",
+   "document_id": "SYN-EVIDENCE-RECORD-001",
+   "document_ref": "output/pdf/synthetic-safety-evidence-record.pdf",
+   "prompt": "assemble the safety record for encounter SYN-ENC-BLOCKED-002",
+   "assembled_sections": [
+    "gate decision",
+    "rule snapshot",
+    "evidence index",
+    "consent signatures",
+    "baseline"
+   ],
+   "status": "AWAITING_HUMAN_SIGNATURE",
+   "next_human_role": "Medical Director",
+   "encounter_id": "SYN-ENC-BLOCKED-002"
+  },
+  "attestation": {
+   "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
+   "signed_by_role": "Medical Director",
+   "status": "SIGNED",
+   "signed_at": "2026-08-27T04:34:55.678231+00:00"
+  },
+  "receipt": {
+   "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
+   "encounter_id": "SYN-ENC-BLOCKED-002",
+   "determination_scope": "Pre-procedure safety determination for human review",
+   "boundary": "This receipt records which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.",
+   "gate_decision_sha256": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
+   "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+   "consent_document_id": "SYN-DOC-CONSENT-001",
+   "baseline_capture_id": "SYN-BASELINE-001",
+   "evidence_record_ref": "output/pdf/synthetic-safety-evidence-record.pdf",
+   "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
+   "cache_manifest": {
+    "nutrient": "07cdea71d017be2ab81353ed32d4b8c2715270de47d09f532ecc6be53b80b509",
+    "serpapi": "31230256234f866afa38ee1c09e623c9c1b9d2713748332bd20200c4bbd83f0b",
+    "doctavian": "104a040c28db4d2c5315fe694a560d7b1bdeaafb3759b10cf47a45993b0ebf04",
+    "perfectcorp": "84861bbf6eac1294609136577836017b1091a731496ec08cb04a225bb407005f",
+    "foxit": "dc62275f0c5e3259f307545c50ad200d07f4e97ab8f56759789dc3287d426909",
+    "namecom": "06dd2ccf8d264064dc053e99e02c1fcd124e90f5f9711724509bc1d5dc80c878"
+   },
+   "sealed_at": "2026-08-24T20:00:00+00:00",
+   "receipt_hash": "0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+   "dns_verification": {
+    "vendor": "name.com CORE sandbox",
+    "domain": "timeout-receipts-demo.com",
+    "txt_name": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219",
+    "txt_value": "before-receipt-v1 sha256=0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+    "verified_through": "seeded offline replay shaped from the name.com sandbox API",
+    "mutable": true,
+    "operations": [
+     "domain search",
+     "availability check",
+     "sandbox registration",
+     "TXT create",
+     "TXT read-back"
+    ],
+    "published": true,
+    "matches": true,
+    "fqdn": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219.timeout-receipts-demo.com.",
+    "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary."
+   },
+   "verification_path": "/receipt/SYN-RECEIPT-SYN-ENC-BLOCKED-002"
+  },
+  "audit_events": [
+   {
+    "id": "SYN-AUDIT-001-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "encounter_opened",
+    "from_state": "DRAFT",
+    "to_state": "EVIDENCE_PENDING",
+    "actor_role": "Clinic Operator",
+    "reason": "Synthetic encounter seeded",
+    "payload_hash": "aea82b8ae8b4d9f868d08ecff83982f88efd0608725f09fc44b9ea025bcb8bb0",
+    "created_at": "2026-08-27T04:34:55.669703+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-002-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "gate_evaluated",
+    "from_state": "EVIDENCE_PENDING",
+    "to_state": "GATE_EVALUATED",
+    "actor_role": "Deterministic Gate",
+    "reason": "Pre-procedure safety determination for human review",
+    "payload_hash": "26d5816461e10de790e6687a9d7105de9924009bd98af24965014d855590e18c",
+    "created_at": "2026-08-27T04:34:55.669703+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-003-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "gate_blocked",
+    "from_state": "GATE_EVALUATED",
+    "to_state": "REMEDIATION",
+    "actor_role": "Deterministic Gate",
+    "reason": "One or more deterministic checks blocked the safety record",
+    "payload_hash": "26d5816461e10de790e6687a9d7105de9924009bd98af24965014d855590e18c",
+    "created_at": "2026-08-27T04:34:55.669703+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-004-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "evidence_remediated",
+    "from_state": "REMEDIATION",
+    "to_state": "EVIDENCE_PENDING",
+    "actor_role": "Medical Director",
+    "reason": "Documented remediation attached; source fixture remains unchanged",
+    "payload_hash": "984671e8c2d01235eebc7cbd868b9ce49dae96f07d684b36ae8ab6ec983f9bbb",
+    "created_at": "2026-08-27T04:34:55.670712+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-005-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "gate_evaluated",
+    "from_state": "EVIDENCE_PENDING",
+    "to_state": "GATE_EVALUATED",
+    "actor_role": "Deterministic Gate",
+    "reason": "Pre-procedure safety determination for human review",
+    "payload_hash": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
+    "created_at": "2026-08-27T04:34:55.670712+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-006-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "low_confidence_routed",
+    "from_state": "GATE_EVALUATED",
+    "to_state": "HUMAN_REVIEW",
+    "actor_role": "Nutrient DWS",
+    "reason": "Low-confidence required field routed to Medical Director",
+    "payload_hash": "35d945f244f4359829cfeca3f2198581ac7e63da0f8f29ac111c787cb25c9ab8",
+    "created_at": "2026-08-27T04:34:55.671714+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-007-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "human_review_resolved",
+    "from_state": "HUMAN_REVIEW",
+    "to_state": "EVIDENCE_PENDING",
+    "actor_role": "Medical Director",
+    "reason": "Named human resolved the evidence uncertainty",
+    "payload_hash": "293963d2e5e3a778c2595a378959417a6ff64b09132b65e10d7012bf3301b7e1",
+    "created_at": "2026-08-27T04:34:55.671714+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-008-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "gate_evaluated",
+    "from_state": "EVIDENCE_PENDING",
+    "to_state": "GATE_EVALUATED",
+    "actor_role": "Deterministic Gate",
+    "reason": "Pre-procedure safety determination for human review",
+    "payload_hash": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
+    "created_at": "2026-08-27T04:34:55.672710+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-009-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "consent_envelope_sent",
+    "from_state": "GATE_EVALUATED",
+    "to_state": "HUMAN_REVIEW",
+    "actor_role": "Doctavian",
+    "reason": "Generated consent sent; progression pauses until patient and injector signatures are recorded",
+    "payload_hash": "e86a765bdf62431033d25f668aeab8c4fe7b1b89d9e312f035a30ba53339b1dd",
+    "created_at": "2026-08-27T04:34:55.673710+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-010-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "treatment_party_signatures_captured",
+    "from_state": "HUMAN_REVIEW",
+    "to_state": "CONSENT_COMPILED",
+    "actor_role": "Doctavian Signature Webhook",
+    "reason": "Doctavian recorded both patient and injector signatures; medical director attestation remains separate",
+    "payload_hash": "44ce3a32969f1953dc841e5ffc72f8ee3bb969899847e764c5bc9e31bc5f90c5",
+    "created_at": "2026-08-27T04:34:55.674710+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-011-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "comprehension_held",
+    "from_state": "CONSENT_COMPILED",
+    "to_state": "HUMAN_REVIEW",
+    "actor_role": "Teach-back Gate",
+    "reason": "Failed or uncertain teach-back requires explanation and re-ask",
+    "payload_hash": "a451477986b66c795c9ab0ffcd0620bf89de647651baba4b8470c8f3b53e886b",
+    "created_at": "2026-08-27T04:34:55.674710+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-012-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "comprehension_remediated",
+    "from_state": "HUMAN_REVIEW",
+    "to_state": "CONSENT_COMPILED",
+    "actor_role": "Injector",
+    "reason": "Risks re-explained and teach-back passed",
+    "payload_hash": "ea1530d93c3d1a579758c7e777e3b5fe54416b7dcb07430ac4fb9d485497510c",
+    "created_at": "2026-08-27T04:34:55.675713+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-013-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "baseline_captured",
+    "from_state": "CONSENT_COMPILED",
+    "to_state": "BASELINE_CAPTURED",
+    "actor_role": "Clinic Operator",
+    "reason": "Standardized SD baseline captured; not diagnosis",
+    "payload_hash": "377c255864021d2f4e331643d74601b7fdb43d9819f5349957cb181940d0d621",
+    "created_at": "2026-08-27T04:34:55.677221+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-014-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "evidence_record_assembled",
+    "from_state": "BASELINE_CAPTURED",
+    "to_state": "AWAITING_ATTESTATION",
+    "actor_role": "Foxit Assembly Agent",
+    "reason": "Reversible assembly complete; agent stopped before human signature",
+    "payload_hash": "cddabcc512c660ef987712dbf12bd5715ea894a350f349857b92efc5d3314fe0",
+    "created_at": "2026-08-27T04:34:55.678231+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-015-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "medical_director_attested",
+    "from_state": "AWAITING_ATTESTATION",
+    "to_state": "READY_FOR_PROCEDURE",
+    "actor_role": "Medical Director",
+    "reason": "Human eSign completed at the irreversible boundary",
+    "payload_hash": "7d78c6ce11176d483b9e8ac97c067bbdf05b167889555ea36eb229f68f00374f",
+    "created_at": "2026-08-27T04:34:55.678231+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-016-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "alert_candidate_raised",
+    "from_state": "READY_FOR_PROCEDURE",
+    "to_state": "HUMAN_REVIEW",
+    "actor_role": "SerpApi",
+    "reason": "Candidate only; no automated conclusion",
+    "payload_hash": "55bb6fce73f5b114e585a5918eb4464e045152b5257a619db0fd511ba4a5a959",
+    "created_at": "2026-08-27T04:34:55.679739+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-017-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "alert_candidate_dismissed",
+    "from_state": "HUMAN_REVIEW",
+    "to_state": "READY_FOR_PROCEDURE",
+    "actor_role": "Medical Director",
+    "reason": "Named human dismissed the search candidate",
+    "payload_hash": "c02ff7955b753bb7f26fe1816b121fce66ef25e7a4048c7b3ef08b1d9e518960",
+    "created_at": "2026-08-27T04:34:55.680750+00:00"
+   },
+   {
+    "id": "SYN-AUDIT-018-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "action": "receipt_sealed",
+    "from_state": "READY_FOR_PROCEDURE",
+    "to_state": "SEALED",
+    "actor_role": "Time-Out Receipt Service",
+    "reason": "This receipt records which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.",
+    "payload_hash": "df878498d9fb225b7e3d58887d8af71bd8bc3e1583ebd5016906b3a6c5d17221",
+    "created_at": "2026-08-27T04:34:55.684752+00:00"
+   }
+  ]
+ },
+ "timeline": [
+  {
+   "step": "blocked",
+   "result": {
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "verdict": "BLOCKED",
+    "determination_scope": "Pre-procedure safety determination for human review",
+    "findings": [
+     {
+      "check_id": "provider_license",
+      "status": "PASS",
+      "summary": "Provider licence evidence is active, in-state, and unexpired.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "state": "TX",
+       "license_status": "ACTIVE",
+       "expires_on": "2027-12-31",
+       "scheduled_on": "2026-08-20",
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "authority_pathway",
+      "status": "REVIEW",
+      "summary": "This title alone neither establishes nor disproves delegated authority; reviewer must assess the other licence and delegation rules.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+       "credential": "AESTHETICIAN",
+       "training_documented": false,
+       "complication_training_documented": false
+      }
+     },
+     {
+      "check_id": "delegation_and_supervision",
+      "status": "BLOCK",
+      "summary": "Delegation, order, BLS, or required availability evidence is incomplete.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+       "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+       "delegation_required": true,
+       "delegation_document_present": false,
+       "protocol_signed_and_dated": false,
+       "delegating_physician_active": false,
+       "patient_specific_order_present": false,
+       "order_contains_drug_dose_strength_route": false,
+       "supervisor_onsite": false,
+       "supervisor_immediately_available": false,
+       "physician_emergency_appointment_available": false,
+       "bls_person_present": false
+      }
+     },
+     {
+      "check_id": "preprocedure_assessment",
+      "status": "BLOCK",
+      "summary": "Practitioner-patient relationship, medical record, or performer disclosure evidence is missing.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+      ],
+      "facts": {
+       "practitioner_patient_relationship_established": false,
+       "adequate_medical_record_present": false,
+       "performer_identity_disclosed": false,
+       "good_faith_exam_label_status": "REVIEW"
+      }
+     },
+     {
+      "check_id": "product_lot",
+      "status": "PASS",
+      "summary": "Product lot is verified and has no captured alert.",
+      "citation_urls": [
+       "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+      ],
+      "facts": {
+       "verified": true,
+       "alerted": false,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "comprehension",
+      "status": "PASS",
+      "summary": "Comprehension evidence meets the configured threshold.",
+      "citation_urls": [
+       "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+      ],
+      "facts": {
+       "recorded": true,
+       "score": 4,
+       "threshold": 4,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "disciplinary_status",
+      "status": "PASS",
+      "summary": "Captured disciplinary status is clear.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "disciplinary_status": "CLEAR"
+      }
+     }
+    ],
+    "rule_snapshot_json": "{\"citations\":{\"bon_aprn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_practice_aprn.asp.html\",\"bon_rn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\",\"occupations_code_157\":\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\",\"tmb_chapter_169\":\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\"},\"comprehension_citations\":[\"https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html\"],\"confidence\":\"HIGH\",\"credential_interpretation_review\":[\"AESTHETICIAN\",\"OTHER\"],\"credential_rule_note\":\"Texas Occupations Code 157.001 and 22 TAC 169.25 use a qualified-and-properly-trained delegation standard, not a closed credential whitelist. A nonmedical title alone is not authority; interaction with that person's other licensing law requires human review.\",\"delegated_path_credentials\":[\"PHYSICIAN_ASSISTANT\",\"APRN\",\"RN\",\"LVN\",\"OTHER_QUALIFIED_TRAINED_DELEGATE\"],\"direct_performer_credentials\":[\"PHYSICIAN\"],\"effective_on\":\"2025-01-09\",\"good_faith_exam_note\":\"Current 22 TAC 169.26 expressly requires a practitioner-patient relationship, an adequate medical record, performer disclosure, BLS presence, and availability. It does not use the phrase good-faith exam in this rule. Do not infer a separate named requirement without counsel review.\",\"jurisdiction\":\"TX\",\"procedure\":\"NEUROTOXIN_INJECTION\",\"product_safety_citations\":[\"https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states\"],\"requires_delegation_doc\":true,\"requires_good_faith_exam\":\"REVIEW\",\"requires_medical_director\":false,\"rn_additional_evidence\":[\"individual_scope_decision\",\"education_knowledge_competence\",\"appropriate_patient_order\",\"drug_dose_strength_route\",\"appropriate_medical_supervision\"],\"rule_id\":\"TX_NEUROTOXIN_2025_01_09\",\"source\":\"Texas Medical Board; Texas Board of Nursing; Texas Occupations Code\",\"supervision_model\":\"ONSITE_OR_IMMEDIATELY_AVAILABLE\",\"verified_at\":\"2026-08-18\",\"written_order_minimum\":[\"delegating_physician_identity\",\"patient_selection_criteria\",\"description_of_appropriate_care\",\"common_complication_serious_injury_and_emergency_procedures\",\"communication_or_feedback_to_physician_or_pa_or_aprn\"]}",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "evaluated_at": "2026-08-24T19:55:00+00:00"
+   }
+  },
+  {
+   "step": "gate_clear",
+   "result": {
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "verdict": "CLEAR",
+    "determination_scope": "Pre-procedure safety determination for human review",
+    "findings": [
+     {
+      "check_id": "provider_license",
+      "status": "PASS",
+      "summary": "Provider licence evidence is active, in-state, and unexpired.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "state": "TX",
+       "license_status": "ACTIVE",
+       "expires_on": "2027-12-31",
+       "scheduled_on": "2026-08-20",
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "authority_pathway",
+      "status": "PASS",
+      "summary": "Delegated-performer training evidence is documented.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "credential": "RN",
+       "training_documented": true,
+       "complication_training_documented": true
+      }
+     },
+     {
+      "check_id": "delegation_and_supervision",
+      "status": "PASS",
+      "summary": "Delegation, order, BLS, and availability evidence is complete.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+       "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+       "delegation_required": true,
+       "delegation_document_present": true,
+       "protocol_signed_and_dated": true,
+       "delegating_physician_active": true,
+       "patient_specific_order_present": true,
+       "order_contains_drug_dose_strength_route": true,
+       "supervisor_onsite": false,
+       "supervisor_immediately_available": true,
+       "physician_emergency_appointment_available": true,
+       "bls_person_present": true
+      }
+     },
+     {
+      "check_id": "preprocedure_assessment",
+      "status": "PASS",
+      "summary": "The explicit Chapter 169 pre-procedure evidence is present.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+      ],
+      "facts": {
+       "practitioner_patient_relationship_established": true,
+       "adequate_medical_record_present": true,
+       "performer_identity_disclosed": true,
+       "good_faith_exam_label_status": "REVIEW"
+      }
+     },
+     {
+      "check_id": "product_lot",
+      "status": "PASS",
+      "summary": "Product lot is verified and has no captured alert.",
+      "citation_urls": [
+       "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+      ],
+      "facts": {
+       "verified": true,
+       "alerted": false,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "comprehension",
+      "status": "PASS",
+      "summary": "Comprehension evidence meets the configured threshold.",
+      "citation_urls": [
+       "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+      ],
+      "facts": {
+       "recorded": true,
+       "score": 4,
+       "threshold": 4,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "disciplinary_status",
+      "status": "PASS",
+      "summary": "Captured disciplinary status is clear.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "disciplinary_status": "CLEAR"
+      }
+     }
+    ],
+    "rule_snapshot_json": "{\"citations\":{\"bon_aprn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_practice_aprn.asp.html\",\"bon_rn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\",\"occupations_code_157\":\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\",\"tmb_chapter_169\":\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\"},\"comprehension_citations\":[\"https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html\"],\"confidence\":\"HIGH\",\"credential_interpretation_review\":[\"AESTHETICIAN\",\"OTHER\"],\"credential_rule_note\":\"Texas Occupations Code 157.001 and 22 TAC 169.25 use a qualified-and-properly-trained delegation standard, not a closed credential whitelist. A nonmedical title alone is not authority; interaction with that person's other licensing law requires human review.\",\"delegated_path_credentials\":[\"PHYSICIAN_ASSISTANT\",\"APRN\",\"RN\",\"LVN\",\"OTHER_QUALIFIED_TRAINED_DELEGATE\"],\"direct_performer_credentials\":[\"PHYSICIAN\"],\"effective_on\":\"2025-01-09\",\"good_faith_exam_note\":\"Current 22 TAC 169.26 expressly requires a practitioner-patient relationship, an adequate medical record, performer disclosure, BLS presence, and availability. It does not use the phrase good-faith exam in this rule. Do not infer a separate named requirement without counsel review.\",\"jurisdiction\":\"TX\",\"procedure\":\"NEUROTOXIN_INJECTION\",\"product_safety_citations\":[\"https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states\"],\"requires_delegation_doc\":true,\"requires_good_faith_exam\":\"REVIEW\",\"requires_medical_director\":false,\"rn_additional_evidence\":[\"individual_scope_decision\",\"education_knowledge_competence\",\"appropriate_patient_order\",\"drug_dose_strength_route\",\"appropriate_medical_supervision\"],\"rule_id\":\"TX_NEUROTOXIN_2025_01_09\",\"source\":\"Texas Medical Board; Texas Board of Nursing; Texas Occupations Code\",\"supervision_model\":\"ONSITE_OR_IMMEDIATELY_AVAILABLE\",\"verified_at\":\"2026-08-18\",\"written_order_minimum\":[\"delegating_physician_identity\",\"patient_selection_criteria\",\"description_of_appropriate_care\",\"common_complication_serious_injury_and_emergency_procedures\",\"communication_or_feedback_to_physician_or_pa_or_aprn\"]}",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "evaluated_at": "2026-08-24T19:55:00+00:00"
+   }
+  },
+  {
+   "step": "nutrient_review",
+   "result": {
+    "vendor": "Nutrient DWS",
+    "document_type": "product_packaging",
+    "fields": {
+     "manufacturer": "Fictional Therapeutics",
+     "product": "EXAMPLETOX \u2014 NOT A REAL PRODUCT",
+     "lot": "INVENTED-LOT-0007",
+     "expires_on": "2027-10-31"
+    },
+    "confidence": {
+     "manufacturer": "HIGH",
+     "product": "HIGH",
+     "lot": "LOW",
+     "expires_on": "MEDIUM"
+    },
+    "page_coordinates": {
+     "lot": [
+      0.52,
+      0.31,
+      0.76,
+      0.39
+     ]
+    },
+    "redacted_before_egress": true,
+    "review_required": true,
+    "assigned_role": "Medical Director",
+    "source_ref": "fixtures/documents/05-product-packaging-low-confidence.json",
+    "extractions": [
+     {
+      "document_type": "credential",
+      "source_ref": "fixtures/providers.json",
+      "confidence": "HIGH",
+      "review_required": false
+     },
+     {
+      "document_type": "patient_intake",
+      "source_ref": "fixtures/documents/01-intake.json",
+      "confidence": "HIGH",
+      "review_required": false
+     },
+     {
+      "document_type": "product_packaging",
+      "source_ref": "fixtures/documents/05-product-packaging-low-confidence.json",
+      "confidence": "LOW",
+      "review_required": true
+     }
+    ]
+   }
+  },
+  {
+   "step": "gate_clear_after_review",
+   "result": {
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "verdict": "CLEAR",
+    "determination_scope": "Pre-procedure safety determination for human review",
+    "findings": [
+     {
+      "check_id": "provider_license",
+      "status": "PASS",
+      "summary": "Provider licence evidence is active, in-state, and unexpired.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "state": "TX",
+       "license_status": "ACTIVE",
+       "expires_on": "2027-12-31",
+       "scheduled_on": "2026-08-20",
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "authority_pathway",
+      "status": "PASS",
+      "summary": "Delegated-performer training evidence is documented.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "credential": "RN",
+       "training_documented": true,
+       "complication_training_documented": true
+      }
+     },
+     {
+      "check_id": "delegation_and_supervision",
+      "status": "PASS",
+      "summary": "Delegation, order, BLS, and availability evidence is complete.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+       "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+       "delegation_required": true,
+       "delegation_document_present": true,
+       "protocol_signed_and_dated": true,
+       "delegating_physician_active": true,
+       "patient_specific_order_present": true,
+       "order_contains_drug_dose_strength_route": true,
+       "supervisor_onsite": false,
+       "supervisor_immediately_available": true,
+       "physician_emergency_appointment_available": true,
+       "bls_person_present": true
+      }
+     },
+     {
+      "check_id": "preprocedure_assessment",
+      "status": "PASS",
+      "summary": "The explicit Chapter 169 pre-procedure evidence is present.",
+      "citation_urls": [
+       "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+      ],
+      "facts": {
+       "practitioner_patient_relationship_established": true,
+       "adequate_medical_record_present": true,
+       "performer_identity_disclosed": true,
+       "good_faith_exam_label_status": "REVIEW"
+      }
+     },
+     {
+      "check_id": "product_lot",
+      "status": "PASS",
+      "summary": "Product lot is verified and has no captured alert.",
+      "citation_urls": [
+       "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+      ],
+      "facts": {
+       "verified": true,
+       "alerted": false,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "comprehension",
+      "status": "PASS",
+      "summary": "Comprehension evidence meets the configured threshold.",
+      "citation_urls": [
+       "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+      ],
+      "facts": {
+       "recorded": true,
+       "score": 4,
+       "threshold": 4,
+       "confidence": "HIGH"
+      }
+     },
+     {
+      "check_id": "disciplinary_status",
+      "status": "PASS",
+      "summary": "Captured disciplinary status is clear.",
+      "citation_urls": [
+       "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+       "disciplinary_status": "CLEAR"
+      }
+     }
+    ],
+    "rule_snapshot_json": "{\"citations\":{\"bon_aprn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_practice_aprn.asp.html\",\"bon_rn_cosmetic_faq\":\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\",\"occupations_code_157\":\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\",\"tmb_chapter_169\":\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\"},\"comprehension_citations\":[\"https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html\"],\"confidence\":\"HIGH\",\"credential_interpretation_review\":[\"AESTHETICIAN\",\"OTHER\"],\"credential_rule_note\":\"Texas Occupations Code 157.001 and 22 TAC 169.25 use a qualified-and-properly-trained delegation standard, not a closed credential whitelist. A nonmedical title alone is not authority; interaction with that person's other licensing law requires human review.\",\"delegated_path_credentials\":[\"PHYSICIAN_ASSISTANT\",\"APRN\",\"RN\",\"LVN\",\"OTHER_QUALIFIED_TRAINED_DELEGATE\"],\"direct_performer_credentials\":[\"PHYSICIAN\"],\"effective_on\":\"2025-01-09\",\"good_faith_exam_note\":\"Current 22 TAC 169.26 expressly requires a practitioner-patient relationship, an adequate medical record, performer disclosure, BLS presence, and availability. It does not use the phrase good-faith exam in this rule. Do not infer a separate named requirement without counsel review.\",\"jurisdiction\":\"TX\",\"procedure\":\"NEUROTOXIN_INJECTION\",\"product_safety_citations\":[\"https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states\"],\"requires_delegation_doc\":true,\"requires_good_faith_exam\":\"REVIEW\",\"requires_medical_director\":false,\"rn_additional_evidence\":[\"individual_scope_decision\",\"education_knowledge_competence\",\"appropriate_patient_order\",\"drug_dose_strength_route\",\"appropriate_medical_supervision\"],\"rule_id\":\"TX_NEUROTOXIN_2025_01_09\",\"source\":\"Texas Medical Board; Texas Board of Nursing; Texas Occupations Code\",\"supervision_model\":\"ONSITE_OR_IMMEDIATELY_AVAILABLE\",\"verified_at\":\"2026-08-18\",\"written_order_minimum\":[\"delegating_physician_identity\",\"patient_selection_criteria\",\"description_of_appropriate_care\",\"common_complication_serious_injury_and_emergency_procedures\",\"communication_or_feedback_to_physician_or_pa_or_aprn\"]}",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "evaluated_at": "2026-08-24T19:55:00+00:00"
+   }
+  },
+  {
+   "step": "consent",
+   "result": {
+    "vendor": "Doctavian",
+    "document_id": "SYN-DOC-CONSENT-001",
+    "template_version": "TX-NEUROTOXIN-CONSENT-1",
+    "branches": [
+     "NEUROTOXIN_INJECTION",
+     "DELEGATED_RN",
+     "NO_PATIENT_FLAGS"
+    ],
+    "disclosures": [
+     "temporary effect and alternatives",
+     "material risks",
+     "who will perform the procedure",
+     "unresolved holds"
+    ],
+    "signers": [
+     "Synthetic Patient",
+     "Synthetic Injector"
+    ],
+    "status": "AWAITING_SIGNATURES",
+    "template_urn": "urn:synthetic:doctavian:template:tx-neurotoxin-consent-1",
+    "data_urn": "urn:synthetic:doctavian:data:syn-enc-clear-001",
+    "generated_document_urn": "urn:synthetic:doctavian:document:syn-doc-consent-001",
+    "envelope_id": "SYN-ENVELOPE-CONSENT-001",
+    "signature_status": "PENDING",
+    "boundary": "Patient and injector consent only. Medical director attestation is a separate Foxit event.",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4"
+   }
+  },
+  {
+   "step": "consent_signed",
+   "result": {
+    "vendor": "Doctavian",
+    "document_id": "SYN-DOC-CONSENT-001",
+    "template_version": "TX-NEUROTOXIN-CONSENT-1",
+    "branches": [
+     "NEUROTOXIN_INJECTION",
+     "DELEGATED_RN",
+     "NO_PATIENT_FLAGS"
+    ],
+    "disclosures": [
+     "temporary effect and alternatives",
+     "material risks",
+     "who will perform the procedure",
+     "unresolved holds"
+    ],
+    "signers": [
+     "Synthetic Patient",
+     "Synthetic Injector"
+    ],
+    "status": "SIGNED",
+    "template_urn": "urn:synthetic:doctavian:template:tx-neurotoxin-consent-1",
+    "data_urn": "urn:synthetic:doctavian:data:syn-enc-clear-001",
+    "generated_document_urn": "urn:synthetic:doctavian:document:syn-doc-consent-001",
+    "envelope_id": "SYN-ENVELOPE-CONSENT-001",
+    "signature_status": "COMPLETED",
+    "boundary": "Patient and injector consent only. Medical director attestation is a separate Foxit event.",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "signatures": [
+     {
+      "role": "Patient",
+      "status": "SIGNED",
+      "signed_at": "2026-08-27T04:34:55.674710+00:00"
+     },
+     {
+      "role": "Injector",
+      "status": "SIGNED",
+      "signed_at": "2026-08-27T04:34:55.674710+00:00"
+     }
+    ],
+    "signed_at": "2026-08-27T04:34:55.674710+00:00"
+   }
+  },
+  {
+   "step": "teach_back_held",
+   "result": {
+    "question_set_version": "TX-NEUROTOXIN-TEACHBACK-1",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "attempt": 1,
+    "answers": [
+     {
+      "question_id": "risk",
+      "answer": "I do not know",
+      "correct": false
+     },
+     {
+      "question_id": "alternative",
+      "answer": "Delay treatment",
+      "correct": true
+     }
+    ],
+    "score": 1,
+    "threshold": 2,
+    "confidence": "HIGH",
+    "passed": false,
+    "recorded_at": "2026-08-27T04:34:55.674710+00:00"
+   }
+  },
+  {
+   "step": "teach_back_passed",
+   "result": {
+    "question_set_version": "TX-NEUROTOXIN-TEACHBACK-1",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "attempt": 2,
+    "answers": [
+     {
+      "question_id": "risk",
+      "answer": "The effect can spread and needs urgent care if breathing is affected",
+      "correct": true
+     },
+     {
+      "question_id": "alternative",
+      "answer": "I can delay or decline treatment",
+      "correct": true
+     }
+    ],
+    "score": 2,
+    "threshold": 2,
+    "confidence": "HIGH",
+    "passed": true,
+    "recorded_at": "2026-08-27T04:34:55.675713+00:00"
+   }
+  },
+  {
+   "step": "baseline",
+   "result": {
+    "vendor": "Perfect Corp YouCam",
+    "capture_id": "SYN-BASELINE-001",
+    "mode": "SD",
+    "concerns": {
+     "acne": 12,
+     "dark_circle": 22,
+     "eye_bag": 14,
+     "firmness": 76,
+     "moisture": 61,
+     "oiliness": 28,
+     "pores": 19,
+     "radiance": 72,
+     "redness": 16,
+     "spots": 18,
+     "texture": 31,
+     "uneven_tone": 23,
+     "wrinkles": 24,
+     "sensitivity": 11
+    },
+    "overlay_ref": "/assets/perfectcorp/synthetic-patient-02-wrinkle-overlay.png",
+    "vto_used": false,
+    "boundary": "Baseline and communication aid only. Not diagnosis.",
+    "overall_score": 68.0,
+    "skin_age": 41,
+    "mask_refs": [
+     "wrinkle",
+     "texture",
+     "pore",
+     "redness",
+     "spots"
+    ],
+    "source_ref": "fixtures/faces/synthetic-patient-02-analysis-input.jpg",
+    "image_ref": "/assets/perfectcorp/synthetic-patient-02-analysis-input.jpg"
+   }
+  },
+  {
+   "step": "foxit_pause",
+   "result": {
+    "vendor": "Foxit PDF Services + eSign",
+    "document_id": "SYN-EVIDENCE-RECORD-001",
+    "document_ref": "output/pdf/synthetic-safety-evidence-record.pdf",
+    "prompt": "assemble the safety record for encounter SYN-ENC-BLOCKED-002",
+    "assembled_sections": [
+     "gate decision",
+     "rule snapshot",
+     "evidence index",
+     "consent signatures",
+     "baseline"
+    ],
+    "status": "AWAITING_HUMAN_SIGNATURE",
+    "next_human_role": "Medical Director",
+    "encounter_id": "SYN-ENC-BLOCKED-002"
+   }
+  },
+  {
+   "step": "human_attestation",
+   "result": {
+    "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
+    "signed_by_role": "Medical Director",
+    "status": "SIGNED",
+    "signed_at": "2026-08-27T04:34:55.678231+00:00"
+   }
+  },
+  {
+   "step": "alert_reversion",
+   "result": {
+    "vendor": "SerpApi",
+    "candidate_id": "SYN-ALERT-001",
+    "query": "site:fda.gov botulinum toxin safety communication",
+    "matched_entity": "EXAMPLETOX - SYNTHETIC ENCOUNTER SCOPE",
+    "source_url": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
+    "published_at": "2026-04-01",
+    "status": "CANDIDATE",
+    "boundary": "Search result only. A named human must confirm or dismiss it.",
+    "queries": [
+     "site:fda.gov botulinum toxin safety communication",
+     "site:tmb.state.tx.us nonsurgical medical cosmetic procedure rules"
+    ]
+   }
+  },
+  {
+   "step": "alert_dismissed",
+   "result": {
+    "id": "SYN-REVIEW-ALERT-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "kind": "ALERT_CANDIDATE",
+    "assigned_role": "Medical Director",
+    "status": "RESOLVED",
+    "reason": "A live-data candidate may be material to the prepared encounter",
+    "source_ref": "https://www.fda.gov/news-events/press-announcements/fda-warns-companies-over-illegal-marketing-botox-and-related-products",
+    "created_at": "2026-08-27T04:34:55.679739+00:00",
+    "resolution": "DISMISSED",
+    "resolved_by": "Medical Director",
+    "resolved_at": "2026-08-27T04:34:55.680750+00:00"
+   }
+  },
+  {
+   "step": "receipt",
+   "result": {
+    "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
+    "encounter_id": "SYN-ENC-BLOCKED-002",
+    "determination_scope": "Pre-procedure safety determination for human review",
+    "boundary": "This receipt records which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.",
+    "gate_decision_sha256": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
+    "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+    "consent_document_id": "SYN-DOC-CONSENT-001",
+    "baseline_capture_id": "SYN-BASELINE-001",
+    "evidence_record_ref": "output/pdf/synthetic-safety-evidence-record.pdf",
+    "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
+    "cache_manifest": {
+     "nutrient": "07cdea71d017be2ab81353ed32d4b8c2715270de47d09f532ecc6be53b80b509",
+     "serpapi": "31230256234f866afa38ee1c09e623c9c1b9d2713748332bd20200c4bbd83f0b",
+     "doctavian": "104a040c28db4d2c5315fe694a560d7b1bdeaafb3759b10cf47a45993b0ebf04",
+     "perfectcorp": "84861bbf6eac1294609136577836017b1091a731496ec08cb04a225bb407005f",
+     "foxit": "dc62275f0c5e3259f307545c50ad200d07f4e97ab8f56759789dc3287d426909",
+     "namecom": "06dd2ccf8d264064dc053e99e02c1fcd124e90f5f9711724509bc1d5dc80c878"
+    },
+    "sealed_at": "2026-08-24T20:00:00+00:00",
+    "receipt_hash": "0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+    "dns_verification": {
+     "vendor": "name.com CORE sandbox",
+     "domain": "timeout-receipts-demo.com",
+     "txt_name": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219",
+     "txt_value": "before-receipt-v1 sha256=0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+     "verified_through": "seeded offline replay shaped from the name.com sandbox API",
+     "mutable": true,
+     "operations": [
+      "domain search",
+      "availability check",
+      "sandbox registration",
+      "TXT create",
+      "TXT read-back"
+     ],
+     "published": true,
+     "matches": true,
+     "fqdn": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219.timeout-receipts-demo.com.",
+     "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary."
+    },
+    "verification_path": "/receipt/SYN-RECEIPT-SYN-ENC-BLOCKED-002"
+   }
+  }
+ ],
+ "offline": true,
+ "recorded_at": "2026-08-26",
+ "replay_note": "Sponsor steps replay cached live responses recorded 2026-08-26. The Gate, remediation, and audit log run live on Xano."
+}

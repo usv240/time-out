@@ -211,14 +211,14 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 
 ---
 
-## Status — 26 Aug 2026
+## Status — 27 Aug 2026
 
 | Area | State |
 |---|---|
 | Gate, state machine, audit log, receipts | ✅ Live on Xano |
-| Public site + API | ✅ Live |
+| Public site + API | ✅ Live — `/try` runs the Gate live on Xano, lets you **break it yourself** (six real attacks, audited), and shows the audit log; `/receipt` is the patient's record; `/how-it-works` re-hashes a live verdict in your browser |
 | Nutrient · SerpApi · name.com · Perfect Corp | ✅ Live calls verified, responses cached for offline replay |
-| Foxit | ✅ PDF Services upload live · MCP assembly agent in progress |
+| Foxit | ✅ Agent live: prompt → MCP assembly → pause → eSign draft folder for the Medical Director (two MCP field-mapping bugs documented and routed via REST) |
 | Doctavian | ⚠️ Auth, data source, solution, template + data upload live. Generation blocked on the demo account's Google Drive delivery — we declined to grant full Drive access. Resolution requested from Doctavian. |
 | Tests | ✅ 55 passing · CI green |
 

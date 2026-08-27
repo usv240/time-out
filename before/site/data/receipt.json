@@ -1,0 +1,42 @@
+{
+ "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
+ "encounter_id": "SYN-ENC-BLOCKED-002",
+ "determination_scope": "Pre-procedure safety determination for human review",
+ "boundary": "This receipt records which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.",
+ "gate_decision_sha256": "eed37ffd0c003d7e5820454fcfaad96efb7e7180e09d137a085aaae507cfac70",
+ "rule_snapshot_sha256": "447e16e6986870fd7ccf59a13e76d7c01cb8458019bf8f2567398290ace58cf4",
+ "consent_document_id": "SYN-DOC-CONSENT-001",
+ "baseline_capture_id": "SYN-BASELINE-001",
+ "evidence_record_ref": "output/pdf/synthetic-safety-evidence-record.pdf",
+ "attestation_id": "SYN-ATTEST-SYN-ENC-BLOCKED-002",
+ "cache_manifest": {
+  "nutrient": "07cdea71d017be2ab81353ed32d4b8c2715270de47d09f532ecc6be53b80b509",
+  "serpapi": "31230256234f866afa38ee1c09e623c9c1b9d2713748332bd20200c4bbd83f0b",
+  "doctavian": "104a040c28db4d2c5315fe694a560d7b1bdeaafb3759b10cf47a45993b0ebf04",
+  "perfectcorp": "84861bbf6eac1294609136577836017b1091a731496ec08cb04a225bb407005f",
+  "foxit": "dc62275f0c5e3259f307545c50ad200d07f4e97ab8f56759789dc3287d426909",
+  "namecom": "06dd2ccf8d264064dc053e99e02c1fcd124e90f5f9711724509bc1d5dc80c878"
+ },
+ "sealed_at": "2026-08-24T20:00:00+00:00",
+ "receipt_hash": "0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+ "dns_verification": {
+  "vendor": "name.com CORE sandbox",
+  "domain": "timeout-receipts-demo.com",
+  "txt_name": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219",
+  "txt_value": "before-receipt-v1 sha256=0b670f31c2194364693e5013df831beee702780d310d1d4cda0987fe0053e99b",
+  "verified_through": "seeded offline replay shaped from the name.com sandbox API",
+  "mutable": true,
+  "operations": [
+   "domain search",
+   "availability check",
+   "sandbox registration",
+   "TXT create",
+   "TXT read-back"
+  ],
+  "published": true,
+  "matches": true,
+  "fqdn": "_before.syn-receipt-syn-enc-blocked-002.0b670f31c219.timeout-receipts-demo.com.",
+  "caveat": "Sandbox DNS does not propagate publicly and the record is owner-mutable; this is not a notary."
+ },
+ "verification_path": "/receipt/SYN-RECEIPT-SYN-ENC-BLOCKED-002"
+}

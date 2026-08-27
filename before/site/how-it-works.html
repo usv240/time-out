@@ -14,4 +14,38 @@
 <article><h3>Adoption trigger</h3><p>A clinic starts with one Texas neurotoxin path when it needs a reproducible pre-procedure record, not a fifty-state claim.</p></article>
 </div><div class="snapshot-proof"><div><p class="eyebrow">Rule update workflow</p><h3>Proposed → human-reviewed → effective → snapshotted</h3></div><code>POST /v1/rule-proposals → /review → /activate</code></div></div></section>
 <section class="section limits-section"><div class="shell limits-grid"><div><p class="eyebrow">Reproducibility</p><h2>Canonical JSON, SHA-256, deterministic rerun.</h2></div><div><p>Every decision stores the exact rules JSON and its digest. The API endpoint below reruns the evidence against that stored snapshot and compares the complete deterministic payload.</p><pre><code>POST /v1/encounters/:id/rerun</code></pre><a class="button button-primary" href="/api.html">Open the playground</a></div></div></section>
+
+<section class="shell verifier" aria-labelledby="verify-title">
+  <p class="eyebrow">Reproduce a decision</p>
+  <h2 id="verify-title">Don't take our word for the hash.</h2>
+  <p class="lead">Every verdict ships with the exact ruleset it used, in canonical form, plus its SHA-256. Press the button: your browser asks the live Xano backend for a fresh verdict, hashes the ruleset itself with WebCrypto, and compares. If the two fingerprints differ, the decision is not reproducible and you should not trust it.</p>
+  <button class="button button-primary" id="verify-run" type="button">Fetch a live verdict and re-hash it here</button>
+  <div class="attack-result" id="verify-out" hidden></div>
+</section>
+<script>
+(() => {
+  const out = document.querySelector("#verify-out"), btn = document.querySelector("#verify-run");
+  const esc = (v) => String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;");
+  const canon = (v) => typeof v === "string" ? v : JSON.stringify(sortKeys(v));
+  function sortKeys(v){ if(Array.isArray(v)) return v.map(sortKeys); if(v && typeof v==="object"){ return Object.fromEntries(Object.keys(v).sort().map(k=>[k,sortKeys(v[k])])); } return v; }
+  async function sha256(text){ const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+  btn.addEventListener("click", async () => {
+    btn.disabled = true; out.hidden = false; out.className = "attack-result"; out.textContent = "Calling the live Gate…";
+    try {
+      const r = await fetch("https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate", {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"});
+      const d = await r.json(); if(!r.ok) throw new Error(d.message || "Gate call failed");
+      const local = await sha256(canon(d.canonical_rule_snapshot));
+      const match = local === d.rule_snapshot_sha256;
+      out.className = "attack-result " + (match ? "clear" : "blocked");
+      out.setAttribute("role", match ? "status" : "alert");
+      out.innerHTML = `<div class="attack-head"><span class="status-pill ${match?"clear":"blocked"}">${match?"REPRODUCED":"MISMATCH"}</span> <span class="src-badge live">LIVE · Xano</span> <span class="src-badge cached">hashed in your browser</span></div>
+        <h3>${match ? "Byte-identical. The server and your browser agree on the ruleset." : "The fingerprints differ. Do not rely on this decision."}</h3>
+        <p><b>Server</b> <code>${esc(d.rule_snapshot_sha256)}</code></p><p><b>Browser</b> <code>${esc(local)}</code></p>
+        <p class="muted">Encounter <code>${esc(d.encounter_id)}</code> · verdict <code>${esc(d.verdict)}</code> · ${Object.keys(d.canonical_rule_snapshot||{}).length || (d.canonical_rule_snapshot||"").length} ${typeof d.canonical_rule_snapshot==="string"?"bytes":"top-level rule keys"} in the snapshot</p>
+        <details class="machine-evidence"><summary>The canonical ruleset that was hashed</summary><pre class="timeline-detail">${esc(canon(d.canonical_rule_snapshot))}</pre></details>`;
+    } catch (e) { out.className = "attack-result review"; out.textContent = e.message + " — the synthetic sandbox may be rate-limited; try again shortly."; }
+    finally { btn.disabled = false; }
+  });
+})();
+</script>
 </main></body></html>
