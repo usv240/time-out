@@ -268,3 +268,43 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
 .open-num{ display:block; font-size:var(--step-4); font-weight:600; color:var(--accent); line-height:1; letter-spacing:-.02em; }
 .open-grid p{ margin:.4rem 0 0; font-size:var(--step--1); color:var(--ink-2); line-height:1.5; }
 .open-cta{ display:flex; gap:.75rem; flex-wrap:wrap; }
+
+/* ============================================================================
+   DENSITY PASS
+   The page was a ~700px column inside a 1400px shell: half the viewport empty
+   and every section costing a full screen. Widen the measure, tighten the
+   rhythm, and let the card grids fill the width.
+   ========================================================================= */
+:root{ --shell: min(1240px, calc(100% - 40px)); }
+.section, .surface-section{ padding-block: 40px !important; }
+.hero{ padding-block: 52px 36px !important; }
+.page-hero{ padding-block: 36px 16px !important; }
+
+/* headings and lead can run wider than body prose without hurting readability */
+.section h2, .surface-section h2{ max-width: 26ch; }
+.section > .shell > .lead, .section.shell > .lead,
+.surface-section > .shell > .lead{ max-width: 76ch; }
+
+/* card grids fill the width instead of stacking */
+.aud-grid{ grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 1.1rem; }
+.wwh-grid{ grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.25rem; }
+.open-grid{ grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1.1rem; margin: 1rem 0 1.4rem; }
+.check-row{ padding-block: .5rem !important; }
+.wwh-steps{ margin: .75rem 0 0; columns: 2; column-gap: 2.5rem; }
+.wwh-steps li{ break-inside: avoid; margin-bottom: .7rem; }
+@media (max-width: 56rem){ .wwh-steps{ columns: 1; } }
+.steps-head{ margin-top: 1.4rem; }
+
+/* the numbered flow strip overflowed at narrow widths */
+.flow-strip, .how-flow{ overflow-x: auto; }
+
+/* sticky in-page nav so a judge can jump instead of scroll */
+.section-nav{ position: sticky; top: 64px; z-index: 40; background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); }
+.section-nav ol{ display: flex; gap: 1.25rem; list-style: none; margin: 0 auto; padding: .55rem 0;
+  width: var(--shell); overflow-x: auto; scrollbar-width: none; }
+.section-nav ol::-webkit-scrollbar{ display: none; }
+.section-nav a{ font-family: var(--f-mono); font-size: 11px; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink-3); text-decoration: none; white-space: nowrap; padding: .2rem 0; border-bottom: 2px solid transparent; }
+.section-nav a:hover, .section-nav a[aria-current="true"]{ color: var(--accent-ink); border-bottom-color: var(--accent); }
+@media (max-width: 48rem){ .section-nav{ display: none; } }
