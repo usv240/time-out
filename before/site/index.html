@@ -134,21 +134,29 @@
         </div>
       </section>
 
-      <section class="section surface-section" id="built-with">
-        <div class="shell">
-          <div class="section-heading"><p class="eyebrow">Built with</p><h2>Each integration owns a visible safety handoff.</h2><p>All six vendor responses replay from typed cache adapters today. Xano is the production backend target and remains pending workspace activation.</p></div>
-          <div class="card-grid three-up">
-            <article class="card"><h3>Xano</h3><p>State machine, rules, approvals, audit log, auth, and REST API production target.</p><code>before/xano/schema.json</code></article>
-            <article class="card"><h3>Nutrient DWS</h3><p>Extraction confidence and page coordinates route uncertain evidence to the Medical Director.</p><code>before/app/integrations.py</code></article>
-            <article class="card"><h3>SerpApi</h3><p>An alert candidate can reverse a ready encounter; a named human decides its meaning.</p><code>before/app/integrations.py</code></article>
-            <article class="card"><h3>Doctavian</h3><p>Verified branches and disclosure loops produce a consent envelope; Patient plus Injector completion is a separate gate.</p><code>before/app/integrations.py</code></article>
-            <article class="card"><h3>Perfect Corp</h3><p>SD skin baseline scores and returned masks support consistent documentation and communication, never diagnosis.</p><code>before/app/integrations.py</code></article>
-            <article class="card"><h3>Foxit</h3><p>The agent assembles the evidence record, stops, and hands attestation to the Medical Director.</p><code>before/app/integrations.py</code></article>
-            <article class="card"><h3>name.com</h3><p>The sandbox API publishes and reads the receipt hash with propagation and mutability limits.</p><code>before/app/integrations.py</code></article>
-          </div>
-          <p style="margin-top:32px"><a href="/evidence.html#integrations">Inspect the implementation evidence →</a></p>
-        </div>
-      </section>
+      <section class="section surface-section" aria-labelledby="built-title">
+    <div class="shell">
+      <p class="eyebrow">Built with</p>
+      <h2 id="built-title">Seven sponsor APIs, each owning a safety handoff.</h2>
+      <p class="lead">Every row below is a real call. Where a response is replayed rather than fetched at page load, it says so &mdash; the demo must never depend on a third party answering at the moment you click.</p>
+
+      <div class="scroll-x">
+      <table class="built-table">
+        <thead><tr><th>Sponsor</th><th>What it does here</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Xano</strong></td><td>The whole backend: 18 tables, the encounter state machine with guarded transitions, the seven-check Gate, the append-only audit log, the public API, static hosting &mdash; and it now brokers live calls to two other sponsors, server-side.</td><td><span class="status-pill clear">DEPLOYED</span></td></tr>
+          <tr><td><strong>SerpApi</strong></td><td>Live search for FDA warning letters and Texas board actions. A hit becomes an alert <em>candidate</em> that can reopen a prepared encounter &mdash; never a conclusion.</td><td><span class="status-pill clear">LIVE ON DEMAND</span></td></tr>
+          <tr><td><strong>name.com</strong></td><td>Search, availability, registration, DNS. Each receipt&rsquo;s SHA-256 is published as a TXT record and read back through the API.</td><td><span class="status-pill clear">LIVE ON DEMAND</span></td></tr>
+          <tr><td><strong>Nutrient DWS</strong></td><td>Extraction with per-field confidence and page coordinates. Anything below the floor is routed to a named Medical Director, who sees the uncertain value boxed on the source page.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
+          <tr><td><strong>Perfect Corp</strong></td><td>The patient&rsquo;s skin baseline before treatment &mdash; 12 scored concerns, overlay masks, skin age. A baseline and communication aid, never a diagnosis.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
+          <tr><td><strong>Foxit</strong></td><td>An agent assembles the evidence record through the MCP server, watermarks it, and <em>stops</em>. A human signs the attestation via eSign. Compare also locates tampering after the fact.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
+          <tr><td><strong>Doctavian</strong></td><td>One consent template that branches on the authority pathway and loops over cited disclosures. Patient and injector sign.</td><td><span class="status-pill review">PARTIAL &mdash; see limits</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="muted">Credentials live in Xano environment variables. None are in the repository, and none have ever been committed.</p>
+    </div>
+  </section>
       
   <section class="section shell what-why-how" aria-labelledby="wwh-title">
     <p class="eyebrow">What it is · Why it exists · How it works</p>
@@ -187,6 +195,33 @@
     </ol>
 
     <p class="wwh-reverse"><strong>And it runs backwards when it has to.</strong> If an FDA warning letter or a board action appears after an encounter is already prepared, it returns to human review. Ready is reversible — that is the point of a hold rather than a checkbox.</p>
+  </section>
+
+  <section class="section shell audience" aria-labelledby="aud-title">
+    <p class="eyebrow">Who this is for</p>
+    <h2 id="aud-title">Four people, one record.</h2>
+    <div class="aud-grid">
+      <article><h3>The clinic</h3><p>Gets a refusal it can act on &mdash; the exact missing document, the rule behind it, and a remedy &mdash; instead of discovering the gap in a deposition two years later.</p></article>
+      <article><h3>The injector</h3><p>Knows before the appointment whether they are covered for this procedure, on this patient, under this delegation. No judgement call in the moment.</p></article>
+      <article><h3>The patient</h3><p>Leaves with a record of what was checked and a baseline of their own skin from before anything was done &mdash; verifiable without trusting the clinic or us.</p></article>
+      <article><h3>The Medical Director</h3><p>Sees only what genuinely needs a human: the uncertain extraction, the ambiguous rule, the new alert. Everything else is already decided by cited code.</p></article>
+    </div>
+    <p class="aud-note"><strong>Where it would sit.</strong> Beside the booking system, not inside it &mdash; the check has to be able to say no to the software that scheduled the appointment. The unit of value is one refusal that would otherwise have become a claim.</p>
+  </section>
+
+  <section class="section surface-section" aria-labelledby="open-title">
+    <div class="shell">
+      <p class="eyebrow">Built in the open</p>
+      <h2 id="open-title">Everything here is inspectable.</h2>
+      <div class="open-grid">
+        <div><span class="open-num">60</span><p>tests, green in CI on every push</p></div>
+        <div><span class="open-num">18</span><p>Xano tables, committed as code in the repo</p></div>
+        <div><span class="open-num">3</span><p>bugs found and reported upstream in Foxit&rsquo;s own MCP server, with repros</p></div>
+        <div><span class="open-num">0</span><p>real patients, clinics, faces, licences, or lot numbers &mdash; anywhere</p></div>
+      </div>
+      <p class="lead">The Gate is a pure function with no network access. Run <code>python -m before.verify</code> from a clean clone with the network disabled and you get the same receipt hash we do &mdash; we ran it three times to be sure.</p>
+      <p class="open-cta"><a class="button" href="https://github.com/usv240/time-out" target="_blank" rel="noopener">Read the source</a> <a class="button button-primary" href="/try.html">Open the console</a></p>
+    </div>
   </section>
 
   <section class="section limits-section" id="limits">
