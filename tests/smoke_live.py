@@ -69,7 +69,14 @@ async def run(base: str) -> None:
         await page.wait_for_timeout(9000)
         text = await page.evaluate("() => document.body.innerText")
         check("BLOCKED" in text, "hero reaches a verdict")
-        check("WAITING" not in text, "no check left WAITING")
+        # Read the check rows themselves rather than scanning page text: an unrelated
+        # status pill reading "AWAITING SCOPE" contains the substring "WAITING".
+        rows = await page.evaluate(
+            "() => [...document.querySelectorAll('.check-row')].map(r => "
+            "[r.dataset.check, r.querySelector('.check-status').textContent.trim()])")
+        stuck = [c for c, s in rows if s == "WAITING"]
+        check(len(rows) == 7, f"all seven checks rendered (found {len(rows)})")
+        check(not stuck, f"every check resolved{' — stuck: ' + ', '.join(stuck) if stuck else ''}")
 
         # ---- /try: run, then every attack, then reset --------------------------
         print("\n/try.html")

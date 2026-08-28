@@ -12,8 +12,8 @@
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
       })();
     </script>
-    <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/product.css">
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="/styles.css?v=f50bc07e"><link rel="stylesheet" href="/product.css?v=7b2271e2">
+    <script src="./app.js?v=7968476d" defer></script>
   <style>section[id]{scroll-margin-top:118px}</style></head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -198,7 +198,7 @@
           <dl>
             <dt>What</dt><dd>15 tables, the encounter state machine, the seven-check Gate, an append-only audit log, the public REST API, and the hosting for this page.</dd>
             <dt>How</dt><dd>Written as XanoScript and pushed from the CLI, so the whole workspace is committed as code and reviewable in the repo. It also brokers live calls to two other tools server-side, so no key ever reaches your browser.</dd>
-            <dt>Why</dt><dd>This product <em>is</em> a state machine with an audit trail. Xano is the system, not a database sitting behind one.</dd>
+            <dt>Why</dt><dd>This product <em>is</em> a state machine with an audit trail, so Xano is the system rather than a database sitting behind one. The Gate runs there as a pure function with no network access &mdash; which is why the same evidence produces a byte-identical verdict on our machine, yours, and the server.</dd>
           </dl>
         </details>
 
@@ -207,7 +207,7 @@
           <dl>
             <dt>What</dt><dd>Turns credential, intake and product documents into typed fields, each with a confidence score and page coordinates. Redaction runs before anything leaves the vault.</dd>
             <dt>How</dt><dd>Anything below the confidence floor stops the encounter and goes to a named Medical Director, who sees the uncertain value boxed on the source page at the coordinates DWS returned.</dd>
-            <dt>Why</dt><dd>The threshold lives in code, never in a prompt. A model reads; it never decides.</dd>
+            <dt>Why</dt><dd>Most extraction pipelines throw the confidence score away. We made it the thing that stops the workflow, and we spend the page coordinates on the human: the reviewer sees the uncertain value boxed on the original page rather than retyped into a form. The threshold lives in code, never in a prompt. A model reads; it never decides.</dd>
           </dl>
         </details>
 
@@ -216,7 +216,7 @@
           <dl>
             <dt>What</dt><dd>Live search across FDA warning letters and Texas board actions.</dd>
             <dt>How</dt><dd>A hit becomes an alert <em>candidate</em> that moves an already-prepared encounter back to human review. A person confirms or dismisses it, and that decision is audited.</dd>
-            <dt>Why</dt><dd>Live data with a consequence: it changes the workflow. Our first real search returned the April 2026 warning letter to a Texas med spa.</dd>
+            <dt>Why</dt><dd>Almost everyone uses search to <em>populate</em> a screen. Here a search result can <em>reverse a decision that was already made</em> &mdash; it moves an encounter out of ready and back into human review. Our first real query returned the actual April 2026 warning letter to a Texas med spa. And it still never decides: a person confirms or dismisses, on the record.</dd>
           </dl>
         </details>
 
@@ -225,7 +225,7 @@
           <dl>
             <dt>What</dt><dd>Twelve scored skin concerns, overlay masks and skin age, captured before treatment.</dd>
             <dt>How</dt><dd>Run once on a synthetic face and attached to the patient&rsquo;s receipt, so they keep the record of how they looked first.</dd>
-            <dt>Why</dt><dd>An objective, repeatable starting point. A baseline and a communication aid &mdash; never a diagnosis.</dd>
+            <dt>Why</dt><dd>Skin analysis is normally used to <em>sell</em> a treatment. We run it in the opposite direction: before anything is done, once, and the output belongs to the patient rather than the clinic. If something looks different in six weeks, there is a scored record of how it looked first. A baseline and a communication aid &mdash; never a diagnosis.</dd>
           </dl>
         </details>
 
@@ -243,16 +243,16 @@
           <dl>
             <dt>What</dt><dd>Domain search, availability, registration and DNS. Each receipt&rsquo;s SHA-256 is published as a TXT record and read back through the API.</dd>
             <dt>How</dt><dd>The patient can look the record up themselves, without an account here.</dd>
-            <dt>Why</dt><dd>Verification that does not require trusting our server. Stated plainly: sandbox DNS does not propagate publicly and a TXT record is mutable by its owner &mdash; a verification channel, not a notary.</dd>
+            <dt>Why</dt><dd>A domain registrar is usually where a project <em>starts</em>. We used it as the last step instead: DNS becomes the channel that lets a patient check their receipt without an account here and without trusting our server. Stated plainly, because it matters: sandbox DNS does not propagate publicly and a TXT record is mutable by its owner. It is a verification channel, not a notary.</dd>
           </dl>
         </details>
 
         <details class="tool">
-          <summary><span class="tool-name">Doctavian</span> <span class="tool-role">Compiles the consent document</span> <span class="status-pill review">PARTIAL — see limits</span></summary>
+          <summary><span class="tool-name">Doctavian</span> <span class="tool-role">Compiles consent that changes with the delegation</span> <span class="status-pill review">WIRED · AWAITING SCOPE</span></summary>
           <dl>
-            <dt>What</dt><dd>One consent template that branches on the authority pathway and loops over cited disclosures. Patient and injector both sign.</dd>
-            <dt>How</dt><dd>Everything upstream of generation is live. Generation itself is blocked: delivery requires granting full Google Drive access, and we declined to hand a third party blanket Drive scope for a hackathon build. We asked for an internal-storage option.</dd>
-            <dt>Why</dt><dd>Consent that branches on <em>who is performing the procedure</em> is the difference between a form and a record. We would rather ship this honestly incomplete than overstate it.</dd>
+            <dt>What</dt><dd>One template, not a library of them. It branches on the authority pathway &mdash; a physician injecting and a nurse injecting under delegation produce genuinely different consent &mdash; then loops over only the disclosures the Gate actually cited for that encounter. Patient and injector both sign.</dd>
+            <dt>How</dt><dd>The template, the branch logic and the disclosure loop are built and bound to the encounter. The final generation call is held on one thing: delivery currently requires granting full Google Drive access, and we would not hand a third party blanket Drive scope over a patient-consent workflow. We&rsquo;ve asked for internal storage or direct download, and the call fires the moment that exists.</dd>
+            <dt>Why</dt><dd>Every other consent form in this industry is a static PDF that says the same thing no matter who picks up the needle. Consent that is <em>computed from who is actually performing the procedure, citing only the rules that applied</em>, is the difference between a signature and a record. The refusal to over-scope is the product working as designed &mdash; the same instinct that makes the Gate say no.</dd>
           </dl>
         </details>
 

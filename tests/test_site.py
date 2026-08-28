@@ -77,3 +77,41 @@ def test_every_page_is_reachable_from_every_other_page() -> None:
         linked = set(re.findall(r'href="/([a-z0-9-]+\.html)"', nav.group(1)))
         missing = pages - linked - {page}
         assert not missing, f"{page} nav does not link to {sorted(missing)}"
+
+
+def test_every_local_asset_url_carries_a_content_version() -> None:
+    """Stale CSS against fresh markup is a silent, visible break.
+
+    Assets are served with max-age=3600. A deploy once shipped a collapsible tool
+    list while returning browsers still held the previous stylesheet, so the section
+    rendered as bare <details> elements with no expand affordance. Versioned URLs
+    make that impossible; run `python -m before.stamp_assets` after changing CSS/JS.
+    """
+    import re
+    site = ROOT / "before" / "site"
+    unversioned = []
+    for page in sorted(site.glob("*.html")):
+        html = page.read_text(encoding="utf-8")
+        for m in re.finditer(r'(?:href|src)="(\.?/[^"]+\.(?:css|js))(\?v=[0-9a-f]+)?"', html):
+            if not m.group(2):
+                unversioned.append(f"{page.name}: {m.group(1)}")
+    assert not unversioned, (
+        "unversioned asset URLs (run python -m before.stamp_assets): " + ", ".join(unversioned))
+
+
+def test_asset_versions_match_the_files_they_point_at() -> None:
+    """A stale stamp is worse than none — it pins visitors to old bytes."""
+    import hashlib
+    import re
+    site = ROOT / "before" / "site"
+    stale = []
+    for page in sorted(site.glob("*.html")):
+        html = page.read_text(encoding="utf-8")
+        for path, ver in re.findall(r'(?:href|src)="(\.?/[^"?]+\.(?:css|js))\?v=([0-9a-f]+)"', html):
+            asset = site / path.lstrip("./").lstrip("/")
+            if not asset.is_file():
+                continue
+            actual = hashlib.sha256(asset.read_bytes()).hexdigest()[:8]
+            if actual != ver:
+                stale.append(f"{page.name}: {path} stamped {ver}, file is {actual}")
+    assert not stale, ("stale asset stamps (run python -m before.stamp_assets): " + ", ".join(stale))

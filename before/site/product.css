@@ -408,3 +408,14 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
 .hero .check-row{ padding-block: .5rem; }
 .hero .evaluation-header{ padding-block: .9rem; }
 .hero .recorded-banner{ padding-block: .5rem; }
+
+/* Make "this opens" unmissable: pointer cursor on the whole row, a hover wash, and a
+   word rather than only a glyph. A judge should never have to guess it is interactive. */
+.tool > summary{ cursor: pointer; border-radius: 6px; transition: background .12s ease; }
+.tool > summary:hover{ background: var(--accent-wash); }
+.tool > summary::after{ content: "Open"; margin-left: auto; padding-left: 1rem;
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--accent); flex: none; }
+.tool[open] > summary::after{ content: "Close"; color: var(--ink-3); }
+.tool[open] > summary{ background: var(--accent-wash); }
+.tool > summary .status-pill{ margin-left: 0; }
