@@ -30,15 +30,15 @@
         </div>
       </nav>
     </header>
-  <nav class="section-nav" aria-label="Sections"><ol><li><a href="#proof">What happened</a></li><li><a href="#why">Why</a></li><li><a href="#how">How it works</a></li><li><a href="#outcomes">Outcomes</a></li><li><a href="#built">Built with</a></li><li><a href="#who">Who it's for</a></li><li><a href="#open">In the open</a></li><li><a href="#limits">Limits</a></li><li><a href="#api">API</a></li></ol></nav>
+  <nav class="section-nav" aria-label="Sections"><ol><li><a href="#evidence">What happened</a></li><li><a href="#why">Why</a></li><li><a href="#how">How it works</a></li><li><a href="#try">Try it</a></li><li><a href="#api">API</a></li><li><a href="#open">In the open</a></li><li><a href="#who">Who it's for</a></li><li><a href="#built">Built with</a></li><li><a href="#limits">Limits</a></li></ol></nav>
 
     <main id="main">
       <section class="hero shell" id="top">
         <div class="hero-copy">
           <p class="eyebrow">Texas · neurotoxin · synthetic demonstration</p>
           <h1>Some treatments cannot be undone.</h1>
-          <p class="lead">Before every incision, a surgical team stops and confirms the patient, the site, and the procedure out loud. The checklist that includes that pause is associated with about <strong>30% fewer complications</strong>. The <strong>13,000 US med spas</strong> injecting neurotoxin thousands of times a day have no equivalent &mdash; and when med-spa malpractice cases go to verdict, the leading causes aren&rsquo;t bad hands. They&rsquo;re absent consent, unexplained risk, and unsupervised delegates. <strong>Paperwork failures, every one of them before the needle.</strong></p>
-          <p class="lead lead-punch"><strong>Time-Out is that pause.</strong> It checks who is performing the procedure, what is being used, and whether the patient actually understood &mdash; and refuses to produce a safety record when the evidence isn&rsquo;t there. Watch it refuse one right now:</p>
+          <p class="lead">Before every incision, a surgical team stops and confirms the patient, the site and the procedure out loud. The <strong>13,000 US med spas</strong> injecting neurotoxin thousands of times a day have no equivalent &mdash; and when their malpractice cases reach a verdict, the leading causes aren&rsquo;t bad hands. They&rsquo;re absent consent, unexplained risk and unsupervised delegates: <strong>paperwork failures, every one of them before the needle.</strong></p>
+          <p class="lead lead-punch"><strong>Time-Out is that pause.</strong> It checks who is performing the procedure, what is being used and whether the patient understood &mdash; and refuses to produce a safety record when the evidence isn&rsquo;t there. Watch it refuse one:</p>
           <p class="hero-ctas"><a class="button button-primary" href="/try.html#attack-grid">Try to break it &rarr;</a> <a class="button" href="/receipt.html">See what the patient gets</a></p>
         </div>
 
@@ -117,7 +117,7 @@
         </div>
       </section>
 
-      <section class="section shell" aria-labelledby="why-title" id="why">
+<section class="section shell" aria-labelledby="why-title" id="why">
         <div class="section-heading narrow"><p class="eyebrow">Why this exists</p><h2 id="why-title">Med spas are among the fastest-growing venues for medical procedures in America, and one of the least supervised.</h2></div>
         <div class="facts-grid">
           <article><p class="fact-number">≈13,000</p><p>US med spas by the end of 2026, with complication rates measurably higher than physician offices.</p><a href="https://doi.org/10.1093/asj/sjag085" target="_blank" rel="noreferrer">Aesthetic Surgery Journal · 2026</a></article>
@@ -128,7 +128,7 @@
         <p class="section-closing">Every one of those is a paperwork failure that happens <em>before</em> the needle. That is the only moment when it is still cheap to fix.</p>
       </section>
 
-      <section class="section surface-section" id="how">
+<section class="section surface-section" id="how">
         <div class="shell">
           <div class="section-heading narrow"><p class="eyebrow">How it works</p><h2>A cited checklist that cannot be skipped.</h2><p>Time-Out is not an AI that decides what's legal. It's a checklist that cannot be skipped, built from cited rules, that freezes exactly what it checked.</p></div>
           <div class="flow-scroll" aria-label="Encounter state machine">
@@ -140,7 +140,7 @@
         </div>
       <p class="wwh-reverse"><strong>And it runs backwards when it has to.</strong> If an FDA warning letter or a board action appears after an encounter is already prepared, it returns to human review. Ready is reversible — that is the point of a hold rather than a checkbox.</p></section>
 
-      <section class="section shell" id="try">
+<section class="section shell" id="try">
         <div class="section-heading"><p class="eyebrow">Try it yourself</p><h2>Three synthetic encounters. Three outcomes.</h2><p>Every path below runs live against the Xano backend. Open the console and try to get an unsafe procedure through &mdash; six attacks, each refused with its citation.</p></div>
         <div class="card-grid three-up scenario-grid">
           <a class="card scenario-card" id="reset-demo" href="/try.html#blocked"><span class="state-label state-blocked">BLOCKED</span><h3>Authority evidence missing</h3><p>The hero above, run against a fresh synthetic encounter.</p><span class="link-line">Open the console &rarr;</span></a>
@@ -149,45 +149,17 @@
         </div>
       </section>
 
-      <section class="section surface-section" aria-labelledby="built-title" id="built">
-    <div class="shell">
-      <p class="eyebrow">Built with</p>
-      <h2 id="built-title">Seven sponsor APIs, each owning a safety handoff.</h2>
-      <p class="lead">Every row below is a real call. Where a response is replayed rather than fetched at page load, it says so &mdash; the demo must never depend on a third party answering at the moment you click.</p>
+<section class="section api-section shell" id="api">
+        <div><p class="eyebrow">Use it as a service</p><h2>Call the Gate from your own system.</h2><p>One endpoint, no signup, a key in one click. Send an encounter, get back a verdict, the exact facts that failed, the citations, and a hash you can reproduce.</p></div>
+        <div class="api-preview">
+          <p class="preview-label">Live call</p><pre><code>curl -X POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate \
+  -H "Content-Type: application/json" -d '{}'</code></pre>
+          <a class="button button-primary" href="/api.html" aria-describedby="api-status">Open the live API</a>
+          <p id="api-status" class="muted">Live on Xano. No signup or key is required for the synthetic seeded encounter.</p>
+        </div>
+      </section>
 
-      <div class="scroll-x">
-      <table class="built-table">
-        <thead><tr><th>Sponsor</th><th>What it does here</th><th>State</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Xano</strong></td><td>The whole backend: 15 tables, the encounter state machine with guarded transitions, the seven-check Gate, the append-only audit log, the public API, static hosting &mdash; and it now brokers live calls to two other sponsors, server-side.</td><td><span class="status-pill clear">DEPLOYED</span></td></tr>
-          <tr><td><strong>SerpApi</strong></td><td>Live search for FDA warning letters and Texas board actions. A hit becomes an alert <em>candidate</em> that can reopen a prepared encounter &mdash; never a conclusion.</td><td><span class="status-pill clear">LIVE ON DEMAND</span></td></tr>
-          <tr><td><strong>name.com</strong></td><td>Search, availability, registration, DNS. Each receipt&rsquo;s SHA-256 is published as a TXT record and read back through the API.</td><td><span class="status-pill clear">LIVE ON DEMAND</span></td></tr>
-          <tr><td><strong>Nutrient DWS</strong></td><td>Extraction with per-field confidence and page coordinates. Anything below the floor is routed to a named Medical Director, who sees the uncertain value boxed on the source page.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
-          <tr><td><strong>Perfect Corp</strong></td><td>The patient&rsquo;s skin baseline before treatment &mdash; 12 scored concerns, overlay masks, skin age. A baseline and communication aid, never a diagnosis.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
-          <tr><td><strong>Foxit</strong></td><td>An agent assembles the evidence record through the MCP server, watermarks it, and <em>stops</em>. A human signs the attestation via eSign. Compare also locates tampering after the fact.</td><td><span class="status-pill clear">LIVE &middot; CACHED REPLAY</span></td></tr>
-          <tr><td><strong>Doctavian</strong></td><td>One consent template that branches on the authority pathway and loops over cited disclosures. Patient and injector sign.</td><td><span class="status-pill review">PARTIAL &mdash; see limits</span></td></tr>
-        </tbody>
-      </table>
-      </div>
-      <p class="muted">Credentials live in Xano environment variables. None are in the repository, and none have ever been committed.</p>
-    </div>
-  </section>
-      
-  
-
-  <section class="section shell audience" aria-labelledby="aud-title" id="who">
-    <p class="eyebrow">Who this is for</p>
-    <h2 id="aud-title">Four people, one record.</h2>
-    <div class="aud-grid">
-      <article><h3>The clinic</h3><p>Gets a refusal it can act on &mdash; the exact missing document, the rule behind it, and a remedy &mdash; instead of discovering the gap in a deposition two years later.</p></article>
-      <article><h3>The injector</h3><p>Knows before the appointment whether they are covered for this procedure, on this patient, under this delegation. No judgement call in the moment.</p></article>
-      <article><h3>The patient</h3><p>Leaves with a record of what was checked and a baseline of their own skin from before anything was done &mdash; verifiable without trusting the clinic or us.</p></article>
-      <article><h3>The Medical Director</h3><p>Sees only what genuinely needs a human: the uncertain extraction, the ambiguous rule, the new alert. Everything else is already decided by cited code.</p></article>
-    </div>
-    <p class="aud-note"><strong>Where it would sit.</strong> Beside the booking system, not inside it &mdash; the check has to be able to say no to the software that scheduled the appointment. The unit of value is one refusal that would otherwise have become a claim.</p>
-  </section>
-
-  <section class="section surface-section" aria-labelledby="open-title" id="open">
+<section class="section surface-section" aria-labelledby="open-title" id="open">
     <div class="shell">
       <p class="eyebrow">Built in the open</p>
       <h2 id="open-title">Everything here is inspectable.</h2>
@@ -202,7 +174,112 @@
     </div>
   </section>
 
-  <section class="section limits-section" id="limits">
+<section class="section shell audience" aria-labelledby="aud-title" id="who">
+    <p class="eyebrow">Who this is for</p>
+    <h2 id="aud-title">Four people, one record.</h2>
+    <div class="aud-grid">
+      <article><h3>The clinic</h3><p>Gets a refusal it can act on &mdash; the exact missing document, the rule behind it, and a remedy &mdash; instead of discovering the gap in a deposition two years later.</p></article>
+      <article><h3>The injector</h3><p>Knows before the appointment whether they are covered for this procedure, on this patient, under this delegation. No judgement call in the moment.</p></article>
+      <article><h3>The patient</h3><p>Leaves with a record of what was checked and a baseline of their own skin from before anything was done &mdash; verifiable without trusting the clinic or us.</p></article>
+      <article><h3>The Medical Director</h3><p>Sees only what genuinely needs a human: the uncertain extraction, the ambiguous rule, the new alert. Everything else is already decided by cited code.</p></article>
+    </div>
+    <p class="aud-note"><strong>Where it would sit.</strong> Beside the booking system, not inside it &mdash; the check has to be able to say no to the software that scheduled the appointment. The unit of value is one refusal that would otherwise have become a claim.</p>
+  </section>
+
+      <section class="section surface-section" aria-labelledby="built-title" id="built">
+    <div class="shell">
+      <p class="eyebrow">Built with</p>
+      <h2 id="built-title">Nine tools. Each one owns a handoff.</h2>
+      <p class="lead">Nothing here is decorative. Open a row to see what it does, how we used it, and why nothing else would have done the job.</p>
+
+      <div class="tool-list">
+        <details class="tool">
+          <summary><span class="tool-name">Xano</span> <span class="tool-role">The entire backend</span> <span class="status-pill clear">DEPLOYED</span></summary>
+          <dl>
+            <dt>What</dt><dd>15 tables, the encounter state machine, the seven-check Gate, an append-only audit log, the public REST API, and the hosting for this page.</dd>
+            <dt>How</dt><dd>Written as XanoScript and pushed from the CLI, so the whole workspace is committed as code and reviewable in the repo. It also brokers live calls to two other tools server-side, so no key ever reaches your browser.</dd>
+            <dt>Why</dt><dd>This product <em>is</em> a state machine with an audit trail. Xano is the system, not a database sitting behind one.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">Nutrient DWS</span> <span class="tool-role">Reads documents into typed fields</span> <span class="status-pill clear">LIVE · CACHED REPLAY</span></summary>
+          <dl>
+            <dt>What</dt><dd>Turns credential, intake and product documents into typed fields, each with a confidence score and page coordinates. Redaction runs before anything leaves the vault.</dd>
+            <dt>How</dt><dd>Anything below the confidence floor stops the encounter and goes to a named Medical Director, who sees the uncertain value boxed on the source page at the coordinates DWS returned.</dd>
+            <dt>Why</dt><dd>The threshold lives in code, never in a prompt. A model reads; it never decides.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">SerpApi</span> <span class="tool-role">Finds alerts after the fact</span> <span class="status-pill clear">LIVE ON DEMAND</span></summary>
+          <dl>
+            <dt>What</dt><dd>Live search across FDA warning letters and Texas board actions.</dd>
+            <dt>How</dt><dd>A hit becomes an alert <em>candidate</em> that moves an already-prepared encounter back to human review. A person confirms or dismisses it, and that decision is audited.</dd>
+            <dt>Why</dt><dd>Live data with a consequence: it changes the workflow. Our first real search returned the April 2026 warning letter to a Texas med spa.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">Perfect Corp</span> <span class="tool-role">Captures the skin baseline</span> <span class="status-pill clear">LIVE · CACHED REPLAY</span></summary>
+          <dl>
+            <dt>What</dt><dd>Twelve scored skin concerns, overlay masks and skin age, captured before treatment.</dd>
+            <dt>How</dt><dd>Run once on a synthetic face and attached to the patient&rsquo;s receipt, so they keep the record of how they looked first.</dd>
+            <dt>Why</dt><dd>An objective, repeatable starting point. A baseline and a communication aid &mdash; never a diagnosis.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">Foxit</span> <span class="tool-role">Assembles the record, then stops</span> <span class="status-pill clear">LIVE · SIGNED</span></summary>
+          <dl>
+            <dt>What</dt><dd>An agent takes a plain-English prompt and assembles a three-page evidence record, watermarked SYNTHETIC on every page. A second call locates tampering after the fact.</dd>
+            <dt>How</dt><dd>Through the official MCP server, then it <em>stops</em>. A named human signed the attestation through eSign; the agent read the outcome back with GET requests only, and can never act on an envelope.</dd>
+            <dt>Why</dt><dd>An agent that could sign its own attestation would make the attestation worthless. The pause is the entire point.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">name.com</span> <span class="tool-role">Publishes the receipt fingerprint</span> <span class="status-pill clear">LIVE ON DEMAND</span></summary>
+          <dl>
+            <dt>What</dt><dd>Domain search, availability, registration and DNS. Each receipt&rsquo;s SHA-256 is published as a TXT record and read back through the API.</dd>
+            <dt>How</dt><dd>The patient can look the record up themselves, without an account here.</dd>
+            <dt>Why</dt><dd>Verification that does not require trusting our server. Stated plainly: sandbox DNS does not propagate publicly and a TXT record is mutable by its owner &mdash; a verification channel, not a notary.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">Doctavian</span> <span class="tool-role">Compiles the consent document</span> <span class="status-pill review">PARTIAL — see limits</span></summary>
+          <dl>
+            <dt>What</dt><dd>One consent template that branches on the authority pathway and loops over cited disclosures. Patient and injector both sign.</dd>
+            <dt>How</dt><dd>Everything upstream of generation is live. Generation itself is blocked: delivery requires granting full Google Drive access, and we declined to hand a third party blanket Drive scope for a hackathon build. We asked for an internal-storage option.</dd>
+            <dt>Why</dt><dd>Consent that branches on <em>who is performing the procedure</em> is the difference between a form and a record. We would rather ship this honestly incomplete than overstate it.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">Model Context Protocol</span> <span class="tool-role">How the agent holds its tools</span> <span class="status-pill clear">LIVE</span></summary>
+          <dl>
+            <dt>What</dt><dd>The assembly agent reaches Foxit through the official MCP server rather than hand-rolled HTTP.</dd>
+            <dt>How</dt><dd>Three field-mapping bugs in that server surfaced during the build. Each is worked around through REST with the reason recorded in the run log, and all three were reported upstream with reproductions.</dd>
+            <dt>Why</dt><dd>Using a tool properly includes reporting it when it is wrong.</dd>
+          </dl>
+        </details>
+
+        <details class="tool">
+          <summary><span class="tool-name">WebCrypto</span> <span class="tool-role">Reproducibility in your browser</span> <span class="status-pill clear">LIVE</span></summary>
+          <dl>
+            <dt>What</dt><dd>Your browser fetches a live verdict, hashes the canonical ruleset itself, and compares it to the fingerprint the server recorded.</dd>
+            <dt>How</dt><dd>No library and no server round-trip for the hash &mdash; see it on <a href="/how-it-works.html">How it works</a>.</dd>
+            <dt>Why</dt><dd>You should not have to take our word for it.</dd>
+          </dl>
+        </details>
+      </div>
+
+      <p class="muted">Credentials live in Xano environment variables. None are in the repository, and none have ever been committed.</p>
+    </div>
+  </section>
+
+<section class="section limits-section" id="limits">
         <div class="shell limits-grid">
           <div class="section-heading"><p class="eyebrow">What this is not</p><h2>We'd rather you trust the parts that work.</h2></div>
           <ul class="limits-list">
@@ -216,15 +293,6 @@
         </div>
       </section>
 
-      <section class="section api-section shell" id="api">
-        <div><p class="eyebrow">Use it as a service</p><h2>Call the Gate from your own system.</h2><p>One endpoint, no signup, a key in one click. Send an encounter, get back a verdict, the exact facts that failed, the citations, and a hash you can reproduce.</p></div>
-        <div class="api-preview">
-          <p class="preview-label">Live call</p><pre><code>curl -X POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate \
-  -H "Content-Type: application/json" -d '{}'</code></pre>
-          <a class="button button-primary" href="/api.html" aria-describedby="api-status">Open the live API</a>
-          <p id="api-status" class="muted">Live on Xano. No signup or key is required for the synthetic seeded encounter.</p>
-        </div>
-      </section>
     </main>
 
     <footer class="footer"><div class="shell footer-inner"><p><strong>Time-Out</strong> · Pre-procedure safety determination for human review.</p><p>Synthetic data only · Texas neurotoxin demonstration · 2026</p></div></footer>

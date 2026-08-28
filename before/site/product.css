@@ -370,3 +370,41 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
   font-weight: 600; letter-spacing: -.02em; color: var(--accent-ink); }
 .hero-stats p{ margin: 0; color: var(--ink-3); font-size: 12.5px; line-height: 1.5; }
 .hero-stats-note{ margin-top: 1.5rem !important; padding-top: 1rem; border-top: 1px solid var(--rule); }
+
+/* ---- Built with: collapsed by default ----
+   Nine rows of prose is a wall. Name, role and state stay visible so the list is
+   scannable; what / how / why open on demand. */
+.tool-list{ display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.tool{ border-bottom: 1px solid var(--rule); }
+.tool > summary{ display: flex; flex-wrap: wrap; align-items: center; gap: .75rem;
+  min-height: 56px; padding: .85rem .25rem; cursor: pointer; list-style: none; }
+.tool > summary::-webkit-details-marker{ display: none; }
+.tool > summary::before{ content: "+"; font-family: var(--f-mono); font-size: 15px;
+  color: var(--accent); width: 1rem; flex: none; }
+.tool[open] > summary::before{ content: "\2212"; }
+.tool > summary:hover .tool-name{ color: var(--accent-ink); }
+.tool > summary:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool-name{ font-weight: 650; font-size: var(--step-0); }
+.tool-role{ flex: 1 1 auto; color: var(--ink-3); font-size: 13.5px; }
+.tool dl{ display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: .35rem 1rem;
+  margin: 0; padding: 0 .25rem 1.15rem 1.75rem; }
+.tool dt{ font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent-ink); padding-top: .2rem; }
+.tool dd{ margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.6; }
+@media (max-width: 40rem){
+  .tool-role{ flex-basis: 100%; }
+  .tool dl{ grid-template-columns: 1fr; gap: .1rem; padding-left: 1.75rem; }
+  .tool dt{ margin-top: .6rem; }
+}
+
+/* Hero: tighter, so the refusal is reachable without a second full scroll. */
+.hero{ padding-block: 40px 32px !important; }
+.hero h1{ margin-bottom: .35rem; }
+.hero .lead{ margin-bottom: .8rem; }
+.hero-ctas{ margin-top: .9rem; }
+.hero .evaluation{ margin-top: 1.5rem; }
+
+/* Denser hero result card: seven rows shouldn't cost a whole screen. */
+.hero .check-row{ padding-block: .5rem; }
+.hero .evaluation-header{ padding-block: .9rem; }
+.hero .recorded-banner{ padding-block: .5rem; }
