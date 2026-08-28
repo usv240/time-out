@@ -2,7 +2,7 @@
 
 **The surgical time-out, applied to cosmetic procedures.**
 
-Before every incision, a surgical team pauses to confirm the patient, the site, and the procedure. The WHO checklist that includes this pause is associated with about 30% fewer complications. Med spas — where neurotoxin and filler injections happen thousands of times a day — don't have one.
+Before every incision, a surgical team pauses to confirm the patient, the site, and the procedure. In the study that introduced the WHO checklist, complications fell from 11.0% to 7.0% and inpatient deaths from 1.5% to 0.8% ([Haynes et al., NEJM 2009](https://pubmed.ncbi.nlm.nih.gov/19144931/)). Med spas — where neurotoxin and filler injections happen thousands of times a day — don't have one.
 
 Time-Out is that pause. Before a cosmetic procedure can go ahead, it checks **who is performing it, what is being used, and whether the patient actually understood** — and refuses to produce a safety record when the evidence isn't there.
 

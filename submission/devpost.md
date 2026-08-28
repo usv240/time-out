@@ -45,7 +45,7 @@ https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
 
 ### Some treatments cannot be undone
 
-Before every incision, a surgical team stops. They confirm the patient, the site, and the procedure out loud. The WHO checklist that includes this pause is associated with roughly 30% fewer complications and half the mortality.
+Before every incision, a surgical team stops. They confirm the patient, the site, and the procedure out loud. In the study that introduced the WHO surgical safety checklist, complications fell from 11.0% to 7.0% and inpatient deaths from 1.5% to 0.8% ([Haynes et al., NEJM 2009](https://pubmed.ncbi.nlm.nih.gov/19144931/)).
 
 Med spas don't have one. There are about 13,000 of them in the US, growing fast, and neurotoxin and filler injections happen thousands of times a day in rooms where the person holding the needle may be an aesthetician, a "laser technician," or a nurse working under a delegation agreement nobody has seen. Complication rates are measurably higher than in physician offices. When a review looked at twenty med-spa malpractice cases, thirteen ended in verdicts for the patient, averaging near $2.5 million — and the leading causes weren't bad hands. They were **absent informed consent, failure to communicate risk, and liability for the actions of delegates.** Paperwork failures. All of them before the needle.
 
@@ -87,7 +87,7 @@ The rule that shapes everything: **the software never decides what's legal, and 
 - **Perfect Corp YouCam** captures the patient's skin baseline — twelve scored concerns, overlay masks, skin age — before treatment. A record the patient keeps. A baseline and communication aid; never a diagnosis.
 - **name.com** publishes each receipt's SHA-256 as a DNS TXT record on a registered domain and reads it back through the API. Verification that doesn't require trusting us.
 - **Doctavian** holds one consent template that branches on the authority pathway, loops over cited disclosures, and calculates only the non-clinical disclosure count. Nothing uncited enters the document.
-- **Foxit** runs the assembly agent: from a plain prompt, through the official Foxit MCP server, to a watermarked three-page record — then it stops. The Medical Director's attestation is a human eSign action, and it was signed: envelope `35611080`, status EXECUTED. The agent reads the outcome back but issues only GETs, so it can never act on an envelope. We found and documented two field-mapping bugs in the MCP server along the way.
+- **Foxit** runs the assembly agent: from a plain prompt, through the official Foxit MCP server, to a watermarked three-page record — then it stops. The Medical Director's attestation is a human eSign action, and it was signed: envelope `35611080`, status EXECUTED. The agent reads the outcome back but issues only GETs, so it can never act on an envelope. We found, worked around and reported upstream three field-mapping bugs in the MCP server along the way, each with a reproduction.
 
 ### What this is not
 
