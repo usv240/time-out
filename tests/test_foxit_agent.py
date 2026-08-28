@@ -37,15 +37,30 @@ class FoxitAgentTests(unittest.TestCase):
             if saved is not None:
                 os.environ["FOXIT_ESIGN_MEDICAL_DIRECTOR_EMAIL"] = saved
 
-    def test_esign_draft_fixture_records_handoff_not_signature(self):
+    def test_esign_fixture_records_handoff_not_signature(self):
+        """The envelope proves a handoff to a named human, never a signature by the agent.
+
+        `sent` is deliberately not asserted either way: sending is a human decision
+        (`request_attestation` defaults to send=False and emails nobody), so both
+        states are legitimate. What must never drift is that the record names a
+        human signer role and carries no claim that the agent applied a signature.
+        """
         import json
         fixture = foxit_agent.ROOT / "fixtures" / "foxit" / "esign-folder.json"
         if not fixture.exists():
             self.skipTest("eSign fixture not present")
         record = json.loads(fixture.read_text(encoding="utf-8"))
-        self.assertFalse(record["sent"])
         self.assertEqual(record["signer_role"], "Medical Director")
         self.assertIn("folderId", record["folder"])
+        self.assertIn("stopped", record["boundary_note"])
+        self.assertNotIn("signature", record)
+        self.assertNotIn("signed_by", record)
+
+    def test_request_attestation_defaults_to_not_sending(self):
+        """The default must never email a human. Sending has to be chosen explicitly."""
+        import inspect
+        default = inspect.signature(foxit_agent.request_attestation).parameters["send"].default
+        self.assertIs(default, False)
 
 
 if __name__ == "__main__":
