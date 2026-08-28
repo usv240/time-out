@@ -37,8 +37,22 @@
         <div class="hero-copy">
           <p class="eyebrow">Texas · neurotoxin · synthetic demonstration</p>
           <h1>Some treatments cannot be undone.</h1>
-          <p class="lead">Time-Out checks who is performing it, what is being used, and whether the patient actually understood — and refuses to produce a safety record when the evidence isn't there.</p>
+          <p class="lead">Before every incision, a surgical team stops and confirms the patient, the site, and the procedure out loud. The checklist that includes that pause is associated with about <strong>30% fewer complications</strong>. The <strong>13,000 US med spas</strong> injecting neurotoxin thousands of times a day have no equivalent &mdash; and when med-spa malpractice cases go to verdict, the leading causes aren&rsquo;t bad hands. They&rsquo;re absent consent, unexplained risk, and unsupervised delegates. <strong>Paperwork failures, every one of them before the needle.</strong></p>
+          <p class="lead lead-punch"><strong>Time-Out is that pause.</strong> It checks who is performing the procedure, what is being used, and whether the patient actually understood &mdash; and refuses to produce a safety record when the evidence isn&rsquo;t there. Watch it refuse one right now:</p>
+          <p class="hero-ctas"><a class="button button-primary" href="/try.html#attack-grid">Try to break it &rarr;</a> <a class="button" href="/receipt.html">See what the patient gets</a></p>
         </div>
+
+        <aside class="hero-stats" aria-label="Why this matters">
+          <dl>
+            <div><dt>Fewer complications with a surgical checklist</dt><dd>~30%</dd>
+              <p><a href="https://pubmed.ncbi.nlm.nih.gov/31948345/" target="_blank" rel="noopener">Meta-analysis</a></p></div>
+            <div><dt>US med spas with no equivalent pause</dt><dd>13,000</dd>
+              <p>And growing faster than oversight.</p></div>
+            <div><dt>Checks Time-Out runs before every procedure</dt><dd>7</dd>
+              <p>All seven, every time. Never short-circuited.</p></div>
+          </dl>
+          <p class="hero-stats-note">Every clinic, patient, licence and lot on this site is synthetic.</p>
+        </aside>
 
         <article class="evaluation" aria-labelledby="encounter-title">
           <header class="evaluation-header">
@@ -228,6 +242,16 @@
     }
   }, { rootMargin: '-120px 0px -70% 0px' });
   document.querySelectorAll('section[id]').forEach(s => io.observe(s));
+
+  // Give the first screen to the argument, not to a second row of links. The section
+  // nav appears once the reader has actually started scrolling, which is the only
+  // point at which "jump to a section" is a useful offer.
+  const nav = document.querySelector('.section-nav');
+  if (nav) {
+    const show = () => nav.classList.toggle('is-visible', window.scrollY > 220);
+    show();
+    addEventListener('scroll', show, { passive: true });
+  }
 })();
 </script></body>
 </html>

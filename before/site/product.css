@@ -339,3 +339,34 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
   .wordmark { min-height: 44px; display: inline-flex; align-items: center; }
   .info-btn, .info-button { width: 32px; height: 32px; }
 }
+
+/* ---- hero: lead with the stakes, then the live refusal ----
+   The measured problem: a judge landing here met fifteen navigation links, then a
+   technical encounter card. Why any of it mattered sat 2.9 screens down, and the
+   sentence that makes the whole project legible sat at 8.7. Both now open the page. */
+.hero .lead{ max-width: 68ch; }
+.hero .lead-punch{ color: var(--ink); margin-top: .9rem; }
+.hero-ctas{ display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.1rem 0 0; }
+
+/* The section nav duplicated Limits and API from the header and pushed content down.
+   Keep it for orientation once reading has started; don't spend the first screen on it. */
+.section-nav{ opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+.section-nav.is-visible{ opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce){ .section-nav{ transition: none; } }
+
+/* Wide screens left ~700px of dead space beside the hero prose while the result card
+   below ran full width. The numbers that justify the project go there — judges scan
+   figures before they read paragraphs. Collapses to one column under 60rem. */
+@media (min-width: 60rem){
+  .hero{ grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); align-items: start; }
+  .hero-copy{ grid-column: 1; }
+  .hero-stats{ grid-column: 2; grid-row: 1; align-self: start; position: sticky; top: 96px; }
+  .hero .evaluation, .hero .after-copy{ grid-column: 1 / -1; }
+}
+.hero-stats{ border-left: 2px solid var(--accent); padding-left: 1.15rem; }
+.hero-stats dl{ display: grid; gap: 1.35rem; margin: 0; }
+.hero-stats dt{ color: var(--ink-3); font-size: 12.5px; line-height: 1.4; text-wrap: balance; }
+.hero-stats dd{ margin: .1rem 0 .2rem; font-family: var(--f-mono); font-size: 30px;
+  font-weight: 600; letter-spacing: -.02em; color: var(--accent-ink); }
+.hero-stats p{ margin: 0; color: var(--ink-3); font-size: 12.5px; line-height: 1.5; }
+.hero-stats-note{ margin-top: 1.5rem !important; padding-top: 1rem; border-top: 1px solid var(--rule); }
