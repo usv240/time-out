@@ -9,9 +9,9 @@ Paste each block into the matching Devpost field. Sponsor challenge text lives i
 
 **Time-Out**
 
-## Elevator pitch (Devpost caps this short — use exactly this)
+## Elevator pitch (Devpost hard-caps this at 200 characters — this is 187)
 
-> The surgical time-out, applied to cosmetic procedures. Before an injection can go ahead, Time-Out checks who is performing it, what is being used, and whether the patient understood — and refuses to produce a safety record when the evidence isn't there.
+> Surgeons pause before every incision. Med spas don't. Time-Out checks who is injecting, what they're using, and whether the patient understood — and refuses when the evidence isn't there.
 
 ## Try it out (link)
 
