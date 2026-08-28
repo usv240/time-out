@@ -3,9 +3,9 @@
   "mode": "SENT to signer",
   "signer_role": "Medical Director",
   "signer_email": "ujwalsureshv@gmail.com",
-  "document_sha256": "dc4e562d6291ea994615e935675fc1ba3bfb7ddc312f0930f2d301394757decc",
+  "document_sha256": "6d9938382bb76531548d1eb9124ad0492ca1f13a1d560e38868e305488f894c4",
   "folder": {
-    "folderId": 35610850,
+    "folderId": 35611080,
     "folderName": "Time-Out attestation  time-out-safety-record  SYNTHETIC",
     "folderCustomName": "${doc_name}",
     "folderPassword": null,
@@ -15,26 +15,26 @@
     "folderAuthorEmail": null,
     "folderAuthorRole": null,
     "folderCompanyId": 2916862,
-    "folderCreationDate": 1787875561050,
-    "folderSentDate": 1787875561583,
+    "folderCreationDate": 1787876931094,
+    "folderSentDate": 1787876931617,
     "folderStatus": "SHARED",
     "custom_field1": null,
     "custom_field2": null,
     "metadata": null,
     "folderDocumentIds": [
-      41461454
+      41461719
     ],
     "documentsList": [
       {
-        "documentId": 41461454,
-        "contractId": 41461454,
+        "documentId": 41461719,
+        "contractId": 41461719,
         "companyId": 2916862,
         "contractCreatedBy": 19155782,
         "contractCreatedOn": null,
         "contractType": null,
         "contractStatus": "WAITING_FOR_SIGNATURE",
         "editable": false,
-        "contractVersionId": 41462515,
+        "contractVersionId": 41462780,
         "contractVersionName": "time-out-safety-record",
         "contractVersionDesc": null,
         "versionCreatedby": 19155782,
@@ -90,7 +90,7 @@
         "envelopeId": 0,
         "partyCompanyId": 2916862,
         "sharingMode": "email",
-        "folderAccessURL": "https://na1.foxitesign.foxit.com/viewDocumentDirect?encrDocId=6jG8IvNDFF4EwLKxoXqFCA%3D%3D&partyId=19155782&partySeq=1",
+        "folderAccessURL": "https://na1.foxitesign.foxit.com/viewDocumentDirect?encrDocId=Av3mRL0V9ycCnN%2Bq%2FQRbaw%3D%3D&partyId=19155782&partySeq=1",
         "securityMode": "none",
         "extraComments": null,
         "allowNameChange": false,
@@ -134,15 +134,15 @@
     "overrideAccountReminders": false,
     "overrideAccountRecipientDelegation": false,
     "allowRecipientsToDelegate": false,
-    "envelopeId": 35610850,
+    "envelopeId": 35611080,
     "envelopeName": "Time-Out attestation  time-out-safety-record  SYNTHETIC",
     "envelopeOriginatorId": 19155782,
     "envelopeCompanyId": 2916862,
-    "envelopeDate": 1787875561050,
-    "envelopeSharedDate": 1787875561583,
+    "envelopeDate": 1787876931094,
+    "envelopeSharedDate": 1787876931617,
     "envelopeStatus": "SHARED",
     "envelopeContractIds": [
-      41461454
+      41461719
     ],
     "envelopePartyPermissions": [
       {
@@ -191,7 +191,7 @@
         "envelopeId": 0,
         "partyCompanyId": 2916862,
         "sharingMode": "email",
-        "folderAccessURL": "https://na1.foxitesign.foxit.com/viewDocumentDirect?encrDocId=6jG8IvNDFF4EwLKxoXqFCA%3D%3D&partyId=19155782&partySeq=1",
+        "folderAccessURL": "https://na1.foxitesign.foxit.com/viewDocumentDirect?encrDocId=Av3mRL0V9ycCnN%2Bq%2FQRbaw%3D%3D&partyId=19155782&partySeq=1",
         "securityMode": "none",
         "extraComments": null,
         "allowNameChange": false,
@@ -230,5 +230,22 @@
   },
   "message": "folder of document(s) successfully created",
   "result": "success",
-  "boundary_note": "The agent assembled the record and stopped. Creating this folder is the handoff; the signature itself can only be applied by the named human."
+  "boundary_note": "The agent assembled the record and stopped. Creating this folder is the handoff; the signature itself can only be applied by the named human.",
+  "attestation": {
+    "folder_id": 35611080,
+    "folder_status": "EXECUTED",
+    "executed": true,
+    "signed_by": [
+      {
+        "name": "Ujwal Suresh Vanjare",
+        "email": "ujwalsureshv@gmail.com"
+      }
+    ],
+    "boundary_note": "The agent assembled the record, handed it to a named human, and read back the outcome. It did not and cannot apply the signature.",
+    "signed_pdf": "before/site/artifacts/time-out-safety-record-signed.pdf",
+    "signed_pdf_sha256": "c7002375052ec904f5f7b4fa68858cea2fd57dead9f6fb1298e6008d814916a9",
+    "signed_pdf_bytes": 68738,
+    "assembled_sha256": "6d9938382bb76531548d1eb9124ad0492ca1f13a1d560e38868e305488f894c4",
+    "digest_note": "signed_pdf_sha256 differs from assembled_sha256 by design: signing appends the signature and the certificate page. The assembled digest is what the agent produced; the signed digest is what the human returned."
+  }
 }

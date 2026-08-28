@@ -18,11 +18,11 @@
       },
       "result": {
         "success": true,
-        "documentId": "6a8f6a374448d7775c2f7dfc",
+        "documentId": "6a90d56e38b43c0d1c0c6e90",
         "fileName": "01-encounter-and-boundary.pdf",
-        "message": "Document uploaded successfully. Use documentId '6a8f6a374448d7775c2f7dfc' in other operations."
+        "message": "Document uploaded successfully. Use documentId '6a90d56e38b43c0d1c0c6e90' in other operations."
       },
-      "ms": 1239
+      "ms": 1165
     },
     {
       "tool": "upload_document",
@@ -32,47 +32,47 @@
       },
       "result": {
         "success": true,
-        "documentId": "6a8f6a386107c945ba755e17",
+        "documentId": "6a90d56f6107c945baeb2f34",
         "fileName": "02-gate-and-rule-snapshot.pdf",
-        "message": "Document uploaded successfully. Use documentId '6a8f6a386107c945ba755e17' in other operations."
+        "message": "Document uploaded successfully. Use documentId '6a90d56f6107c945baeb2f34' in other operations."
       },
-      "ms": 1183
+      "ms": 969
     },
     {
       "tool": "upload_document",
       "args": {
-        "fileContent": "<base64 3380 bytes>",
+        "fileContent": "<base64 3388 bytes>",
         "fileName": "03-sources-and-attestation.pdf"
       },
       "result": {
         "success": true,
-        "documentId": "6a8f6a392f2e20594e28828d",
+        "documentId": "6a90d5702f2e20594e9efe68",
         "fileName": "03-sources-and-attestation.pdf",
-        "message": "Document uploaded successfully. Use documentId '6a8f6a392f2e20594e28828d' in other operations."
+        "message": "Document uploaded successfully. Use documentId '6a90d5702f2e20594e9efe68' in other operations."
       },
-      "ms": 1085
+      "ms": 1023
     },
     {
       "tool": "REST pdf-combine (MCP pdf_merge workaround)",
       "args": {
         "documentInfos": [
-          "6a8f6a374448d7775c2f7dfc",
-          "6a8f6a386107c945ba755e17",
-          "6a8f6a392f2e20594e28828d"
+          "6a90d56e38b43c0d1c0c6e90",
+          "6a90d56f6107c945baeb2f34",
+          "6a90d5702f2e20594e9efe68"
         ],
-        "why": "pdf_merge in the TypeScript Foxit MCP server sends `documents` where the PDF Services API requires `documentInfos` (server returns VALIDATION_ERROR). Merge is routed through the same host's REST endpoint until upstream fixes the mapping. All other operations run through MCP."
+        "why": "pdf_merge in the TypeScript Foxit MCP server sends `documents` where the PDF Services API requires `documentInfos` (server returns VALIDATION_ERROR). Merge is routed through the same host's REST endpoint until upstream fixes the mapping. All other operations run through MCP. Reported upstream: https://github.com/foxitsoftware/foxit-pdf-api-mcp-server/issues/4"
       },
       "result": {
-        "documentId": "6a8f6a3ca9748565637fba86",
-        "taskId": "6a8f6a3bd244747411ccd900",
+        "documentId": "6a90d572efe54d2a0583abb4",
+        "taskId": "6a90d57238b43c0d1c0c6efd",
         "polls": 1
       },
-      "ms": 5233
+      "ms": 4596
     },
     {
       "tool": "REST pdf-watermark (MCP pdf_watermark workaround)",
       "args": {
-        "documentId": "6a8f6a3ca9748565637fba86",
+        "documentId": "6a90d572efe54d2a0583abb4",
         "config": {
           "type": "TEXT",
           "text": "SYNTHETIC - NOT FOR CLINICAL USE",
@@ -85,21 +85,21 @@
         "why": "pdf_watermark in the TypeScript Foxit MCP server has three field mismatches with the PDF Services API (opacity scale, opacity type, and `content` vs `text`). Watermarking is routed through the same host's REST endpoint until upstream fixes the mapping."
       },
       "result": {
-        "documentId": "6a8f6a41d89211294a97f66b",
-        "taskId": "6a8f6a406107c945ba755f74",
+        "documentId": "6a90d576d89211294a97f90b",
+        "taskId": "6a90d57638b43c0d1c0c6f96",
         "polls": 1
       },
-      "ms": 4305
+      "ms": 4257
     },
     {
       "tool": "get_pdf_properties",
       "args": {
-        "documentId": "6a8f6a41d89211294a97f66b",
+        "documentId": "6a90d576d89211294a97f90b",
         "includePageInfo": true
       },
       "result": {
         "success": true,
-        "taskId": "6a8f6a442f2e20594e288443",
+        "taskId": "6a90d57ad2447474114175bf",
         "properties": {
           "pagesInfo": [
             {
@@ -133,7 +133,7 @@
             "isTagged": false,
             "isLinearized": false,
             "isXFA": false,
-            "fileSize": 10138,
+            "fileSize": 10147,
             "fonts": [
               {
                 "fontType": "Type1",
@@ -172,11 +172,6 @@
               },
               {
                 "fontType": "Type1",
-                "familyName": "Courier New",
-                "name": "CourierNewPSMT"
-              },
-              {
-                "fontType": "Type1",
                 "familyName": "Arial",
                 "name": "Arial-BoldMT"
               },
@@ -184,6 +179,11 @@
                 "fontType": "Type1",
                 "familyName": "Arial",
                 "name": "ArialMT"
+              },
+              {
+                "fontType": "Type1",
+                "familyName": "Courier New",
+                "name": "CourierNewPSMT"
               }
             ],
             "isEncrypted": false,
@@ -194,8 +194,8 @@
               "Keywords": "",
               "Creator": "",
               "Producer": "",
-              "CreationDate": "2026-08-26 22:35:40 ",
-              "ModDate": "2026-08-26 22:35:44 "
+              "CreationDate": "2026-08-28 00:25:22 ",
+              "ModDate": "2026-08-28 00:25:26 "
             },
             "hasAcroform": false,
             "userPermissionsAnalysis": {
@@ -215,29 +215,29 @@
         },
         "message": "PDF properties extracted successfully"
       },
-      "ms": 2698
+      "ms": 2066
     },
     {
       "tool": "download_document",
       "args": {
-        "documentId": "6a8f6a41d89211294a97f66b",
+        "documentId": "6a90d576d89211294a97f90b",
         "outputPath": "C:\\Hackathons\\DevNetwork [API + Cloud + AI] Hackathon 2026\\output\\pdf\\time-out-safety-record.pdf"
       },
       "result": {
         "success": true,
-        "documentId": "6a8f6a41d89211294a97f66b",
+        "documentId": "6a90d576d89211294a97f90b",
         "outputPath": "C:\\Hackathons\\DevNetwork [API + Cloud + AI] Hackathon 2026\\output\\pdf\\time-out-safety-record.pdf",
-        "size": 10138,
+        "size": 10147,
         "message": "Document downloaded successfully to C:\\Hackathons\\DevNetwork [API + Cloud + AI] Hackathon 2026\\output\\pdf\\time-out-safety-record.pdf"
       },
-      "ms": 1123
+      "ms": 1256
     }
   ],
   "output_pdf": "output\\pdf\\time-out-safety-record.pdf",
-  "output_sha256": "dc4e562d6291ea994615e935675fc1ba3bfb7ddc312f0930f2d301394757decc",
+  "output_sha256": "6d9938382bb76531548d1eb9124ad0492ca1f13a1d560e38868e305488f894c4",
   "properties": {
     "success": true,
-    "taskId": "6a8f6a442f2e20594e288443",
+    "taskId": "6a90d57ad2447474114175bf",
     "properties": {
       "pagesInfo": [
         {
@@ -271,7 +271,7 @@
         "isTagged": false,
         "isLinearized": false,
         "isXFA": false,
-        "fileSize": 10138,
+        "fileSize": 10147,
         "fonts": [
           {
             "fontType": "Type1",
@@ -310,11 +310,6 @@
           },
           {
             "fontType": "Type1",
-            "familyName": "Courier New",
-            "name": "CourierNewPSMT"
-          },
-          {
-            "fontType": "Type1",
             "familyName": "Arial",
             "name": "Arial-BoldMT"
           },
@@ -322,6 +317,11 @@
             "fontType": "Type1",
             "familyName": "Arial",
             "name": "ArialMT"
+          },
+          {
+            "fontType": "Type1",
+            "familyName": "Courier New",
+            "name": "CourierNewPSMT"
           }
         ],
         "isEncrypted": false,
@@ -332,8 +332,8 @@
           "Keywords": "",
           "Creator": "",
           "Producer": "",
-          "CreationDate": "2026-08-26 22:35:40 ",
-          "ModDate": "2026-08-26 22:35:44 "
+          "CreationDate": "2026-08-28 00:25:22 ",
+          "ModDate": "2026-08-28 00:25:26 "
         },
         "hasAcroform": false,
         "userPermissionsAnalysis": {
@@ -356,6 +356,6 @@
   "paused_at_boundary": true,
   "next_human_action": "Medical Director reviews and signs the attestation via Foxit eSign.",
   "boundary_note": "The agent performs only reversible assembly. It never signs. Treatment-party signatures collected by Doctavian are never reused here.",
-  "started_at": "2026-08-26T22:35:27Z",
-  "finished_at": "2026-08-26T22:35:50Z"
+  "started_at": "2026-08-28T00:25:12Z",
+  "finished_at": "2026-08-28T00:25:32Z"
 }

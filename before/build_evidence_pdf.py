@@ -99,7 +99,7 @@ def build(output: Path = OUTPUT) -> Path:
     for source in sources:
         story.extend([Paragraph(f"- {source}", styles["BodySmall"]), Spacer(1, 4)])
     story.extend([Spacer(1, 18), Paragraph("Bounded receipt language", styles["SectionTitle"]), Paragraph("This record proves which checks, evidence, sources, and rule snapshot were captured before the procedure. It does not certify legality, safety, product authenticity, provider quality, or outcome.", styles["Boundary"]), Spacer(1, 30)])
-    signature = Table([["MEDICAL DIRECTOR ATTESTATION", ""], ["Status", "PENDING HUMAN eSIGN"], ["Synthetic attestation ID", "SYN-ATTEST-SYN-ENC-BLOCKED-002"], ["Signature", "________________________________"]], colWidths=[2.15 * inch, 4.45 * inch])
+    signature = Table([["MEDICAL DIRECTOR ATTESTATION", ""], ["Status", "NOT ATTESTED UNLESS SIGNED BELOW"], ["Synthetic attestation ID", "SYN-ATTEST-SYN-ENC-BLOCKED-002"], ["Signature", "________________________________"]], colWidths=[2.15 * inch, 4.45 * inch])
     signature.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, RULE), ("BACKGROUND", (0, 0), (-1, 0), WASH), ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (1, 1), (1, -1), "Courier"), ("FONTSIZE", (0, 0), (-1, -1), 8), ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10)]))
     story.append(signature)
     doc.build(story, onFirstPage=footer, onLaterPages=footer)

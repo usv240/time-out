@@ -427,6 +427,83 @@ def request_attestation(pdf: Path = OUTPUT_PDF, send: bool = False) -> dict[str,
     return record
 
 
+SIGNED_PDF = ROOT / "before" / "site" / "artifacts" / "time-out-safety-record-signed.pdf"
+
+
+def _esign_headers(accept: str) -> dict[str, str]:
+    return {"client_id": os.environ["FOXIT_CLOUD_API_CLIENT_ID"],
+            "client_secret": os.environ["FOXIT_CLOUD_API_CLIENT_SECRET"],
+            "Accept": accept}
+
+
+def collect_attestation(folder_id: int | None = None) -> dict[str, Any]:
+    """Fetch the signature outcome, and the executed PDF once a human has signed.
+
+    The agent may read the outcome but can never produce it. If the folder is not
+    EXECUTED this returns the current status and downloads nothing — a pending
+    signature is a real state, not an error to paper over.
+    """
+    from before.app.live import _requests  # noqa: WPS433
+
+    if folder_id is None:
+        if not ESIGN_CACHE.exists():
+            raise AgentError("No eSign folder on record. Run request_attestation first.")
+        folder_id = json.loads(ESIGN_CACHE.read_text(encoding="utf-8"))["folder"]["folderId"]
+
+    detail = _requests().get(f"{ESIGN_HOST}/folders/myfolder", headers=_esign_headers("*/*"),
+                             params={"folderId": folder_id}, timeout=90)
+    if detail.status_code >= 400:
+        raise AgentError(f"eSign myfolder failed HTTP {detail.status_code}: {detail.text[:300]}")
+    folder = detail.json().get("folder") or {}
+    status = folder.get("folderStatus")
+
+    outcome: dict[str, Any] = {
+        "folder_id": folder_id,
+        "folder_status": status,
+        "executed": status == "EXECUTED",
+        "signed_by": [
+            {"name": f"{p.get('partyDetails', {}).get('firstName', '')} "
+                     f"{p.get('partyDetails', {}).get('lastName', '')}".strip(),
+             "email": p.get("partyDetails", {}).get("emailId")}
+            for p in folder.get("folderRecipientParties", [])
+        ],
+        "boundary_note": (
+            "The agent assembled the record, handed it to a named human, and read back the "
+            "outcome. It did not and cannot apply the signature."
+        ),
+    }
+    if not outcome["executed"]:
+        outcome["note"] = f"Signature still pending ({status}). Nothing downloaded."
+        return outcome
+
+    pdf = _requests().get(f"{ESIGN_HOST}/folders/document/download",
+                          headers=_esign_headers("application/octet-stream"),
+                          params={"folderId": folder_id, "docNumber": 1}, timeout=180)
+    if pdf.status_code >= 400:
+        raise AgentError(f"eSign download failed HTTP {pdf.status_code}: {pdf.text[:300]}")
+    if not pdf.content.startswith(b"%PDF-"):
+        raise AgentError("eSign download did not return a PDF.")
+
+    SIGNED_PDF.parent.mkdir(parents=True, exist_ok=True)
+    SIGNED_PDF.write_bytes(pdf.content)
+    outcome["signed_pdf"] = str(SIGNED_PDF.relative_to(ROOT)).replace("\\", "/")
+    outcome["signed_pdf_sha256"] = hashlib.sha256(pdf.content).hexdigest()
+    outcome["signed_pdf_bytes"] = len(pdf.content)
+    # The signed PDF is the assembled record plus signature and certificate pages, so its
+    # digest necessarily differs from the pre-signature one. Keep both and say why.
+    outcome["assembled_sha256"] = json.loads(ESIGN_CACHE.read_text(encoding="utf-8"))["document_sha256"]
+    outcome["digest_note"] = (
+        "signed_pdf_sha256 differs from assembled_sha256 by design: signing appends the "
+        "signature and the certificate page. The assembled digest is what the agent produced; "
+        "the signed digest is what the human returned."
+    )
+
+    record = json.loads(ESIGN_CACHE.read_text(encoding="utf-8"))
+    record["attestation"] = outcome
+    ESIGN_CACHE.write_text(json.dumps(record, indent=2), encoding="utf-8")
+    return outcome
+
+
 # ------------------------------------------------------------------- CLI
 
 if __name__ == "__main__":

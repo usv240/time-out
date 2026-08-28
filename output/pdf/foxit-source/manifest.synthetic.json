@@ -5,7 +5,7 @@
   "contains_prohibited_identifiers": false,
   "agent_prompt": "assemble the safety record for encounter SYN-ENC-BLOCKED-002",
   "source_document": "output/pdf/synthetic-safety-evidence-record.pdf",
-  "source_document_sha256": "aa3acd0e9f8b62c0e92b0fadc313b35abbe48c31e83a7d477bca1feea5dd325c",
+  "source_document_sha256": "521bd38861a265527e58c7d2782fbd6505176db92dcd529c4c8cae694f5d9c38",
   "documents": [
     {
       "path": "output/pdf/foxit-source/01-encounter-and-boundary.pdf",
@@ -21,7 +21,7 @@
     },
     {
       "path": "output/pdf/foxit-source/03-sources-and-attestation.pdf",
-      "sha256": "ba6f65f837cf75748b884a91e65b440a396e6fe45ae2ff880c80c27e71b574e7",
+      "sha256": "6f41c4ae5aada0eb679c7bdfdb03ed1c34ffe51cb953b1e38e9fbefbb18420fa",
       "pages": 1,
       "section": "Sources, bounded receipt language, and attestation handoff"
     }

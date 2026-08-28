@@ -68,11 +68,39 @@ function dnsBlock(dns) {
   </section>`;
 }
 
+function attestationBlock(esign) {
+  const a = esign?.attestation;
+  const signed = Boolean(a?.executed);
+  const who = (a?.signed_by || []).map((s) => s.name).filter(Boolean).join(", ");
+  // Two documents, deliberately: what the agent produced, and what the human returned.
+  const assembled = `<a class="button" href="/artifacts/time-out-safety-record.pdf" target="_blank" rel="noopener">Open the assembled record (PDF, watermarked SYNTHETIC)</a>`;
+  if (!signed) {
+    return `<section class="attestation-proof">
+      <p class="integration-kicker">MEDICAL DIRECTOR ATTESTATION ${info("i-attest", "The agent assembled this record and stopped. A named human signs it through Foxit eSign.", "An agent that could sign its own attestation would make the attestation worthless. The pause is the point.", "Foxit eSign · envelope " + escapeHtml(String(esign?.folder?.folderId || "")))}</p>
+      <strong>AWAITING SIGNATURE</strong>
+      <p class="muted">This record is not attested until the Medical Director signs it.</p>
+      ${assembled}</section>`;
+  }
+  return `<section class="attestation-proof dns-match">
+    <p class="integration-kicker">MEDICAL DIRECTOR ATTESTATION ${info("i-attest", "The agent assembled this record and stopped. A named human signed it through Foxit eSign, and the agent read the outcome back.", "An agent that could sign its own attestation would make the attestation worthless. The pause is the point.", "Foxit eSign · envelope " + escapeHtml(String(a.folder_id)))}</p>
+    <strong>SIGNED BY A NAMED HUMAN</strong>
+    <h3>${escapeHtml(who)}</h3>
+    <p class="muted">Envelope <code>${escapeHtml(String(a.folder_id))}</code> · status <code>${escapeHtml(a.folder_status)}</code></p>
+    <p class="muted">Signing appends a signature and a certificate page, so the signed file's fingerprint differs from the assembled one by design. Both are published:<br>
+      assembled <code>${escapeHtml((a.assembled_sha256 || "").slice(0, 24))}…</code><br>
+      signed <code>${escapeHtml((a.signed_pdf_sha256 || "").slice(0, 24))}…</code></p>
+    <a class="button button-primary" href="/artifacts/time-out-safety-record-signed.pdf" target="_blank" rel="noopener">Open the signed record (PDF)</a>
+    ${assembled}
+    <p class="evidence-boundary">The agent never signs. It assembled the record, handed it to a named human, and read the outcome back.</p>
+  </section>`;
+}
+
 async function loadReceipt() {
   try {
-    const [receipt, hero] = await Promise.all([
+    const [receipt, hero, esign] = await Promise.all([
       fetch("/data/receipt.json").then((r) => r.json()),
       fetch("/data/hero-timeline.json").then((r) => r.json()).catch(() => null),
+      fetch("/data/esign-folder.json").then((r) => r.json()).catch(() => null),
     ]);
     if (requestedId && requestedId !== receipt.receipt_id && !requestedId.endsWith("receipt.html")) {
       // Only the hero receipt is committed as a static artifact. Say so instead of pretending.
@@ -100,7 +128,7 @@ async function loadReceipt() {
         <div class="receipt-field"><dt>Medical Director attestation</dt><dd><code>${escapeHtml(receipt.attestation_id)}</code></dd></div>
       </dl>
       ${dnsBlock(dns)}
-      <a class="button button-primary" href="/artifacts/time-out-safety-record.pdf" target="_blank" rel="noopener">Open the assembled safety record (PDF, watermarked SYNTHETIC)</a>
+      ${attestationBlock(esign)}
       <div class="receipt-boundary"><strong>What this proves — and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
       <details class="machine-evidence"><summary>Machine evidence</summary><pre class="timeline-detail">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre></details>`);
   } catch (error) {

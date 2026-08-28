@@ -62,6 +62,31 @@ class FoxitAgentTests(unittest.TestCase):
         default = inspect.signature(foxit_agent.request_attestation).parameters["send"].default
         self.assertIs(default, False)
 
+    def test_collect_attestation_reads_outcome_but_never_produces_it(self):
+        """The agent may read a signature outcome; it must never be able to create one."""
+        import inspect
+        src = inspect.getsource(foxit_agent.collect_attestation)
+        # Only GETs. A POST here would mean the agent could act on the envelope.
+        self.assertNotIn(".post(", src)
+        self.assertIn("myfolder", src)
+        self.assertIn("document/download", src)
+        # A pending signature is a legitimate state, not an error to swallow.
+        self.assertIn("Signature still pending", src)
+
+    def test_signed_record_is_published_alongside_the_assembled_one(self):
+        import json
+        cache = foxit_agent.ROOT / ".cache" / "foxit" / "esign-folder.json"
+        if not cache.exists():
+            self.skipTest("no eSign record cached")
+        att = json.loads(cache.read_text(encoding="utf-8")).get("attestation")
+        if not att or not att.get("executed"):
+            self.skipTest("envelope not executed")
+        # Signing appends pages, so the digests MUST differ. If they ever matched,
+        # we would be publishing the unsigned file as though it were signed.
+        self.assertNotEqual(att["signed_pdf_sha256"], att["assembled_sha256"])
+        self.assertTrue((foxit_agent.ROOT / att["signed_pdf"]).exists())
+        self.assertTrue(att["signed_by"] and att["signed_by"][0]["name"])
+
 
 if __name__ == "__main__":
     unittest.main()
