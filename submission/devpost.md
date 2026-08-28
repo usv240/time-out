@@ -36,6 +36,8 @@ https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
 | `screenshots/05-receipt.png` | The patient's receipt: seven checks, their skin baseline, and a published, verifiable record |
 | `screenshots/06-reproduced.png` | Reproducibility, in your own browser: WebCrypto re-hashes the live ruleset and it matches |
 | `screenshots/07-landing-dark.png` | Theme-aware, keyboard-complete |
+| `screenshots/08-xano-tables.png` | The backend is Xano: 17 tables, each documented with the constraint it enforces — "append-only", "immutable once used by a decision", "never a finding of fact" |
+| `screenshots/09-xano-functions.png` | The Gate as a Xano function: "no network calls and no short-circuiting… a safety determination for human review, never a legality decision" |
 
 ---
 
