@@ -15,7 +15,7 @@ first sentence.
 
 ---
 
-## Xano — "Rebuild a SaaS tool you hate"
+## Xano — Build a better version of business software you use today
 
 **Xano is the entire backend.** Fifteen tables, the encounter state machine with guarded transitions, the deterministic seven-check Gate, approval gates, an append-only audit log, the public REST API, and static hosting for the site — all in Xano, deployed from the CLI, with the workspace committed as code in `xano-workspace/`.
 
@@ -63,15 +63,45 @@ In our first live run, the search returned the actual April 2026 FDA warning let
 
 ## name.com — Domain API Challenge
 
-**Four name.com endpoints make the receipt independently verifiable.** Search and availability to claim the registry namespace; registration for `timeout-receipts-demo.com`; DNS to publish each safety receipt's SHA-256 as a TXT record; and read-back through the API to verify it.
+**Every clinic gets the domain its own patients verify against.** Publishing every
+receipt under a domain *we* control leaves the patient trusting us — which is the
+exact thing the receipt exists to remove. So onboarding a clinic provisions a domain
+that belongs to the clinic, and that clinic's receipts publish underneath it.
 
-A patient handed a Time-Out receipt can check that the record they hold matches what was published — without an account and without trusting our server.
+Four surfaces, each load-bearing:
 
-**Limits, stated where the result is shown:** sandbox DNS doesn't propagate to public resolvers, so verification reads through the API rather than `dig`. And a TXT record is mutable by its owner. This is a verification channel, not an immutable notary. We say so on the receipt screen.
+| Surface | Endpoint | What it decides |
+|---|---|---|
+| Search | `POST /core/v1/domains:search` | Find a domain that reads as the clinic's own, not ours |
+| Availability | `POST /core/v1/domains:checkAvailability` | Search suggests; availability is what we're willing to promise |
+| Registration | `POST /core/v1/domains` | The clinic owns what its patients check against |
+| DNS | `POST/PUT/GET /core/v1/domains/{domain}/records` | Each sealed receipt's SHA-256 as a TXT record, read back through the API |
 
-**Edge cases handled:** duplicate publish is idempotent (update, not a second record); a token that hasn't finished activating returns a clear "activating" state rather than a failure; a read-back mismatch is surfaced as a verification failure, never silently.
+Run live for a synthetic clinic: `Cedar Park Aesthetics` → search returned 12
+candidates → availability confirmed three purchasable at $17.99 →
+**`cedarparkaesthetics.com` registered** → receipt `dbb4241c…` published and read
+back at `_timeout.syn-receipt-syn-enc-blocked-002.cedarparkaesthetics.com`, matching.
+Reproduce with `python -m before.onboard_clinic --clinic "Cedar Park Aesthetics"`
+(add `--register` to perform the irreversible step).
 
-**Where name.com did the real work, and why:** not a domain search tool. DNS as public infrastructure for a record that has to outlive us.
+**Registration never runs from a page a visitor can click.** It is the one
+irreversible call in the flow, so it lives in the onboarding script behind an
+explicit flag — the same boundary the product draws everywhere else.
+
+**Edge cases handled:** duplicate publish is idempotent (update, not a second
+record); a token still activating returns a clear "activating" state rather than a
+failure; a read-back mismatch surfaces as a verification failure, never silently.
+
+**Limits, stated where the result is shown:** sandbox registrations don't resolve
+publicly, so verification reads through the API rather than `dig`, and a TXT record
+stays mutable by whoever owns the domain. Handing the domain to the clinic removes us
+from the trust path; it does not make the record notarised. That sentence is on the
+receipt screen, not just here.
+
+**Where name.com did the real work, and why:** a registrar is normally where a
+project starts. Here it is the last step — the thing that lets a patient check a
+medical record without an account, without `dig`, and without trusting the clinic
+that produced it or the vendor that built it.
 
 ---
 

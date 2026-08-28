@@ -1,0 +1,62 @@
+{
+  "clinic": "Cedar Park Aesthetics",
+  "surfaces_used": [
+    "search",
+    "checkAvailability",
+    "register",
+    "DNS records"
+  ],
+  "steps": [
+    {
+      "step": "search",
+      "endpoint": "POST /core/v1/domains:search",
+      "why": "Find a domain that reads as the clinic's own, not ours.",
+      "returned": 12,
+      "top": [
+        "cedarparkaesthetics.com",
+        "cedarparkaesthetics.org",
+        "cedarparkaesthetics.health",
+        "cedarparkaesthetics.care",
+        "cedar-park-aesthetics.health"
+      ]
+    },
+    {
+      "step": "availability",
+      "endpoint": "POST /core/v1/domains:checkAvailability",
+      "why": "Search suggests; availability is what we are willing to promise.",
+      "checked": [
+        "cedarparkaesthetics.com",
+        "cedarparkaesthetics.org",
+        "cedarparkaesthetics.care"
+      ],
+      "purchasable": [
+        "cedarparkaesthetics.com",
+        "cedarparkaesthetics.org",
+        "cedarparkaesthetics.care"
+      ],
+      "price_usd": 17.99
+    },
+    {
+      "step": "register",
+      "endpoint": "POST /core/v1/domains",
+      "why": "The clinic owns the domain its patients verify against.",
+      "domain": "cedarparkaesthetics.com",
+      "expires": "2027-08-28T23:06:35Z"
+    },
+    {
+      "step": "publish",
+      "endpoint": "POST/PUT /core/v1/domains/{domain}/records",
+      "why": "Each sealed receipt's SHA-256 becomes a TXT record under that domain, then is read back through the API to confirm it landed.",
+      "already_live": true
+    }
+  ],
+  "provisioned": "cedarparkaesthetics.com",
+  "boundary": "Sandbox registrations do not resolve publicly and a TXT record stays mutable by whoever owns the domain. Giving the clinic the domain removes us from the trust path; it does not make the record a notarised one.",
+  "published": {
+    "domain": "cedarparkaesthetics.com",
+    "host": "_timeout.syn-receipt-syn-enc-blocked-002",
+    "fqdn": "_timeout.syn-receipt-syn-enc-blocked-002.cedarparkaesthetics.com.",
+    "receipt_sha256": "dbb4241ce3e278ee28ed887bd36967c4cb6a36a24039fd7f32d60fea8f6a83ab",
+    "read_back_matches": true
+  }
+}

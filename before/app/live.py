@@ -229,6 +229,65 @@ def _verify_receipt_live(host: str, digest: str) -> dict[str, Any]:
     }
 
 
+# ---- clinic onboarding: give every clinic its own verification domain --------
+#
+# Publishing every receipt under one domain we control is a trust weakness we
+# already state out loud: the patient still has to trust us. The fix is a
+# provisioning step at clinic onboarding — search for a domain that belongs to the
+# clinic, confirm it is actually purchasable, register it, then publish that
+# clinic's receipts underneath it. A patient then verifies against their own
+# clinic's domain, and we are no longer in the trust path.
+
+def _namecom_search_live(keyword: str, tlds: list[str] | None = None) -> dict[str, Any]:
+    """Suggest verification domains for a clinic name."""
+    response = _requests().post(
+        f"{_env('NAMECOM_BASE_URL').rstrip('/')}/core/v1/domains:search",
+        auth=_namecom_auth(),
+        json={"keyword": keyword, "tldFilter": tlds or ["com", "org", "health", "care"]},
+        timeout=TIMEOUT,
+    )
+    _check(response, "name.com domain search")
+    return response.json()
+
+
+def _namecom_check_availability_live(domains: list[str]) -> dict[str, Any]:
+    """Confirm a candidate is purchasable before anyone is shown a price."""
+    response = _requests().post(
+        f"{_env('NAMECOM_BASE_URL').rstrip('/')}/core/v1/domains:checkAvailability",
+        auth=_namecom_auth(),
+        json={"domainNames": domains},
+        timeout=TIMEOUT,
+    )
+    _check(response, "name.com availability check")
+    return response.json()
+
+
+def _namecom_register_live(domain: str, years: int = 1) -> dict[str, Any]:
+    """Register a clinic's verification domain in the name.com sandbox.
+
+    Registration is the one irreversible step in this flow, so it is never called
+    from a page a visitor can click — only from the onboarding script, deliberately.
+    """
+    response = _requests().post(
+        f"{_env('NAMECOM_BASE_URL').rstrip('/')}/core/v1/domains",
+        auth=_namecom_auth(),
+        json={"domain": {"domainName": domain}, "years": years, "purchasePrice": None},
+        timeout=TIMEOUT,
+    )
+    _check(response, "name.com domain registration")
+    return response.json()
+
+
+def _namecom_list_domains_live() -> dict[str, Any]:
+    """Which verification domains this account already holds."""
+    response = _requests().get(
+        f"{_env('NAMECOM_BASE_URL').rstrip('/')}/core/v1/domains",
+        auth=_namecom_auth(), timeout=TIMEOUT,
+    )
+    _check(response, "name.com list domains")
+    return response.json()
+
+
 # ---------------------------------------------------------------- Perfect Corp
 
 PERFECTCORP_BASE = "https://yce-api-01.makeupar.com/s2s/v2.0"

@@ -271,11 +271,11 @@
         </details>
 
         <details class="tool">
-          <summary><span class="tool-name">name.com</span> <span class="tool-role">Publishes the receipt fingerprint</span> <span class="status-pill clear">LIVE ON DEMAND</span></summary>
+          <summary><span class="tool-name">name.com</span> <span class="tool-role">Gives each clinic the domain its patients verify against</span> <span class="status-pill clear">LIVE · 4 SURFACES</span></summary>
           <dl>
-            <dt>What</dt><dd>Domain search, availability, registration and DNS. Each receipt&rsquo;s SHA-256 is published as a TXT record and read back through the API.</dd>
-            <dt>How</dt><dd>The patient can look the record up themselves, without an account here.</dd>
-            <dt>Why</dt><dd>A domain registrar is usually where a project <em>starts</em>. We used it as the last step instead: DNS becomes the channel that lets a patient check their receipt without an account here and without trusting our server. Stated plainly, because it matters: sandbox DNS does not propagate publicly and a TXT record is mutable by its owner. It is a verification channel, not a notary.</dd>
+            <dt>What</dt><dd>Domain <strong>search</strong>, <strong>availability</strong>, <strong>registration</strong> and <strong>DNS</strong> &mdash; all four, each doing work the product depends on.</dd>
+            <dt>How</dt><dd>Onboarding a clinic searches for a domain that reads as theirs, confirms it is actually purchasable before anyone is quoted a price, registers it, then publishes each sealed receipt&rsquo;s SHA-256 as a TXT record underneath it and reads it back through the API. Registration is the one irreversible step, so it never runs from a page a visitor can click.</dd>
+            <dt>Why</dt><dd>Publishing every receipt under a domain <em>we</em> control leaves the patient trusting us &mdash; the exact thing the receipt exists to remove. Giving the clinic its own domain takes us out of the trust path entirely. A registrar is usually where a project starts; here it is what makes the last step verifiable. Stated plainly, because it matters: sandbox registrations do not resolve publicly and a TXT record stays mutable by whoever owns the domain. A verification channel, not a notary.</dd>
           </dl>
         </details>
 
