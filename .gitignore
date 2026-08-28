@@ -43,3 +43,4 @@ plan/
 
 # Sponsor-issued Postman collection — contains a demo API key
 doctavian-demo.postman_collection.json
+OUTREACH-*.md
