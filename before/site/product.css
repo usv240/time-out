@@ -331,3 +331,11 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
 .docs-card pre, .docs-card table, .machine-evidence pre { max-width: 100%; overflow-x: auto; }
 .docs-card table { display: block; }
 .docs-card code, .docs-card p, .docs-card li { overflow-wrap: anywhere; }
+
+/* Touch targets. WCAG 2.5.8 exempts links inline in a sentence, so citation links inside
+   prose are deliberately left alone — padding them would break the line box. These two are
+   standalone controls, so they get a real finger-sized target on touch devices. */
+@media (pointer: coarse) {
+  .wordmark { min-height: 44px; display: inline-flex; align-items: center; }
+  .info-btn, .info-button { width: 32px; height: 32px; }
+}

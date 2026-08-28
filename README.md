@@ -151,8 +151,21 @@ git clone https://github.com/usv240/time-out.git && cd time-out
 python -m pip install -r requirements.txt
 python -m before.seed         # write the synthetic cache
 python -m before.verify       # run the whole hero path offline, print the receipt
-python -m pytest tests -q     # 55 checks
+python -m pytest tests -q     # 67 checks, offline
 ```
+
+Everything above is offline. One more suite drives the **deployed** site in a real
+browser against the **deployed** backend — the six attacks, the receipt, the
+reproducibility check, and layout at phone and desktop widths:
+
+```bash
+python -m playwright install chromium
+python -m tests.smoke_live                    # 31 checks against production
+```
+
+It exists because the offline suite cannot see a transport-layer rejection between
+the browser and the Gate. Both were correct while the request between them was being
+rejected, and every unit test still passed. CI runs it after each push and daily.
 
 Everything above runs with **no network and no credentials**. To point it at live sponsor APIs, copy `.env.example` to `.env` and fill in the keys you have — each integration activates independently; the rest keep replaying cached responses.
 
@@ -220,7 +233,7 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 | Nutrient · SerpApi · name.com · Perfect Corp | ✅ Live calls verified, responses cached for offline replay |
 | Foxit | ✅ Agent live end to end: prompt → MCP assembly → pause → human eSign, **signed** (envelope 35611080, EXECUTED) → outcome read back GET-only. Two MCP field-mapping bugs documented and routed via REST |
 | Doctavian | ⚠️ Auth, data source, solution, template + data upload live. Generation blocked on the demo account's Google Drive delivery — we declined to grant full Drive access. Resolution requested from Doctavian. |
-| Tests | ✅ 55 passing · CI green |
+| Tests | ✅ 67 offline + 31 live-browser smoke checks · CI green |
 
 ---
 
