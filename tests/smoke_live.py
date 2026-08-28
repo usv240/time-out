@@ -16,6 +16,12 @@ demo, and after any deploy:
     python -m tests.smoke_live --base <url>         # against a dev build
 
 Exit code is non-zero if any check fails, so CI can gate on it.
+
+One caveat worth knowing before you trust a red run: static assets are served with
+`Cache-Control: max-age=3600`, so for a short window straight after a deploy the CDN
+can still hand back the previous build. A failure that appears immediately after
+promoting a build, and clears on a re-run a minute later, is that — not a regression.
+Re-run before investigating.
 """
 from __future__ import annotations
 
