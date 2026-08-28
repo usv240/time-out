@@ -63,7 +63,10 @@
 .source-item .source-type { color: var(--accent-ink); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 
 @media (max-width: 820px) {
-  .console-shell, .docs-layout { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track has an implicit auto minimum, so one wide
+     child (a long curl line, a reference table) forces the whole column to its min-content
+     width and the page scrolls sideways on a phone. */
+  .console-shell, .docs-layout { grid-template-columns: minmax(0, 1fr); }
   .console-sidebar { position: static; }
   .receipt-grid { grid-template-columns: 1fr; }
 }
@@ -323,3 +326,8 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: 12.5px; }
 .hero .encounter-card, .hero .demo-card{ margin-top: .5rem; }
 .check-row{ padding-block: .34rem !important; }
 .recorded-banner.is-done{ background: var(--accent-wash); color: var(--accent-ink); }
+
+/* Wide content scrolls inside its own box; the page body never scrolls sideways. */
+.docs-card pre, .docs-card table, .machine-evidence pre { max-width: 100%; overflow-x: auto; }
+.docs-card table { display: block; }
+.docs-card code, .docs-card p, .docs-card li { overflow-wrap: anywhere; }
