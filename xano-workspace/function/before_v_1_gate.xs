@@ -187,8 +187,8 @@ function before_v1_gate {
     var $supervision_facts {
       value = {
         delegation_required                      : ($direct_performer == false)
-        delegation_document_present              : ($input.authority_evidence.delegation_agreement_id != "")
-        protocol_signed_and_dated                : ($input.authority_evidence.protocol_id != "")
+        delegation_document_present              : ($input.authority_evidence.delegation_agreement_id != null && $input.authority_evidence.delegation_agreement_id != "")
+        protocol_signed_and_dated                : ($input.authority_evidence.protocol_id != null && $input.authority_evidence.protocol_id != "")
         delegating_physician_active              : $input.authority_evidence.delegating_physician_active
         patient_specific_order_present           : $input.authority_evidence.patient_specific_order_present
         order_contains_drug_dose_strength_route  : $input.authority_evidence.order_contains_drug_dose_strength_route
@@ -212,7 +212,7 @@ function before_v1_gate {
         }
       }
     
-      elseif ($input.authority_evidence.delegation_agreement_id != "" && $input.authority_evidence.protocol_id != "" && $input.authority_evidence.delegating_physician_active && $input.authority_evidence.patient_specific_order_present && $input.authority_evidence.order_contains_drug_dose_strength_route && $input.authority_evidence.bls_current && ($input.authority_evidence.supervisor_onsite || $input.authority_evidence.supervisor_immediately_available) && $input.authority_evidence.physician_emergency_appointment_available) {
+      elseif ($input.authority_evidence.delegation_agreement_id != null && $input.authority_evidence.delegation_agreement_id != "" && $input.authority_evidence.protocol_id != null && $input.authority_evidence.protocol_id != "" && $input.authority_evidence.delegating_physician_active && $input.authority_evidence.patient_specific_order_present && $input.authority_evidence.order_contains_drug_dose_strength_route && $input.authority_evidence.bls_current && ($input.authority_evidence.supervisor_onsite || $input.authority_evidence.supervisor_immediately_available) && $input.authority_evidence.physician_emergency_appointment_available) {
         array.push $findings {
           value = {
             check_id     : "delegation_and_supervision"

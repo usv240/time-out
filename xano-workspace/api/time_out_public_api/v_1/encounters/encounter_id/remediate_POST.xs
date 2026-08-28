@@ -12,8 +12,11 @@ query "v1/encounters/{encounter_id}/remediate" verb=POST {
     text credential_type filters=trim|upper
     bool training_documented
     bool complication_training
-    text delegation_agreement_id filters=trim
-    text protocol_id filters=trim
+    // Optional so an empty string is accepted: "" is how a caller says the delegation
+    // document is absent, which is precisely what the aesthetician-swap attack asserts.
+    // A required text input rejects "" as a missing param and the attack cannot be expressed.
+    text delegation_agreement_id? filters=trim
+    text protocol_id? filters=trim
     bool delegating_physician_active
     bool patient_specific_order_present
     bool order_contains_drug_dose_strength_route

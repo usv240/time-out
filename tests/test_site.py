@@ -56,3 +56,24 @@ def test_hero_check_rows_match_the_deployed_gate_contract():
     assert rows, "no check rows found on the landing page"
     assert rows <= known, f"landing rows the deployed Gate never returns: {sorted(rows - known)}"
     assert known <= rows, f"Gate checks with no row on the page: {sorted(known - rows)}"
+
+
+def test_every_page_is_reachable_from_every_other_page() -> None:
+    """No page may become an orphan.
+
+    /receipt.html was reachable only through a link the console injected after a
+    successful run, so a visitor who never completed a run could not find the patient
+    receipt at all — and that page is where the skin baseline and the published DNS
+    record are shown. /how-it-works.html was missing from the landing page for the
+    same reason.
+    """
+    import re
+    site = ROOT / "before" / "site"
+    pages = {"try.html", "receipt.html", "how-it-works.html", "api.html", "evidence.html"}
+    for page in sorted(pages | {"index.html"}):
+        html = (site / page).read_text(encoding="utf-8")
+        nav = re.search(r'<div class="nav-links"[^>]*>(.*?)</div>', html, re.S)
+        assert nav, f"{page} has no nav-links block"
+        linked = set(re.findall(r'href="/([a-z0-9-]+\.html)"', nav.group(1)))
+        missing = pages - linked - {page}
+        assert not missing, f"{page} nav does not link to {sorted(missing)}"

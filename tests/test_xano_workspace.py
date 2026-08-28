@@ -80,3 +80,35 @@ def test_hosted_site_targets_xano_not_localhost() -> None:
     assert "https://x6g0-xqak-a8ri.n7e.xano.io/api:before" in app
     assert "https://x6g0-xqak-a8ri.n7e.xano.io/api:before" in api_page
     assert "localhost:4173" not in api_html
+
+
+def test_absence_of_delegation_evidence_is_expressible_over_the_api() -> None:
+    """An empty delegation id is how a caller says "there is no delegation document".
+
+    Xano rejects "" for a *required* text input as a missing param, which made the two
+    most important attacks — swapping in the aesthetician and deleting the delegation
+    protocol — fail with HTTP 400 instead of producing a refusal. The inputs must stay
+    optional so absence can be stated at all.
+    """
+    src = (WORKSPACE / "api" / "time_out_public_api" / "v_1" / "encounters"
+           / "encounter_id" / "remediate_POST.xs").read_text(encoding="utf-8")
+    for field in ("delegation_agreement_id", "protocol_id"):
+        assert f"text {field}? filters=trim" in src, (
+            f"{field} must be an optional input; a required text input rejects \"\" "
+            f"and the absence of delegation evidence becomes unexpressible."
+        )
+
+
+def test_gate_treats_a_null_delegation_id_as_absent_not_present() -> None:
+    """Fail closed. `null != ""` is true, so a bare != "" check reads missing as present.
+
+    That would invert the safety default on the delegation check, which is the one the
+    whole product exists to make.
+    """
+    src = (WORKSPACE / "function" / "before_v_1_gate.xs").read_text(encoding="utf-8")
+    for field in ("delegation_agreement_id", "protocol_id"):
+        for line in src.splitlines():
+            if f"authority_evidence.{field} !=" in line:
+                assert f"authority_evidence.{field} != null" in line, (
+                    f"{field} is compared without a null guard on: {line.strip()[:110]}"
+                )
