@@ -14,27 +14,30 @@ query "v1/live/receipt-verify" verb=POST {
     var $domain {
       value = "timeout-receipts-demo.com"
     }
-
+  
     var $want_host {
       value = ($input.host|strlen) > 0 ? $input.host : "receipt-syn-enc-blocked-002"
     }
-
+  
     api.request {
       url = $env.NAMECOM_BASE_URL ~ "/core/v1/domains/" ~ $domain ~ "/records"
       method = "GET"
-      headers = ["Authorization: Basic " ~ ($env.NAMECOM_USERNAME ~ ":" ~ $env.NAMECOM_TOKEN|base64_encode)]
+      headers = [
+        "Authorization: Basic " ~ ($env.NAMECOM_USERNAME ~ ":" ~ $env.NAMECOM_TOKEN|base64_encode)
+      ]
+    
       timeout = 30
     } as $dns
-
+  
     precondition ($dns.response.status == 200) {
       error_type = "notfound"
       error = "name.com sandbox did not answer. Cached verification remains available on the receipt page."
     }
-
+  
     var $record {
       value = $dns.response.result.records|filter:($$.host == $want_host && $$.type == "TXT")|first
     }
-
+  
     var $matches {
       value = ($input.digest|strlen) > 0 ? ($record.answer|contains:$input.digest) : false
     }

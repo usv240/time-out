@@ -12,31 +12,34 @@ query "v1/live/serpapi-scan" verb=POST {
     var $query {
       value = ($input.q|strlen) > 0 ? $input.q : "site:fda.gov warning letter med spa botox Texas"
     }
-
+  
     api.request {
       url = "https://serpapi.com/search"
       method = "GET"
       params = {
-        engine  : "google"
-        q       : $query
-        num     : 5
-        api_key : $env.SERPAPI_KEY
+        engine : "google"
+        q      : $query
+        num    : 5
+        api_key: $env.SERPAPI_KEY
       }
+    
       timeout = 30
     } as $serp
-
+  
     precondition ($serp.response.status == 200) {
       error_type = "notfound"
       error = "SerpApi did not return results. The synthetic sandbox stays usable; try again shortly."
     }
-
+  
     var $candidates {
-      value = $serp.response.result.organic_results|slice:0:5|map:{
-        title      : $$.title
-        source_url : $$.link
-        snippet    : $$.snippet
-        status     : "CANDIDATE"
-      }
+      value = ```
+        $serp.response.result.organic_results|slice:0:5|map:{
+                title      : $$.title
+                source_url : $$.link
+                snippet    : $$.snippet
+                status     : "CANDIDATE"
+              }
+        ```
     }
   }
 
