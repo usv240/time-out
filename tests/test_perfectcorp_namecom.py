@@ -167,3 +167,15 @@ def test_missing_status_never_reads_as_valid() -> None:
     xs = (root / "xano-workspace" / "api" / "time_out_public_api" / "v_1" / "live"
           / "receipt_status_GET.xs").read_text(encoding="utf-8")
     assert "UNKNOWN" in xs and "Absence is not validity" in xs
+
+
+def test_every_scored_concern_has_plain_language_copy() -> None:
+    """A score with no explanation is a number, not a record the patient can read."""
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    js = (root / "before" / "site" / "receipt-v2.js").read_text(encoding="utf-8")
+    hero = json.loads((root / "before" / "site" / "data" / "hero-timeline.json").read_text(encoding="utf-8"))
+    baseline = next(s for s in hero["timeline"] if s["step"] == "baseline")["result"]
+    for concern in baseline["concerns"]:
+        assert f"{concern}:" in js, f"no plain-language copy for scored concern {concern!r}"

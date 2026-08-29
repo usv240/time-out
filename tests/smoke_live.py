@@ -122,6 +122,24 @@ async def run(base: str) -> None:
         check("SIGNED BY A NAMED HUMAN" in rec, "attestation shows a human signature")
         check("TXT READ-BACK MATCHED" in rec, "name.com DNS read-back matched")
         check("YOUR BASELINE" in rec, "Perfect Corp baseline present")
+
+        # The baseline has to be explorable, not just displayed: one overlay at a time,
+        # tied to the score that produced it.
+        concerns = page.locator(".concern")
+        n_c = await concerns.count()
+        check(n_c == 12, f"twelve scored concerns rendered (found {n_c})")
+        if n_c:
+            await concerns.nth(3).scroll_into_view_if_needed()
+            await concerns.nth(3).click()
+            await page.wait_for_timeout(800)
+            st = await page.evaluate("""() => {
+                const vis = [...document.querySelectorAll('.analysis-mask')].filter(m => !m.hidden);
+                const sel = document.querySelector('.concern[aria-checked="true"]');
+                return { visible: vis.length, sameAsSelected: vis[0]?.dataset.mask === sel?.dataset.concern,
+                         caption: (document.querySelector('#mask-caption')?.textContent || '').length }; }""")
+            check(st["visible"] == 1, f"exactly one overlay shown (saw {st['visible']})")
+            check(st["sameAsSelected"], "the overlay matches the selected concern")
+            check(st["caption"] > 10, "the overlay is captioned")
         check("What this proves" in rec, "limits stated on the receipt")
         broken = await page.evaluate(
             "() => [...document.images].filter(i => !i.complete || i.naturalWidth === 0).length")

@@ -43,18 +43,79 @@ function checksTable(findings) {
   return `<table class="findings"><thead><tr><th>Check</th><th>Result</th><th>Cited</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+// Twelve concerns, twelve overlay masks, twelve scores. Rendering them stacked made a
+// static picture; a patient could not tell which mark belonged to which score. Selecting
+// one shows that mask alone over the face, with the score and what it does and does not
+// mean. The point of a baseline is that the patient can read it, not just hold it.
+const CONCERN_COPY = {
+  radiance: ["Radiance", "How evenly light reflects off the skin surface."],
+  pore: ["Pore visibility", "Where pores read as larger in this lighting."],
+  oiliness: ["Oiliness", "Surface shine at the time of capture."],
+  moisture: ["Moisture", "Estimated surface hydration."],
+  redness: ["Redness", "Areas reading warmer than surrounding skin."],
+  texture: ["Texture", "Local variation in the skin surface."],
+  firmness: ["Firmness", "How defined the facial contour reads."],
+  wrinkle: ["Wrinkles", "Lines the analysis could resolve at this resolution."],
+  acne: ["Blemishes", "Spots the analysis marked as raised or inflamed."],
+  droopy_lower_eyelid: ["Lower eyelid", "Contour beneath the eye."],
+  eye_bag: ["Under-eye", "Shadowing and puffiness under the eye."],
+  droopy_upper_eyelid: ["Upper eyelid", "How the upper lid sits over the eye."],
+};
+
 function baselineBlock(b) {
   if (!b) return "";
-  const scores = Object.entries(b.concerns || {}).sort((x, y) => x[0].localeCompare(y[0]));
-  const grid = scores.map(([name, score]) => `<div class="score-row"><span>${escapeHtml(name.replaceAll("_", " "))}</span><meter min="0" max="100" value="${Number(score)}">${Number(score)}</meter><code>${Number(score)}</code></div>`).join("");
-  const masks = (b.mask_refs || []).map(maskSrc).filter(Boolean).map((m) => `<img class="analysis-mask" src="${escapeHtml(m)}" alt="">`).join("");
+  const entries = Object.entries(b.concerns || {})
+    .sort((x, y) => Number(x[1]) - Number(y[1]));          // lowest score first: what a clinician looks at
+  const masks = (b.mask_refs || []).filter((r) => maskSrc(r));
+
+  const layers = masks.map((ref) => `<img class="analysis-mask" data-mask="${escapeHtml(ref)}" src="${escapeHtml(maskSrc(ref))}" alt="" hidden>`).join("");
+
+  const rows = entries.map(([name, score], i) => {
+    const [label, blurb] = CONCERN_COPY[name] || [name.replaceAll("_", " "), ""];
+    const has = masks.includes(name);
+    return `<button class="concern" role="radio" aria-checked="${i === 0}" tabindex="${i === 0 ? 0 : -1}"
+      data-concern="${escapeHtml(name)}" data-blurb="${escapeHtml(blurb)}" data-label="${escapeHtml(label)}"
+      ${has ? "" : "data-nomask=\"1\""}>
+      <span class="concern-name">${escapeHtml(label)}</span>
+      <span class="concern-bar"><span style="width:${Number(score)}%"></span></span>
+      <span class="concern-score">${Number(score)}</span>
+    </button>`;
+  }).join("");
+
   return `<section class="perfect-proof" aria-label="Your skin baseline">
-    <div class="baseline-portrait"><img src="${escapeHtml(b.image_ref)}" alt="AI-generated fictional adult used for the synthetic baseline">${masks}</div>
-    <div class="baseline-data"><p class="integration-kicker">YOUR BASELINE — BEFORE TREATMENT ${info("i-baseline", "A standardized skin analysis taken before anything was done, with scored concerns and overlays.", "An objective starting point you keep. If something looks different later, this is what it looked like first.", "Perfect Corp YouCam Skin Analysis (SD) · synthetic face")}</p>
-    <div class="metric-pair"><div><span>Overall</span><strong>${Number(b.overall_score).toFixed(1)}</strong></div><div><span>Skin age (synthetic)</span><strong>${escapeHtml(b.skin_age)}</strong></div></div>
-    <div class="score-grid">${grid}</div>
-    <p class="evidence-boundary">${escapeHtml(b.boundary)}</p></div>
+    <div class="baseline-portrait">
+      <img src="${escapeHtml(b.image_ref)}" alt="AI-generated fictional adult used for the synthetic baseline">
+      ${layers}
+      <p class="mask-caption" id="mask-caption" aria-live="polite"></p>
+    </div>
+    <div class="baseline-data">
+      <p class="integration-kicker">YOUR BASELINE — BEFORE TREATMENT ${info("i-baseline", "A standardized skin analysis taken before anything was done, with a score and an overlay for each of twelve concerns.", "An objective starting point you keep. If something looks different later, this is what it looked like first — and you can see exactly which mark produced which score.", "Perfect Corp YouCam Skin Analysis (SD) · synthetic face")}</p>
+      <div class="metric-pair"><div><span>Overall</span><strong>${Number(b.overall_score).toFixed(1)}</strong></div><div><span>Skin age (synthetic)</span><strong>${escapeHtml(b.skin_age)}</strong></div></div>
+      <p class="muted concern-hint">Select a concern to see it on the face. Lowest scores first &mdash; those are the ones worth watching.</p>
+      <div class="concern-list" role="radiogroup" aria-label="Skin concerns">${rows}</div>
+      <p class="evidence-boundary">${escapeHtml(b.boundary)}</p>
+    </div>
   </section>`;
+}
+
+function selectConcern(btn) {
+  const wrap = btn.closest(".perfect-proof");
+  if (!wrap) return;
+  for (const b of wrap.querySelectorAll(".concern")) {
+    b.setAttribute("aria-checked", String(b === btn));
+    b.tabIndex = b === btn ? 0 : -1;
+  }
+  const name = btn.dataset.concern;
+  for (const layer of wrap.querySelectorAll(".analysis-mask")) {
+    layer.hidden = layer.dataset.mask !== name;
+  }
+  const caption = wrap.querySelector("#mask-caption");
+  if (caption) {
+    caption.textContent = btn.dataset.nomask
+      ? `${btn.dataset.label} — scored, no overlay returned for this concern.`
+      : `${btn.dataset.label} — ${btn.dataset.blurb}`;
+  }
+  btn.focus();
 }
 
 // A receipt carries two records on the clinic's own domain, answering two different
@@ -183,6 +244,8 @@ async function loadReceipt() {
 }
 
 document.addEventListener("click", (event) => {
+  const concern = event.target.closest(".concern");
+  if (concern) { selectConcern(concern); return; }
   if (event.target.closest("#check-status")) { checkStatus(); return; }
   const btn = event.target.closest(".info-btn");
   if (!btn) return;
@@ -192,6 +255,19 @@ document.addEventListener("click", (event) => {
   pop.hidden = open;
 });
 document.addEventListener("keydown", (event) => {
+  // A radiogroup is expected to move with arrows, not Tab.
+  const current = event.target.closest?.(".concern");
+  if (current && ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(event.key)) {
+    const all = [...current.closest(".concern-list").querySelectorAll(".concern")];
+    const i = all.indexOf(current);
+    const next = event.key === "Home" ? 0
+      : event.key === "End" ? all.length - 1
+      : ["ArrowDown", "ArrowRight"].includes(event.key) ? (i + 1) % all.length
+      : (i - 1 + all.length) % all.length;
+    event.preventDefault();
+    selectConcern(all[next]);
+    return;
+  }
   if (event.key !== "Escape") return;
   for (const btn of document.querySelectorAll('.info-btn[aria-expanded="true"]')) {
     btn.setAttribute("aria-expanded", "false");

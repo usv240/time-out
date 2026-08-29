@@ -427,3 +427,30 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 /* The chip is a flex child of .receipt-header, so it stretched to the header's full
    height (77px) and the pill rendered as an ellipse around 12px text. Size to content. */
 .receipt-header .synthetic-chip{ align-self: start; display: inline-flex; align-items: center; }
+
+/* ---- baseline explorer: twelve concerns, one overlay at a time ----
+   Stacked masks made a static picture in which no mark could be tied to a score.
+   Selecting a concern shows that mask alone, so the patient can read their own record. */
+.baseline-portrait{ position: relative; }
+.baseline-portrait .analysis-mask{ position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; mix-blend-mode: screen; pointer-events: none; }
+.mask-caption{ position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 10px 12px;
+  background: color-mix(in srgb, #000 66%, transparent); color: #fff;
+  font-size: var(--step--2); line-height: 1.45; }
+.mask-caption:empty{ display: none; }
+
+.concern-hint{ margin: .75rem 0 .5rem; }
+.concern-list{ display: grid; gap: 2px; }
+.concern{ display: grid; grid-template-columns: minmax(0, 8.5rem) 1fr 2.25rem;
+  align-items: center; gap: 12px; min-height: 36px; padding: 6px 8px; border: 0;
+  border-radius: 5px; background: transparent; color: var(--ink-2); font: inherit;
+  font-size: var(--step--1); text-align: left; cursor: pointer; }
+.concern:hover{ background: var(--surface-sunk); color: var(--ink); }
+.concern:focus-visible{ outline: 2px solid var(--accent); outline-offset: 1px; }
+.concern[aria-checked="true"]{ background: var(--accent-wash); color: var(--accent-ink); font-weight: 600; }
+.concern-bar{ display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
+.concern-bar > span{ display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+.concern[aria-checked="true"] .concern-bar > span{ background: var(--accent-ink); }
+.concern-score{ font-family: var(--f-mono); font-size: var(--step--2); text-align: right; }
+@media (max-width: 40rem){ .concern{ grid-template-columns: minmax(0, 1fr) 2.25rem; }
+  .concern-bar{ grid-column: 1 / -1; } }

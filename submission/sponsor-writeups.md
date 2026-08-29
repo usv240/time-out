@@ -49,15 +49,41 @@ In our first live run, the search returned the actual April 2026 FDA warning let
 
 ## Perfect Corp — AI-driven consumer experiences
 
-**YouCam Skin Analysis captures the patient's pre-procedure baseline.** Twelve scored concerns, an overall score, skin age, and per-concern overlay masks, recorded before treatment and carried into the patient's own safety receipt. The image is captured to a fixed framing, because inconsistent before/after photos are exactly what gets challenged in a dispute.
+**Skin analysis is normally used to sell a treatment. We run it in the opposite
+direction — once, before anything is done, and the result belongs to the patient.**
 
-**Consumer value:** the patient leaves with an objective record of their own skin *before* anything was done to it — something no med spa gives them today.
+YouCam Skin Analysis captures the pre-procedure baseline: twelve scored concerns, an
+overall score, skin age, and a separate overlay mask per concern, to a fixed capture
+contract (frontal, even light, ~1024px) because inconsistent before/after photos are
+exactly what gets challenged in a dispute.
 
-**Framing, stated plainly:** this is a baseline and communication aid. It is never a diagnosis and never an input to any legal reasoning. Faces in this project are synthetic, generated, and fictional.
+**The interactive part is the point.** Twelve stacked overlays make a picture nobody
+can read — you cannot tell which mark produced which score. So on the patient's own
+receipt the baseline is explorable: select a concern and that mask alone appears over
+the face, captioned in plain language, with the score beside it. Concerns are ordered
+lowest-score-first, which is the order a clinician would look at them. It is a
+radiogroup — arrow keys move between concerns, and the caption is announced — because
+a medical record that only works with a mouse is not a record everyone can read.
 
-**A note for your engineers:** the analysis rejects large images with `error_src_face_too_small` because it downsamples internally. A tight face crop at ~1024px wide is the working input; it's documented in code.
+**Consumer value, concretely:** the patient walks out with an objective, timestamped
+record of their own skin from before anything was done, published under their clinic's
+domain and verifiable without an account. No med spa gives them that today. If
+something looks different in six weeks, this is what it looked like first — and they
+can point at the exact overlay and score rather than argue from memory.
 
-**Where Perfect Corp did the real work, and why:** an unexpected use of a retail beauty API — as a medico-legal baseline, a vertical you're already moving toward.
+**Framing, stated on the screen and not just here:** this is a baseline and a
+communication aid. It is never a diagnosis and never an input to any legal reasoning.
+Every face in this project is AI-generated and fictional.
+
+**A note for your engineers:** the analysis rejects large images with
+`error_src_face_too_small` because it downsamples internally before detection. A tight
+face crop around 1024px wide is the working input. It is counterintuitive enough that
+we documented it in code for the next person.
+
+**Where Perfect Corp did the real work, and why:** an unexpected use of a retail beauty
+API — as a medico-legal baseline the patient owns, in a vertical you are already moving
+toward. The same twelve scores that would normally recommend a product here become the
+evidence that a procedure happened to a person who looked like this beforehand.
 
 ---
 
