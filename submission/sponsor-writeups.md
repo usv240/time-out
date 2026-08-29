@@ -75,7 +75,7 @@ Four surfaces, each load-bearing:
 | Search | `POST /core/v1/domains:search` | Find a domain that reads as the clinic's own, not ours |
 | Availability | `POST /core/v1/domains:checkAvailability` | Search suggests; availability is what we're willing to promise |
 | Registration | `POST /core/v1/domains` | The clinic owns what its patients check against |
-| DNS | `POST/PUT/GET /core/v1/domains/{domain}/records` | Each sealed receipt's SHA-256 as a TXT record, read back through the API |
+| DNS | `POST/PUT/GET /core/v1/domains/{domain}/records` | Two records per receipt: the **digest** (`_timeout.<id>`) and the **status** (`_status.<id>`) |
 
 Run live for a synthetic clinic: `Cedar Park Aesthetics` → search returned 12
 candidates → availability confirmed three purchasable at $17.99 →
@@ -83,6 +83,33 @@ candidates → availability confirmed three purchasable at $17.99 →
 back at `_timeout.syn-receipt-syn-enc-blocked-002.cedarparkaesthetics.com`, matching.
 Reproduce with `python -m before.onboard_clinic --clinic "Cedar Park Aesthetics"`
 (add `--register` to perform the irreversible step).
+
+**DNS as the revocation channel — the part we think is new.** Time-Out's central
+claim is that ready is reversible: a confirmed FDA warning letter moves an encounter
+back to human review. That held right up to the moment a receipt was issued. After
+that the patient was holding a record saying the checks passed, with no way to learn
+it had stopped being true.
+
+Certificates solved this long ago by separating a certificate's contents from its
+status. A receipt now carries both, on the clinic's own domain:
+
+```
+_timeout.<receipt-id>.<clinic>   digest  → is this the receipt that was issued?
+_status.<receipt-id>.<clinic>    status  → is it still good?
+```
+
+Those are different questions, and conflating them is how a stale record ends up
+looking authoritative. **A missing status record resolves to `UNKNOWN`, never to
+valid** — an unpublished receipt and a good one must not look the same to a patient.
+
+Run live: receipt sealed → `status=VALID`; FDA warning letter 723267 confirmed by a
+named Medical Director → `status=REVOKED reason=... at=...`; the patient re-checks and
+sees the revocation. The receipt page has a **Check this receipt's status now** button
+that reads the clinic's domain live through Xano, so no credential touches the browser.
+Reproduce with `python -m before.revoke_receipt --seal | --revoke "<reason>" | --show`.
+
+Revocation is a human decision after confirming an alert candidate. The search result
+never revokes anything by itself.
 
 **Registration never runs from a page a visitor can click.** It is the one
 irreversible call in the flow, so it lives in the onboarding script behind an

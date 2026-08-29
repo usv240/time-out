@@ -1,0 +1,16 @@
+{
+  "domain": "cedarparkaesthetics.com",
+  "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
+  "revoked_at": "2026-08-29T00:11:54+00:00",
+  "reason": "FDA warning letter 723267 lot reconciliation confirmed by Medical Director",
+  "operation": "updated",
+  "status": {
+    "found": true,
+    "status": "REVOKED",
+    "reason": "FDA-warning-letter-723267-lot-reconciliation-confirmed-by-Medical-Director",
+    "at": "2026-08-29T00:11:54+00:00",
+    "fqdn": "_status.syn-receipt-syn-enc-blocked-002.cedarparkaesthetics.com.",
+    "answer": "timeout-status-v1 status=REVOKED reason=FDA-warning-letter-723267-lot-reconciliation-confirmed-by-Medical-Director at=2026-08-29T00:11:54+00:00"
+  },
+  "boundary": "Revocation is a named human's decision after confirming an alert candidate. The search result never revokes anything by itself."
+}

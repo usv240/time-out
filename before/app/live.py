@@ -288,6 +288,102 @@ def _namecom_list_domains_live() -> dict[str, Any]:
     return response.json()
 
 
+# ---- receipt status: DNS as the revocation channel ---------------------------
+#
+# The product's central claim is that ready is reversible — a confirmed FDA alert
+# or board action moves an encounter back to human review. That works right up to
+# the moment a receipt is issued. After that the patient is holding a piece of paper
+# that says the checks passed, and nothing tells them if it later stopped being true.
+#
+# Certificates solved this with revocation lists. A receipt gets a status record
+# alongside its digest record, so the digest answers "is this the receipt that was
+# issued?" and the status answers "is it still good?". Those are different questions
+# and conflating them is how a stale record ends up looking authoritative.
+
+STATUS_PREFIX = "_status"
+
+
+def _status_host(receipt_id: str) -> str:
+    return f"{STATUS_PREFIX}.{receipt_id.lower()}"
+
+
+def _namecom_find_record(domain: str, host: str) -> dict[str, Any] | None:
+    response = _requests().get(
+        f"{_env('NAMECOM_BASE_URL').rstrip('/')}/core/v1/domains/{domain}/records",
+        auth=_namecom_auth(), timeout=TIMEOUT,
+    )
+    _check(response, "name.com list records")
+    for record in response.json().get("records", []):
+        if record.get("host") == host and record.get("type") == "TXT":
+            return record
+    return None
+
+
+def _namecom_publish_status_live(
+    domain: str, receipt_id: str, status: str, reason: str = "", at: str = "",
+) -> dict[str, Any]:
+    """Publish or update a receipt's status. VALID on seal, REVOKED when reopened.
+
+    Written in place rather than appended: a receipt has one current status, and two
+    conflicting TXT answers would be worse than none.
+    """
+    if status not in {"VALID", "REVOKED"}:
+        raise IntegrationError(f"Unsupported receipt status: {status}")
+    base = _env("NAMECOM_BASE_URL").rstrip("/")
+    host = _status_host(receipt_id)
+    answer = f"timeout-status-v1 status={status}"
+    if reason:
+        answer += f" reason={reason}"
+    if at:
+        answer += f" at={at}"
+    body = {"host": host, "type": "TXT", "answer": answer, "ttl": 300}
+
+    existing = _namecom_find_record(domain, host)
+    if existing and existing.get("id"):
+        response = _requests().put(
+            f"{base}/core/v1/domains/{domain}/records/{existing['id']}",
+            auth=_namecom_auth(), json=body, timeout=TIMEOUT,
+        )
+        _check(response, "name.com update status record")
+        payload = response.json(); payload["operation"] = "updated"
+    else:
+        response = _requests().post(
+            f"{base}/core/v1/domains/{domain}/records",
+            auth=_namecom_auth(), json=body, timeout=TIMEOUT,
+        )
+        _check(response, "name.com create status record")
+        payload = response.json(); payload["operation"] = "created"
+    payload["status"] = status
+    return payload
+
+
+def _namecom_read_status_live(domain: str, receipt_id: str) -> dict[str, Any]:
+    """Ask the clinic's own domain whether a receipt is still good.
+
+    A missing record is deliberately NOT reported as valid. An unpublished receipt
+    and a good one must never look the same to a patient.
+    """
+    record = _namecom_find_record(domain, _status_host(receipt_id))
+    if record is None:
+        return {
+            "found": False,
+            "status": "UNKNOWN",
+            "note": "No status record published for this receipt. Absence is not validity.",
+        }
+    answer = str(record.get("answer", ""))
+    fields = dict(
+        part.split("=", 1) for part in answer.split() if "=" in part
+    )
+    return {
+        "found": True,
+        "status": fields.get("status", "UNKNOWN"),
+        "reason": fields.get("reason", ""),
+        "at": fields.get("at", ""),
+        "fqdn": record.get("fqdn"),
+        "answer": answer,
+    }
+
+
 # ---------------------------------------------------------------- Perfect Corp
 
 PERFECTCORP_BASE = "https://yce-api-01.makeupar.com/s2s/v2.0"

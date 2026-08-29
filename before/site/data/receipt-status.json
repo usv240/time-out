@@ -1,0 +1,15 @@
+{
+  "domain": "cedarparkaesthetics.com",
+  "receipt_id": "SYN-RECEIPT-SYN-ENC-BLOCKED-002",
+  "sealed_at": "2026-08-29T00:12:17+00:00",
+  "operation": "updated",
+  "status": {
+    "found": true,
+    "status": "VALID",
+    "reason": "",
+    "at": "2026-08-29T00:12:17+00:00",
+    "fqdn": "_status.syn-receipt-syn-enc-blocked-002.cedarparkaesthetics.com.",
+    "answer": "timeout-status-v1 status=VALID at=2026-08-29T00:12:17+00:00"
+  },
+  "boundary": "A status record says whether this receipt is still current. It does not certify that the procedure was safe, and it stays mutable by whoever owns the domain."
+}

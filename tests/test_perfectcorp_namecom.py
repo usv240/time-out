@@ -138,3 +138,32 @@ def test_domain_registration_is_never_reachable_from_the_site() -> None:
         text = page.read_text(encoding="utf-8")
         assert "domains:checkAvailability" not in text and "onboard_clinic" not in text, (
             f"{page.name} exposes a provisioning call to the browser")
+
+
+def test_receipt_status_is_a_separate_record_from_the_digest() -> None:
+    """Two questions, two records.
+
+    The digest answers "is this the receipt that was issued?". The status answers
+    "is it still good?". Publishing only the digest means a receipt revoked after an
+    FDA alert still reads as authoritative to the patient holding it.
+    """
+    from pathlib import Path
+    src = (Path(__file__).resolve().parents[1] / "before" / "app" / "live.py").read_text(encoding="utf-8")
+    assert "_namecom_publish_status_live" in src
+    assert "_namecom_read_status_live" in src
+    assert 'STATUS_PREFIX = "_status"' in src
+
+
+def test_missing_status_never_reads_as_valid() -> None:
+    """Fail closed. An unpublished receipt and a good one must not look the same."""
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    src = (root / "before" / "app" / "live.py").read_text(encoding="utf-8")
+    i = src.index("def _namecom_read_status_live")
+    body = src[i:i + 1400]
+    assert '"status": "UNKNOWN"' in body, "absent status record must resolve to UNKNOWN"
+    assert "Absence is not validity" in body
+
+    xs = (root / "xano-workspace" / "api" / "time_out_public_api" / "v_1" / "live"
+          / "receipt_status_GET.xs").read_text(encoding="utf-8")
+    assert "UNKNOWN" in xs and "Absence is not validity" in xs

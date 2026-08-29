@@ -57,6 +57,51 @@ function baselineBlock(b) {
   </section>`;
 }
 
+// A receipt carries two records on the clinic's own domain, answering two different
+// questions: the digest says "is this the receipt that was issued?", the status says
+// "is it still good?". A patient needs the second one, because an alert can land after
+// they have already walked out.
+const XANO_V1 = ["localhost", "127.0.0.1"].includes(location.hostname)
+  ? "/v1" : "https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1";
+
+function statusBlock() {
+  return `<section class="dns-receipt-proof" id="status-proof">
+    <p class="integration-kicker">IS THIS RECEIPT STILL GOOD? ${info("i-status", "A separate status record published on your clinic's own domain, read live through the name.com API.", "A receipt says the checks passed on the day. If an FDA alert or a board action lands afterwards, this is how you find out — without calling the clinic that gave it to you.", "name.com CORE sandbox · _status.<receipt-id>.<clinic domain>")}</p>
+    <p class="muted">Checks the clinic&rsquo;s own domain, not ours. A missing record reports <code>UNKNOWN</code>, never valid &mdash; absence is not validity.</p>
+    <button class="button button-primary" id="check-status" type="button">Check this receipt&rsquo;s status now</button>
+    <div id="status-out" hidden></div>
+  </section>`;
+}
+
+async function checkStatus() {
+  const out = document.querySelector("#status-out");
+  const btn = document.querySelector("#check-status");
+  btn.disabled = true;
+  out.hidden = false;
+  out.innerHTML = `<p class="muted">Reading the clinic&rsquo;s DNS through name.com…</p>`;
+  try {
+    const r = await fetch(`${XANO_V1}/live/receipt-status`);
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || "status lookup failed");
+    const cls = d.status === "VALID" ? "dns-match" : d.status === "REVOKED" ? "dns-unverified" : "";
+    const headline = d.status === "VALID" ? "STILL VALID"
+      : d.status === "REVOKED" ? "REVOKED — DO NOT RELY ON THIS RECEIPT"
+      : "UNKNOWN — no status published";
+    document.querySelector("#status-proof").className = `dns-receipt-proof ${cls}`;
+    out.innerHTML = `<strong>${escapeHtml(headline)}</strong>
+      <span class="src-badge live">LIVE · name.com via Xano</span>
+      ${d.reason ? `<p><b>Reason</b> ${escapeHtml(String(d.reason).replaceAll("-", " "))}</p>` : ""}
+      ${d.at ? `<p class="muted">Recorded ${escapeHtml(d.at)}</p>` : ""}
+      <h3>${escapeHtml(d.fqdn || "")}</h3>
+      <code>${escapeHtml(d.answer || "")}</code>
+      <p class="muted">${escapeHtml(d.caveat || "")}</p>`;
+  } catch (error) {
+    out.innerHTML = `<p class="console-error" role="alert">${escapeHtml(error.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function dnsBlock(dns) {
   const ok = Boolean(dns?.matches);
   return `<section class="dns-receipt-proof ${ok ? "dns-match" : "dns-unverified"}">
@@ -128,6 +173,7 @@ async function loadReceipt() {
         <div class="receipt-field"><dt>Medical Director attestation</dt><dd><code>${escapeHtml(receipt.attestation_id)}</code></dd></div>
       </dl>
       ${dnsBlock(dns)}
+      ${statusBlock()}
       ${attestationBlock(esign)}
       <div class="receipt-boundary"><strong>What this proves — and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
       <details class="machine-evidence"><summary>Machine evidence</summary><pre class="timeline-detail">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre></details>`);
@@ -137,6 +183,7 @@ async function loadReceipt() {
 }
 
 document.addEventListener("click", (event) => {
+  if (event.target.closest("#check-status")) { checkStatus(); return; }
   const btn = event.target.closest(".info-btn");
   if (!btn) return;
   const pop = document.getElementById(btn.getAttribute("aria-controls"));

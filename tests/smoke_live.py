@@ -127,6 +127,19 @@ async def run(base: str) -> None:
             "() => [...document.images].filter(i => !i.complete || i.naturalWidth === 0).length")
         check(broken == 0, f"no broken images on the receipt ({broken} broken)")
 
+        # Revocation channel: the patient must be able to ask whether the receipt is
+        # still good, live, against the clinic's own domain.
+        btn = page.locator("#check-status")
+        if await btn.count():
+            await btn.scroll_into_view_if_needed()
+            await btn.click()
+            await page.wait_for_timeout(12000)
+            out = await page.evaluate("() => document.querySelector('#status-out').innerText")
+            check(any(w in out for w in ("STILL VALID", "REVOKED")), "live receipt status resolves")
+            check("UNKNOWN" not in out, "status is published, not UNKNOWN")
+        else:
+            check(False, "receipt status button present")
+
         # ---- reproducibility ---------------------------------------------------
         print("\n/how-it-works.html")
         await page.goto(base + "/how-it-works.html", wait_until="networkidle", timeout=90000)
