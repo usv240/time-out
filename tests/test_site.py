@@ -69,7 +69,8 @@ def test_every_page_is_reachable_from_every_other_page() -> None:
     """
     import re
     site = ROOT / "before" / "site"
-    pages = {"try.html", "receipt.html", "how-it-works.html", "api.html", "evidence.html"}
+    pages = {"try.html", "receipt.html", "how-it-works.html", "assumptions.html",
+             "api.html", "evidence.html"}
     for page in sorted(pages | {"index.html"}):
         html = (site / page).read_text(encoding="utf-8")
         nav = re.search(r'<div class="nav-links"[^>]*>(.*?)</div>', html, re.S)
@@ -115,3 +116,21 @@ def test_asset_versions_match_the_files_they_point_at() -> None:
             if actual != ver:
                 stale.append(f"{page.name}: {path} stamped {ver}, file is {actual}")
     assert not stale, ("stale asset stamps (run python -m before.stamp_assets): " + ", ".join(stale))
+
+
+def test_assumptions_page_only_cites_tests_that_exist() -> None:
+    """The page's whole argument is that every claim is pinned by a named test.
+
+    If one is renamed or deleted the page quietly becomes a lie, which is worse than
+    not having made the claim.
+    """
+    import re
+    root = ROOT
+    html = (root / "before" / "site" / "assumptions.html").read_text(encoding="utf-8")
+    cited = set(re.findall(r"<code>(test_[a-z0-9_]+)</code>", html))
+    assert cited, "the assumptions page cites no tests"
+    defined = set()
+    for path in (root / "tests").glob("*.py"):
+        defined |= set(re.findall(r"def (test_[a-z0-9_]+)", path.read_text(encoding="utf-8")))
+    missing = sorted(cited - defined)
+    assert not missing, f"assumptions.html cites tests that do not exist: {missing}"

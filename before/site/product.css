@@ -454,3 +454,16 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 .concern-score{ font-family: var(--f-mono); font-size: var(--step--2); text-align: right; }
 @media (max-width: 40rem){ .concern{ grid-template-columns: minmax(0, 1fr) 2.25rem; }
   .concern-bar{ grid-column: 1 / -1; } }
+
+/* ---- assumptions page ---- */
+.assumption-list{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 24px; margin-top: 24px; }
+.assumption-list article{ padding: 20px; border: 1px solid var(--rule); border-radius: 8px;
+  background: var(--surface); }
+.assumption-list h3{ margin: 0 0 .5rem; font-size: var(--step-1) !important; }
+.assumption-list p{ margin: 0 0 .6rem; color: var(--ink-2); font-size: var(--step--1); }
+.assumption-list .src{ margin: 0; padding-top: .6rem; border-top: 1px solid var(--rule);
+  color: var(--ink-3); font-size: var(--step--2); overflow-wrap: anywhere; }
+.assumption-list .src code{ font-size: var(--step--3); }
+.limit-list{ display: grid; gap: 12px; margin: 20px 0 0; padding-left: 1.15rem; max-width: 76ch; }
+.limit-list li{ color: var(--ink-2); line-height: 1.6; }
