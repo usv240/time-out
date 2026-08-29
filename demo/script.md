@@ -1,69 +1,83 @@
 # Time-Out — demo script (≤ 3:00)
 
-One master cut, ≤ 3:00, satisfies every sponsor's length rule (Perfect Corp caps at
-3:00; the others allow 4:00). Screen recording only, no talking head, captions burned
-in. **Record with the network on** — every step on the hosted site is either a live
-Xano call or a committed cached response, so nothing can fail mid-take; the
-"CACHED · recorded 26 Aug" badges are visible and honest.
+One master cut at ≤ 3:00 satisfies every sponsor's length rule (Perfect Corp caps at
+3:00; the rest allow 4:00). Screen recording only, no talking head, captions burned in.
+**Record with the network on** — every step is either a live call or a committed cached
+response, and the CACHED badges are on screen and honest.
 
-Recording: 1440×900, 100% zoom, light theme, Chrome, `Win+G` or OBS. Speak the
-captions or leave them silent — the words on screen carry it.
+Recording: 1440×900, 100% zoom, light theme, Chrome, bookmarks bar hidden.
+
+**Measured on prod, 29 Aug** — the page is faster than you'll expect, so don't rush the
+pauses: the hero verdict lands **3.6s** after load with no click, `/try` shows the attack
+buttons **1.8s** after you click Run, and each attack resolves in **0.6s**. The silence
+after a refusal is doing work. Let it sit.
 
 ---
 
 ## Beats
 
-| Time | Screen | Caption (say it or show it) |
+| Time | Screen | Say this |
 |---|---|---|
-| 0:00 | `/` hero, cursor on **Run the safety check** | *Surgeons pause before every incision to confirm the patient, the site, and the procedure. It cuts complications by a third. Med spas don't do it.* |
-| 0:12 | Click. Checks resolve one by one. Red band: **BLOCKED** | *Time-Out is that pause. This synthetic encounter is an aesthetician booked to inject neurotoxin in Texas — with no delegation evidence on file.* |
-| 0:22 | Hover the failed finding: facts in mono, **source** link | *Every refusal names the exact fact that failed and cites the rule. Nothing about the patient is judged — only the record.* |
-| 0:30 | Scroll to **LIVE · Xano** badge, then the **audit log** | *That ran live on the backend. Every transition is an audit event. Nobody edits a database.* |
-| 0:40 | `/try`. Timeline step: **Nutrient routes low confidence** | *Documents are read into typed fields with confidence scores. A field below the floor goes to a named Medical Director before anything irreversible.* |
-| 0:50 | Step: **SerpApi candidate reopens review** | *A live search found the actual FDA warning letter from April. A ready encounter goes back to review. Search never decides — a person confirms or dismisses, and that's audited.* |
-| 1:02 | Step: **Doctavian compiles consent** → **Both parties sign** | *One consent template branches on who is performing the procedure and loops over the cited disclosures. Patient and injector sign.* |
-| 1:12 | Step: **Teach-back holds** → **passes on retry** | *A signature proves someone clicked. Teach-back proves they understood. The first wrong answer holds the encounter.* |
-| 1:22 | Step: **Perfect Corp baseline** — face, overlays, scores, skin age | *A standardized skin baseline, captured before treatment. Twelve scored concerns and overlays — the patient's own record. A baseline, never a diagnosis.* |
-| 1:34 | Step: **Foxit agent assembles, then stops** — tool-call trace, SHA, `folderId` | *An agent assembled the record through the Foxit MCP server, watermarked every page SYNTHETIC, and stopped. The Medical Director's attestation is a human eSign — the agent never signs.* |
-| 1:46 | Step: **Receipt sealed** — **TXT READ-BACK MATCHED** | *The receipt's fingerprint is published as a DNS record on name.com and read back through the API. The patient can verify it without trusting us.* |
-| 1:54 | Click **Open the patient receipt** → `/receipt` — checks, baseline, published record, *What this proves* | *This is what the patient leaves with. And what it does not claim: not legality, not safety, not authenticity, not outcome.* |
-| 2:06 | `/how-it-works` → **Fetch a live verdict and re-hash it** → **REPRODUCED** | *Every verdict ships with the exact ruleset it used. Your browser just hashed it and it matches the server, byte for byte.* |
-| 2:18 | Back to `/try` → **Break it yourself**. Click **Use the FDA-flagged lot** → red **TIME OUT** | *Now try to get an unsafe procedure through. Each button breaks exactly one thing and re-runs the checks — live.* |
-| 2:28 | Click **Skip the teach-back** → **TIME OUT** | *They signed. That isn't enough.* |
-| 2:36 | Click **Swap in the aesthetician** → **TIME OUT**, citation visible | *A job title is never an answer. Texas requires documented delegation.* |
-| 2:44 | Scroll to the audit log — the three attempts, **Judge:** as actor | *Every attempt you just made is in the log, with you as the actor.* |
-| 2:50 | Click **Reset** → **CLEAR** | *Complete evidence, every check passes.* |
-| 2:54 | Cut to `/` hero, still | *A signature proves someone clicked. Time-Out proves the right person, product, rules, understanding, and evidence were present — before the needle.* |
-| 3:00 | End card: URL + repo | https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io · github.com/usv240/time-out |
+| 0:00 | `/` on load. Headline and the stat rail. Don't scroll yet. | *Surgeons stop before every incision and confirm the patient, the site, the procedure. Complications fell from eleven percent to seven when that checklist arrived. Thirteen thousand US med spas inject neurotoxin with no equivalent.* |
+| 0:12 | Scroll to the card. It's already running. | *And when their malpractice cases reach a verdict, the leading causes aren't bad hands — they're absent consent, unexplained risk, unsupervised delegates. Paperwork failures, every one before the needle.* |
+| 0:20 | Red band: **BLOCKED · DO NOT PROCEED**. Hover the failed facts. | *Time-Out is that pause. This synthetic encounter is an aesthetician booked to inject in Texas with no delegation evidence. It names the exact facts that failed and cites the rule.* |
+| 0:32 | Point at **Snapshot** hash, then **Remedy**. | *Frozen with the exact ruleset it used. A person attaches what's missing and re-runs it. Nobody edits a database.* |
+| 0:40 | Click **Try to break it →** | *Now try to get an unsafe procedure through.* |
+| 0:46 | `/try` → **Run the complete safety workflow** → attacks appear | *This is the real backend. Each button takes the complete, valid evidence set and breaks exactly one thing.* |
+| 0:54 | **Swap in the aesthetician** → red **TIME OUT** | *A job title is never an answer. Texas requires documented delegation.* |
+| 1:02 | **Use the FDA-flagged lot** → **TIME OUT** | *A confirmed product alert stops it.* |
+| 1:08 | **Skip the teach-back** → **TIME OUT** | *They signed. That isn't enough. Teach-back means saying the risks back in your own words.* |
+| 1:16 | Scroll to the audit log — your three attempts, **Judge:** as actor | *Every attempt you just made is in the log, with you as the actor.* |
+| 1:24 | **Reset** → **CLEAR** | *Complete evidence, all seven pass.* |
+| 1:30 | Click through to `/receipt` | *This is what the patient leaves with.* |
+| 1:36 | Scroll: seven checks → **skin baseline**, overlays, scores | *A standardized skin baseline captured before treatment. Twelve scored concerns. Skin analysis normally sells a treatment; here it runs once, before anything, and the record belongs to the patient.* |
+| 1:48 | **PUBLISHED RECORD** — TXT read-back matched | *The receipt's fingerprint is published as a DNS record on the clinic's own domain, and read back through the name.com API.* |
+| 1:56 | Click **Check this receipt's status now** → **STILL VALID** | *And this is the part I'd point at. A receipt says the checks passed on the day. If an FDA alert lands next week, the patient is holding paper that quietly stopped being true.* |
+| 2:08 | Stay on the result. Point at the `_status` record. | *So every receipt carries a second record — its status — on the clinic's domain. Confirm an alert and it flips to REVOKED, with the reason. A missing record reads UNKNOWN, never valid. Absence is not validity.* |
+| 2:22 | Scroll to **MEDICAL DIRECTOR ATTESTATION — SIGNED BY A NAMED HUMAN** | *An agent assembled this record through the Foxit MCP server, watermarked every page, and stopped. A named human signed it. The agent read the outcome back with GET requests only — it can never sign anything.* |
+| 2:34 | `/how-it-works` → **Fetch a live verdict and re-hash it** → **REPRODUCED** | *Your browser just hashed the ruleset itself and matched the server, byte for byte. You don't have to take our word for it.* |
+| 2:46 | `/` → scroll to **What this is not** | *It does not determine legality. It does not certify that a treatment is safe. Every clinic, patient, face and lot here is synthetic — no clinic has used this yet, and that's the next step, not a feature.* |
+| 2:56 | End card: URL + repo | https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io · github.com/usv240/time-out |
 
 ---
 
 ## Rules for the take
 
-- **Say the limits out loud** (1:54). Judges trust teams that bound their own claims.
-- **Never say "first," "nobody else," or "determines legality."** The copy on screen already avoids it; match it.
-- The red band appears only on BLOCKED / TIME OUT. Don't linger on it — 2 seconds is enough; it detonates on its own.
-- If a live call is slow, wait — don't cut. The badge says LIVE; the wait is honest.
+- **Say the limits out loud** (2:46). Bounding your own claims is why the rest is believed.
+- **Never say "first", "nobody else", or "determines legality."** The copy on screen already avoids it — match it.
+- The red band is 2 seconds of screen time. It detonates on its own; don't linger.
+- If a live call is slow, wait. The badge says LIVE and the wait is honest.
 - One take is fine. Two is better. Pick the calmer one.
+- **Do not read the nine-tool list aloud.** Showing two tools doing real work beats naming nine.
 
-## Per-sponsor cut notes (same master, if a sponsor page wants a shorter clip)
+## Before you record — checklist
+
+- [ ] `python -m tests.smoke_live` → **34/34**. If anything fails, fix it before recording.
+- [ ] Hard-refresh each page once (Ctrl+Shift+R) so nothing serves from cache mid-take
+- [ ] `/receipt.html` → **Check this receipt's status now** returns **STILL VALID**
+- [ ] Browser 100% zoom, light theme, 1440×900, bookmarks bar hidden, notifications off
+- [ ] Screen recorder tested for 10 seconds
+- [ ] Close anything you would not want in a public gallery
+
+## Per-sponsor cut notes (same master, if a challenge wants a shorter clip)
 
 | Sponsor | Clip | Runs |
 |---|---|---|
-| Xano | 0:12–0:40 + 2:18–2:50 | ~1:00 — the live Gate, the audit log, the attacks |
-| Nutrient | 0:40–0:50 + 1:54–2:06 | ~0:25 — confidence routing, bounded receipt |
-| SerpApi | 0:50–1:02 + 2:18–2:28 | ~0:25 — live alert reopening review; flagged lot |
-| Perfect Corp | 1:22–1:34 + 1:54–2:06 | ~0:25 — baseline on the patient's receipt (≤3:00 master also complies) |
-| name.com | 1:46–2:06 | ~0:20 — TXT published and read back, limits stated |
-| Doctavian | 1:02–1:12 | ~0:10 — branching consent, two signers (+ honest status in the write-up) |
-| Foxit | 1:34–1:46 | ~0:12 — agent trace, the pause, eSign handoff |
+| Xano | 0:12–0:40 + 1:16–1:30 | ~0:40 — live Gate, cited refusal, audit log |
+| name.com | 1:48–2:22 | ~0:35 — published record, then the revocation channel |
+| Foxit | 2:22–2:34 | ~0:12 — agent assembles, stops, human signs, GET-only read-back |
+| Perfect Corp | 1:36–1:48 + 2:46–2:56 | ~0:22 — baseline on the patient's receipt, limits stated (master is ≤3:00, so it also complies whole) |
+| SerpApi | 1:02–1:08 + 1:56–2:22 | ~0:32 — flagged lot, and a confirmed alert revoking a receipt |
+| Nutrient | 0:20–0:40 | ~0:20 — typed evidence, confidence routing, cited refusal |
+| Doctavian | — | Not demonstrable; the write-up states why, honestly |
 
-## Before you record — the checklist (Aug 31)
+## If you have 4:00 instead of 3:00
 
-- [ ] `https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io/` loads; click **Run** once to warm the sandbox
-- [ ] `/try` → Run → six attack buttons appear; try one; **Reset** returns CLEAR
-- [ ] `/receipt.html` shows the face with overlays and **TXT READ-BACK MATCHED**
-- [ ] `/how-it-works` → verifier returns **REPRODUCED**
-- [ ] Browser at 100% zoom, light theme, 1440×900, bookmarks bar hidden
-- [ ] Screen recorder tested for 10 seconds; audio optional
-- [ ] Tell me **go** — I'll send the eSign attestation email to `ujwalsureshv@gmail.com` so you can show the signature request landing if you want the extra beat (optional; the draft folder is already on screen at 1:34)
+Only two challenges cap at 3:00. If you cut a longer version for the rest, the extra
+minute is best spent on:
+
+1. `/try` → the **SerpApi live search** button (a real FDA query, on screen) — 20s
+2. The **Nutrient** step: a field below the confidence floor boxed on its source page — 20s
+3. The **"Could this be a company"** section: who buys it, and what it replaces — 20s
+
+Record the 3:00 master first. The longer cut is a bonus, not the deliverable.
