@@ -11,3 +11,8 @@ pytest>=8,<9
 # Smoke test only (tests/smoke_live.py). Drives the deployed site in a real browser;
 # the unit suite never imports it, so an offline clone still runs green without it.
 playwright>=1.40,<2
+
+# Reads text back out of the PDFs we generate, so the suite can assert a document was
+# really rendered rather than trusting a 200. Doctavian returns 200 for expressions it
+# silently declines to fill, so this check has to run in CI, not just locally.
+PyMuPDF>=1.24,<2
