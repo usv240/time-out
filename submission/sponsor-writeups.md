@@ -174,64 +174,73 @@ In our first live run on a three-page evidence record, 3 of 29 elements fell bel
 
 ## Doctavian — Generate It Right. Sign It Tight.
 
-**Live and authenticated against your API. Generation is blocked on one thing, and
-we would rather name it precisely than dress it up.**
+**We call your generation API for real, through the full solution-based flow. Eleven
+calls succeed. The engine's template read is what fails, and we do not think it is
+our template.**
 
-Seven calls succeed against `demo.api.doctavian.com`, authenticated with the demo key
-and an OAuth bearer that refreshes itself:
+The whole chain runs live against `demo.api.doctavian.com`, authenticated with the
+demo key and an OAuth bearer that refreshes itself:
 
 ```
-POST /v1/documents/template/upload        201
-POST /v1/documents/data/upload            201
-POST /v1/documents/template/create        200
-POST /v1/documents/datasource/create      200
-POST /v1/documents/configuration/create   200
+POST /v1/documents/template/upload        201   file into Storage
+POST /v1/documents/template/create        200   -> documentTemplateGuid
+POST /v1/documents/data/upload            201   file into Storage
+POST /v1/documents/datasource/create      200   -> dataSourceGuid
+POST /v1/documents/configuration/create   200   PDF, delivered to Storage
+POST /v1/documents/request/create         200   -> documentRequestGuid
+GET  /v1/documents/request/{guid}/get     200   status: Failed
 GET  /v1/common/user/get                  200
+GET  /v1/common/limits/get                200
 GET  /v1/documents/solution/{guid}/get    200
+GET  /v1/documents/document/{id}/download 200   byte-identical read-back
 ```
 
-`POST /v1/documents/document/generate` returns `500 TEMPLATE_READ_FAILED`. Here is
-what we established before saying that, so you can rule things out quickly:
+The document request is accepted and reaches your pipeline. It comes back
+`status: "Failed"`, `errorMessage: "Failed to read the template."`
 
-- The upload route is right. `template/upload` with `X-Storage-Type: document-template`
-  is the only one whose id `generate` resolves; every other route reports the file
-  missing, which makes the two errors a usable oracle.
-- **The file is intact in your storage.** Uploaded through `document/upload` and read
-  back through `document/{id}/download`, it is byte-identical — same SHA-256, same
+**Why we do not think the template is ours.** We tried to disprove that first:
+
+- **A Word-authored third-party `.docx` fails identically.** So does python-docx's own
+  bundled `default.docx`, which Word produced. It is not our authoring tool.
+- **A plain-text template with no expressions fails identically.** It is not our
+  expression syntax.
+- **The uploaded file is intact in your storage** — pushed through `document/upload`,
+  pulled back through `document/{id}/download`, byte-identical: same SHA-256, same
   40,120 bytes, same ZIP magic.
-- The failure is stable across a 0, 5 and 15 second delay, so it is not a
-  consistency race — though freshly uploaded minimal templates *did* intermittently
-  report `FILE_MISSING_FROM_STORAGE` on the same call, which may be worth a look.
-- It is not our expression syntax or our data: a template containing only plain text
-  and no expressions fails the same way.
+- **Not a consistency race** — stable across 0, 5 and 15 second delays.
+- The upload route is right: `template/upload` with `X-Storage-Type:
+  document-template` is the only one whose id `generate` resolves. Every other route
+  reports the file missing, which makes the two error codes a usable oracle.
 
-So `generate` finds the file, and the engine will not read it. Our template is built
-programmatically with python-docx rather than authored through your Office add-in,
-and that is our best remaining explanation — we could not test it without Word and
-the add-in. It is a template-authoring gap on our side, not an API fault on yours.
+Every docx we can produce or find fails the same way on the demo subscription, and no
+document has ever been generated on this account (`generatedDocumentCount: 0`).
 
-**What the template is for.** One template, not a library of them. It branches on the
-authority pathway — a physician injecting and a nurse injecting under delegation
-produce genuinely different consent — then loops over only the disclosures our rules
-engine actually cited for that encounter, and calculates the non-clinical disclosure
-count. Patient and injector both sign. Every other consent form in this industry is a
-static PDF that says the same thing regardless of who picks up the needle.
+**Two things worth passing to your engineers**
 
-**We also solved the problem we originally wrote to you about.** Generation defaulted
-to Google Drive delivery, and we would not grant a third party blanket Drive scope
-over a patient-consent workflow. Setting `deliveryMethod: "Storage"` on both the
-solution configuration and the generate call removes that requirement entirely.
+1. **The OpenAPI spec disagrees with the implementation.**
+   `POST /v1/documents/request/create` documents the field as `dataGuid`; sending that
+   returns `400 REQUEST_DATA_ID_REQUIRED`. The field the service actually accepts is
+   **`dataSourceGuid`**. That cost an hour, and the error message points away from the
+   real cause.
+2. **Freshly uploaded templates intermittently report `FILE_MISSING_FROM_STORAGE`** on
+   the very next call, then resolve on a retry. It looks like a write-visibility race.
 
-**Diagnosis worth passing to your team.** Every endpoint returns `ApiKeyNotFound`
-identically whether the caller sends a valid Microsoft token, a Google token, or no
-`Authorization` header at all — the key check runs before the bearer is read. That
-cost several days of chasing an account-linkage theory that was never the issue. A
-`401` that distinguished "no key" from "no token" would have pointed straight at it.
+**What the template is for.** One template, not a library. It branches on the authority
+pathway — a physician injecting and a nurse injecting under delegation produce
+genuinely different consent — loops over only the disclosures our rules engine actually
+cited for that encounter, and calculates the non-clinical disclosure count. Patient and
+injector both sign. Every other consent form in this industry is a static PDF that says
+the same thing regardless of who picks up the needle.
 
-**Where Doctavian would do the real work:** consent computed from *who is actually
-performing the procedure*, citing only the rules that applied, is the difference
-between a signature and a record. We got the whole pipeline standing and stopped one
-call short. We are not claiming a generated document we do not have.
+**We also solved the problem we first wrote to you about.** Generation defaulted to
+Google Drive delivery, and we would not grant a third party blanket Drive scope over a
+patient-consent workflow. Setting `deliveryMethod: "Storage"` on both the configuration
+and the request removes that requirement entirely.
+
+**Where Doctavian does the real work, and why:** consent computed from *who is actually
+performing the procedure*, citing only the rules that applied, is the difference between
+a signature and a record. We are one engine-side read away from the artifact, and we are
+not going to claim a generated document we do not have.
 
 ---
 
