@@ -513,8 +513,17 @@ def parse_perfectcorp_scores(blob: bytes) -> dict[str, Any]:
 
 
 def _doctavian_headers() -> dict[str, str]:
+    """Both credentials, every call. The bearer refreshes itself.
+
+    Doctavian checks the api key before it looks at the bearer, so a missing key
+    reports ApiKeyNotFound no matter how good the token is. The bearer lasts about an
+    hour; before.doctavian_auth keeps the refresh token and renews silently rather
+    than failing mid-run.
+    """
+    from before.doctavian_auth import bearer  # noqa: WPS433
+
     return {
-        "Authorization": f"Bearer {_env('DOCTAVIAN_BEARER')}",
+        "Authorization": f"Bearer {bearer()}",
         "x-api-key": _env("DOCTAVIAN_API_KEY"),
         "X-Origin": os.getenv("DOCTAVIAN_ORIGIN", "https://app.mavenmule.com"),
     }

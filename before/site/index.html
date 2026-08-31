@@ -280,10 +280,10 @@
         </details>
 
         <details class="tool">
-          <summary><span class="tool-name">Doctavian</span> <span class="tool-role">Compiles consent that changes with the delegation</span> <span class="status-pill review">WIRED · AWAITING SCOPE</span></summary>
+          <summary><span class="tool-name">Doctavian</span> <span class="tool-role">Compiles consent that changes with the delegation</span> <span class="status-pill review">LIVE · GENERATION BLOCKED</span></summary>
           <dl>
             <dt>What</dt><dd>One template, not a library of them. It branches on the authority pathway &mdash; a physician injecting and a nurse injecting under delegation produce genuinely different consent &mdash; then loops over only the disclosures the Gate actually cited for that encounter. Patient and injector both sign.</dd>
-            <dt>How</dt><dd>The template, the branch logic and the disclosure loop are built and bound to the encounter. The final generation call is held on one thing: delivery currently requires granting full Google Drive access, and we would not hand a third party blanket Drive scope over a patient-consent workflow. We&rsquo;ve asked for internal storage or direct download, and the call fires the moment that exists.</dd>
+            <dt>How</dt><dd>Seven calls run live and authenticated: the template and the data upload to Doctavian Storage, the template, data source and solution configuration are created, and the output is set to deliver to Storage &mdash; which removes the Google Drive scope we declined to grant over a patient-consent workflow. The generation call itself returns <code>TEMPLATE_READ_FAILED</code>. A one-paragraph template produces the identical error, so it is not our expression syntax: Doctavian templates carry Elements authored through their Office add-in, and ours is built programmatically. That is a template-authoring gap, and we would rather name it than dress it up.</dd>
             <dt>Why</dt><dd>Every other consent form in this industry is a static PDF that says the same thing no matter who picks up the needle. Consent that is <em>computed from who is actually performing the procedure, citing only the rules that applied</em>, is the difference between a signature and a record. The refusal to over-scope is the product working as designed &mdash; the same instinct that makes the Gate say no.</dd>
           </dl>
         </details>

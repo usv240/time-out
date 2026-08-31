@@ -174,11 +174,50 @@ In our first live run on a three-page evidence record, 3 of 29 elements fell bel
 
 ## Doctavian — Generate It Right. Sign It Tight.
 
-**One Doctavian template carries the logic for every Texas neurotoxin consent.** It branches on procedure and on the provider's authority pathway (direct performer vs. delegated RN), loops over the cited risk disclosures required for that path, and calculates only the non-clinical disclosure count. Patient and injector sign. **Nothing uncited enters the document** — no invented cooling-off period, no calculated clinical dose. The Medical Director's attestation is a separate document with a separate signer, on purpose.
+**Live and authenticated against your API. Generation is blocked on one thing, and
+we would rather name it precisely than dress it up.**
 
-**Live status, stated honestly:** authentication, data source, solution, template upload, and data upload all succeed against the demo API. Generation currently fails at delivery with `COPY_FILE_GOOGLEDRIVE_FAILED` because the demo account defaulted to Google Drive output and we declined to grant a third party full Drive access for a hackathon build. We've asked Doctavian for an internal-storage delivery option. The template is real, tested, and in the repo at `before/doctavian/`.
+Seven calls succeed against `demo.api.doctavian.com`, authenticated with the demo key
+and an OAuth bearer that refreshes itself:
 
-**Where Doctavian did the real work, and why:** consent that changes shape depending on who is allowed to perform the procedure. Fifty static forms can't do that. One template with real branching can.
+```
+POST /v1/documents/template/upload        201
+POST /v1/documents/data/upload            201
+POST /v1/documents/template/create        200
+POST /v1/documents/datasource/create      200
+POST /v1/documents/configuration/create   200
+GET  /v1/common/user/get                  200
+GET  /v1/documents/solution/{guid}/get    200
+```
+
+`POST /v1/documents/document/generate` returns `500 TEMPLATE_READ_FAILED`. **A
+one-paragraph template produces the identical error**, so it is not our expression
+syntax or our data — Doctavian templates carry Elements authored through your Office
+add-in, and ours is generated programmatically with python-docx. That is a
+template-authoring gap on our side, not an API problem on yours.
+
+**What the template is for.** One template, not a library of them. It branches on the
+authority pathway — a physician injecting and a nurse injecting under delegation
+produce genuinely different consent — then loops over only the disclosures our rules
+engine actually cited for that encounter, and calculates the non-clinical disclosure
+count. Patient and injector both sign. Every other consent form in this industry is a
+static PDF that says the same thing regardless of who picks up the needle.
+
+**We also solved the problem we originally wrote to you about.** Generation defaulted
+to Google Drive delivery, and we would not grant a third party blanket Drive scope
+over a patient-consent workflow. Setting `deliveryMethod: "Storage"` on both the
+solution configuration and the generate call removes that requirement entirely.
+
+**Diagnosis worth passing to your team.** Every endpoint returns `ApiKeyNotFound`
+identically whether the caller sends a valid Microsoft token, a Google token, or no
+`Authorization` header at all — the key check runs before the bearer is read. That
+cost several days of chasing an account-linkage theory that was never the issue. A
+`401` that distinguished "no key" from "no token" would have pointed straight at it.
+
+**Where Doctavian would do the real work:** consent computed from *who is actually
+performing the procedure*, citing only the rules that applied, is the difference
+between a signature and a record. We got the whole pipeline standing and stopped one
+call short. We are not claiming a generated document we do not have.
 
 ---
 
