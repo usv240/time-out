@@ -172,6 +172,24 @@ async def run(base: str) -> None:
         hw = await page.evaluate("() => document.body.innerText")
         check("REPRODUCED" in hw.upper(), "browser re-hash reproduces the server fingerprint")
 
+        # ---- the API page: a claim judges will test with their own hands -------
+        print("\n/api.html")
+        await page.goto(base + "/api.html", wait_until="networkidle", timeout=90000)
+        await page.wait_for_timeout(3000)
+        for sel, label, target in (("#send-request", "Send request", "#response-output"),
+                                   ("#get-key", "Instant key", "#key-output")):
+            el = page.locator(sel)
+            if not await el.count():
+                check(False, f"{label} control present")
+                continue
+            await el.scroll_into_view_if_needed()
+            await el.click()
+            await page.wait_for_timeout(11000)
+            body = await page.evaluate("t => (document.querySelector(t)?.innerText || '')", target)
+            check(len(body) > 40, f"{label} returns a live response")
+            if sel == "#send-request":
+                check("verdict" in body, "the playground returns a real verdict")
+
         # ---- every page reachable, no sideways scroll, no JS errors ------------
         print("\nwhole site")
         pages = ["/", "/try.html", "/receipt.html", "/how-it-works.html", "/evidence.html", "/api.html"]

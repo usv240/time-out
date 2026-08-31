@@ -94,3 +94,22 @@ class ApiContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_published_curl_matches_the_endpoint_the_page_calls() -> None:
+    """The landing page prints a curl command as an invitation.
+
+    If the printed URL and the URL the site actually calls ever drift, a judge who
+    copies the command gets a different answer from the one on screen.
+    """
+    import re
+    from pathlib import Path
+    site = Path(__file__).resolve().parents[1] / "before" / "site"
+    index = (site / "index.html").read_text(encoding="utf-8")
+    js = (site / "api-page.js").read_text(encoding="utf-8")
+
+    printed = re.search(r"curl -X POST (https://\S+)", index)
+    assert printed, "no curl command printed on the landing page"
+    url = printed.group(1).rstrip("\\")
+    assert url.endswith("/v1/encounters/demo/evaluate"), url
+    assert "encounters/demo/evaluate" in js, "the page calls a different endpoint than it prints"
