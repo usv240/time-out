@@ -174,73 +174,65 @@ In our first live run on a three-page evidence record, 3 of 29 elements fell bel
 
 ## Doctavian — Generate It Right. Sign It Tight.
 
-**We call your generation API for real, through the full solution-based flow. Eleven
-calls succeed. The engine's template read is what fails, and we do not think it is
-our template.**
+**Your API generated our consent document. It is committed in the repo, and every
+expression in it was resolved by your platform.**
 
-The whole chain runs live against `demo.api.doctavian.com`, authenticated with the
-demo key and an OAuth bearer that refreshes itself:
+`python -m before.doctavian_generate` runs the whole thing live: template upload, data
+upload, `document/generate`, then download. What comes back is a two-page PDF —
+`documents-generated: 1` on the subscription — with the encounter merged, the cited
+disclosures indexed out of the repeated record, and **`$count` evaluated by Doctavian**
+rather than precomputed by us:
 
 ```
-POST /v1/documents/template/upload        201   file into Storage
-POST /v1/documents/template/create        200   -> documentTemplateGuid
-POST /v1/documents/data/upload            201   file into Storage
-POST /v1/documents/datasource/create      200   -> dataSourceGuid
-POST /v1/documents/configuration/create   200   PDF, delivered to Storage
-POST /v1/documents/request/create         200   -> documentRequestGuid
-GET  /v1/documents/request/{guid}/get     200   status: Failed
-GET  /v1/common/user/get                  200
-GET  /v1/common/limits/get                200
-GET  /v1/documents/solution/{guid}/get    200
-GET  /v1/documents/document/{id}/download 200   byte-identical read-back
+Encounter: SYN-ENC-CLEAR-001        Authority pathway: DELEGATED
+Disclosures cited for this encounter: 3
+1. Temporary effect and alternatives
+2. Who will perform the procedure          Source: 22 TAC 169.26; Tex. Occ. Code §157.001
+3. Teach-back and unresolved holds
 ```
 
-The document request is accepted and reaches your pipeline. It comes back
-`status: "Failed"`, `errorMessage: "Failed to read the template."`
+**Where the branch lives, and why we moved it.** Our first template used
+`<mdoc:repeater>` and `<mdoc:paragraph hidden=...>` written as literal text. Those are
+authored through your Office add-in and cannot be produced programmatically — they fail
+with `PROCESS_MARKUP_ELEMENT_FAILED`. So the Gate resolves the authority pathway from
+cited rules and passes the resolved sentence in as data, while the document keeps the
+platform-side count and the indexed disclosure records.
 
-**Why we do not think the template is ours.** We tried to disprove that first:
+We think that is the better design anyway, and it matches the rule the rest of this
+project follows: a document template is the wrong place to decide who may lawfully
+perform a procedure. The template renders; the cited code decides.
 
-- **A Word-authored third-party `.docx` fails identically.** So does python-docx's own
-  bundled `default.docx`, which Word produced. It is not our authoring tool.
-- **A plain-text template with no expressions fails identically.** It is not our
-  expression syntax.
-- **The uploaded file is intact in your storage** — pushed through `document/upload`,
-  pulled back through `document/{id}/download`, byte-identical: same SHA-256, same
-  40,120 bytes, same ZIP magic.
-- **Not a consistency race** — stable across 0, 5 and 15 second delays.
-- The upload route is right: `template/upload` with `X-Storage-Type:
-  document-template` is the only one whose id `generate` resolves. Every other route
-  reports the file missing, which makes the two error codes a usable oracle.
+**Three findings for your team, each verified before writing it down**
 
-Every docx we can produce or find fails the same way on the demo subscription, and no
-document has ever been generated on this account (`generatedDocumentCount: 0`).
+1. **`request/create` documents the wrong field name.** `DocumentRequestModel` lists
+   `dataGuid` as required; the service ignores it and returns
+   `400 REQUEST_DATA_ID_REQUIRED` — identical to omitting the field. It accepts
+   **`dataSourceGuid`**, which is absent from that schema, and echoes it back in the
+   response. Tested with freshly created GUIDs to rule out stale ids.
+2. **The data-contract failure is reported as a template failure.** A payload with raw
+   numbers or booleans fails with **`TEMPLATE_READ_FAILED` — "check the template
+   format"**. The template is fine; the fix is one root `data` object with every scalar
+   leaf stringified. We spent hours on the template, including proving a Word-authored
+   third-party `.docx` and your own bundled `default.docx` failed identically. An error
+   naming the data would have saved all of it.
+3. **Unsupported expressions return 200 and render blank.** A ternary and `$if(...)`
+   both produced `HTTP 200` and an empty string in the PDF. Silent blanks in a consent
+   document are worse than an error — we only caught it by downloading the output and
+   reading the text back, which is now a test.
 
-**Two things worth passing to your engineers**
-
-1. **The OpenAPI spec disagrees with the implementation.**
-   `POST /v1/documents/request/create` documents the field as `dataGuid`; sending that
-   returns `400 REQUEST_DATA_ID_REQUIRED`. The field the service actually accepts is
-   **`dataSourceGuid`**. That cost an hour, and the error message points away from the
-   real cause.
-2. **Freshly uploaded templates intermittently report `FILE_MISSING_FROM_STORAGE`** on
-   the very next call, then resolve on a retry. It looks like a write-visibility race.
-
-**What the template is for.** One template, not a library. It branches on the authority
-pathway — a physician injecting and a nurse injecting under delegation produce
-genuinely different consent — loops over only the disclosures our rules engine actually
-cited for that encounter, and calculates the non-clinical disclosure count. Patient and
-injector both sign. Every other consent form in this industry is a static PDF that says
-the same thing regardless of who picks up the needle.
+Also worth knowing: freshly uploaded files intermittently report
+`FILE_MISSING_FROM_STORAGE` on the very next call and resolve on a retry, so our client
+re-uploads and retries.
 
 **We also solved the problem we first wrote to you about.** Generation defaulted to
 Google Drive delivery, and we would not grant a third party blanket Drive scope over a
-patient-consent workflow. Setting `deliveryMethod: "Storage"` on both the configuration
-and the request removes that requirement entirely.
+patient-consent workflow. `deliveryMethod: "Storage"` on both the configuration and the
+request removes the requirement entirely.
 
-**Where Doctavian does the real work, and why:** consent computed from *who is actually
-performing the procedure*, citing only the rules that applied, is the difference between
-a signature and a record. We are one engine-side read away from the artifact, and we are
-not going to claim a generated document we do not have.
+**Where Doctavian did the real work, and why:** consent that carries the disclosures a
+rules engine actually cited for *this* encounter, counted on your platform, is the
+difference between a signature and a record. Every other consent form in this industry
+is a static PDF that says the same thing regardless of who picks up the needle.
 
 ---
 
