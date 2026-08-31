@@ -190,11 +190,25 @@ GET  /v1/common/user/get                  200
 GET  /v1/documents/solution/{guid}/get    200
 ```
 
-`POST /v1/documents/document/generate` returns `500 TEMPLATE_READ_FAILED`. **A
-one-paragraph template produces the identical error**, so it is not our expression
-syntax or our data — Doctavian templates carry Elements authored through your Office
-add-in, and ours is generated programmatically with python-docx. That is a
-template-authoring gap on our side, not an API problem on yours.
+`POST /v1/documents/document/generate` returns `500 TEMPLATE_READ_FAILED`. Here is
+what we established before saying that, so you can rule things out quickly:
+
+- The upload route is right. `template/upload` with `X-Storage-Type: document-template`
+  is the only one whose id `generate` resolves; every other route reports the file
+  missing, which makes the two errors a usable oracle.
+- **The file is intact in your storage.** Uploaded through `document/upload` and read
+  back through `document/{id}/download`, it is byte-identical — same SHA-256, same
+  40,120 bytes, same ZIP magic.
+- The failure is stable across a 0, 5 and 15 second delay, so it is not a
+  consistency race — though freshly uploaded minimal templates *did* intermittently
+  report `FILE_MISSING_FROM_STORAGE` on the same call, which may be worth a look.
+- It is not our expression syntax or our data: a template containing only plain text
+  and no expressions fails the same way.
+
+So `generate` finds the file, and the engine will not read it. Our template is built
+programmatically with python-docx rather than authored through your Office add-in,
+and that is our best remaining explanation — we could not test it without Word and
+the add-in. It is a template-authoring gap on our side, not an API fault on yours.
 
 **What the template is for.** One template, not a library of them. It branches on the
 authority pathway — a physician injecting and a nurse injecting under delegation
