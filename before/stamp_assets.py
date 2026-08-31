@@ -25,11 +25,24 @@ SITE = Path(__file__).resolve().parents[1] / "before" / "site"
 REF = re.compile(r'(?P<attr>href|src)="(?P<path>\.?/[^"?]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"')
 
 
+def digest(asset: Path) -> str:
+    """Content hash with line endings normalised.
+
+    Git checks these files out CRLF on Windows and LF on Linux, so hashing raw bytes
+    produces a different stamp per platform: the stamps written on a dev machine then
+    read as stale in CI, for files nobody had touched. Normalising means the stamp
+    tracks the content and nothing else.
+    """
+    return hashlib.sha256(
+        asset.read_bytes().replace(b"\r\n", b"\n")
+    ).hexdigest()[:8]
+
+
 def _digest(url_path: str) -> str | None:
     asset = SITE / url_path.lstrip("./").lstrip("/")
     if not asset.is_file():
         return None
-    return hashlib.sha256(asset.read_bytes()).hexdigest()[:8]
+    return digest(asset)
 
 
 def stamp() -> list[tuple[str, int]]:

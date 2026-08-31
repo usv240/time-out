@@ -102,8 +102,8 @@ def test_every_local_asset_url_carries_a_content_version() -> None:
 
 def test_asset_versions_match_the_files_they_point_at() -> None:
     """A stale stamp is worse than none — it pins visitors to old bytes."""
-    import hashlib
     import re
+    from before.stamp_assets import digest        # one hash function, not two
     site = ROOT / "before" / "site"
     stale = []
     for page in sorted(site.glob("*.html")):
@@ -112,7 +112,7 @@ def test_asset_versions_match_the_files_they_point_at() -> None:
             asset = site / path.lstrip("./").lstrip("/")
             if not asset.is_file():
                 continue
-            actual = hashlib.sha256(asset.read_bytes()).hexdigest()[:8]
+            actual = digest(asset)
             if actual != ver:
                 stale.append(f"{page.name}: {path} stamped {ver}, file is {actual}")
     assert not stale, ("stale asset stamps (run python -m before.stamp_assets): " + ", ".join(stale))
