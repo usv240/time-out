@@ -540,3 +540,14 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
   font-size: var(--step--2); line-height: 1.55; }
 .viewer-img{ display: block; width: 100%; max-height: 30rem; object-fit: contain; background: #05090b; }
 .viewer-pdf{ display: block; width: 100%; height: 30rem; border: 0; }
+
+/* ---- put the evidence back ----
+   This sat below the result panel, so after an attack it was pushed off screen and a
+   judge could not find the way back to a passing state. It belongs with the buttons it
+   undoes, and it is not an attack, so it does not share their look. */
+.attack-reset-row{ display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 14px 0 4px; }
+.attack-reset-row .muted{ font-size: var(--step--1); }
+.reset-button{ border: 1px solid var(--ok); background: var(--ok-wash); color: var(--ok);
+  font-weight: 600; }
+.reset-button:hover:not(:disabled){ background: var(--ok); color: var(--bg); }
+.reset-button:focus-visible{ outline: 2px solid var(--ok); outline-offset: 2px; }

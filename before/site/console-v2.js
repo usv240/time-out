@@ -335,8 +335,8 @@ async function remediateAndEvaluate(patch, label) {
 function renderAttack(attack, verdict) {
   const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
   const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-  const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
-    : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide." : "CLEAR, every check passed.";
+  const headline = verdict.verdict === "BLOCKED" ? "TIME OUT. This encounter cannot proceed."
+    : verdict.verdict === "REVIEW" ? "HOLD. A person has to decide." : "CLEAR. Every check passed.";
   attackResult.className = `attack-result ${cls}`;
   attackResult.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
     <h3>${escapeHtml(headline)}</h3>
@@ -467,9 +467,9 @@ async function runComposed() {
     const verdict = await remediateAndEvaluate(composed, "Composed by a judge");
     const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
     const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
-      : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide."
-      : "CLEAR, every check passed on your evidence.";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT. This encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD. A person has to decide."
+      : "CLEAR. Every check passed on your evidence.";
     out.className = `attack-result ${cls}`;
     out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
       <h3>${escapeHtml(headline)}</h3>
@@ -539,9 +539,9 @@ async function runPasted() {
     const verdict = await remediateAndEvaluate(patch, "Pasted by a judge");
     const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
     const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
-      : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide."
-      : "CLEAR, every check passed on your JSON.";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT. This encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD. A person has to decide."
+      : "CLEAR. Every check passed on your JSON.";
     out.className = `attack-result ${cls}`;
     out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
       <h3>${escapeHtml(headline)}</h3>
