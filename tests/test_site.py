@@ -134,3 +134,22 @@ def test_assumptions_page_only_cites_tests_that_exist() -> None:
         defined |= set(re.findall(r"def (test_[a-z0-9_]+)", path.read_text(encoding="utf-8")))
     missing = sorted(cited - defined)
     assert not missing, f"assumptions.html cites tests that do not exist: {missing}"
+
+
+def test_claimed_test_counts_match_reality() -> None:
+    """The assumptions page argues that every claim is pinned by a test.
+
+    A stale count on that page undermines the argument it is making, and it drifts
+    every time a test is added — which is often.
+    """
+    import re
+    root = ROOT
+    actual = len(re.findall(
+        r"def (test_[a-z0-9_]+)",
+        "\n".join(p.read_text(encoding="utf-8") for p in (root / "tests").glob("test_*.py"))))
+
+    page = (root / "before" / "site" / "assumptions.html").read_text(encoding="utf-8")
+    claimed = {int(n) for n in re.findall(r"(\d+) tests", page)}
+    assert claimed, "the assumptions page states no test count"
+    assert claimed == {actual}, (
+        f"assumptions.html claims {sorted(claimed)} tests; {actual} are defined")
