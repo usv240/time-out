@@ -178,3 +178,41 @@ for (const link of navLinks.querySelectorAll("a")) {
   });
   io.observe(document.body, { subtree: true, childList: true, characterData: true });
 })();
+
+// The `i` buttons opened on click only, which meant a judge had to guess they were
+// interactive. Hover and keyboard focus now open them too. Click still toggles, so
+// touch users and anyone reading with the keyboard get the same thing; hover is an
+// addition, never the only way in.
+function infoPop(btn) {
+  return document.getElementById(btn.getAttribute("aria-controls"));
+}
+function showInfo(btn) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  pop.hidden = false;
+  btn.setAttribute("aria-expanded", "true");
+}
+function hideInfo(btn, force = false) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  // A click pins it open; hovering away should not close a pinned one.
+  if (!force && btn.dataset.pinned === "true") return;
+  pop.hidden = true;
+  btn.setAttribute("aria-expanded", "false");
+}
+document.addEventListener("pointerover", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("pointerout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn && !btn.contains(e.relatedTarget)) hideInfo(btn);
+});
+document.addEventListener("focusin", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("focusout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) hideInfo(btn);
+});

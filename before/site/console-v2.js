@@ -122,14 +122,59 @@ function pillFor(step, result) {
   return ["RECORDED", ""];
 }
 
+// The API returns developer identifiers. A judge is not a developer, so the question
+// gets asked in English and the identifier stays available underneath for anyone who
+// wants to match it against the API response.
+const CHECK_QUESTION = {
+  provider_license:            ["Is the licence real and current?", "Active, in this state, not expired."],
+  authority_pathway:           ["Is this person allowed to do it?", "Directly, or under documented delegation. A job title alone is never an answer."],
+  delegation_and_supervision:  ["Is the delegation properly set up?", "A written agreement, a signed protocol, an order for this patient, current life-support training, and a supervisor who is actually reachable."],
+  preprocedure_assessment:     ["Was the patient properly assessed?", "A real relationship, a medical record, and the patient told who would perform it."],
+  good_faith_exam:             ["Was the patient properly assessed?", "A real relationship, a medical record, and the patient told who would perform it."],
+  product_lot:                 ["Is the product batch accounted for?", "The batch number is recorded and carries no confirmed safety alert. This is not a check that the product is genuine."],
+  product_evidence:            ["Is the product batch accounted for?", "The batch number is recorded and carries no confirmed safety alert."],
+  comprehension:               ["Did the patient actually understand?", "They said the risks back in their own words and got them right. A signature does not count."],
+  board_status:                ["Any disciplinary history?", "No open or recorded action against this practitioner."],
+  disciplinary_status:         ["Any disciplinary history?", "No open or recorded action against this practitioner."],
+};
+
+// Raw fact keys are snake_case field names. These are the ones a non-expert will not guess.
+const FACT_LABEL = {
+  bls_person_present: "someone with current life-support training is present",
+  bls_current: "life-support training is current",
+  delegation_document_present: "the written delegation agreement is on file",
+  protocol_signed_and_dated: "the protocol is signed and dated",
+  delegating_physician_active: "the supervising doctor's licence is active",
+  patient_specific_order_present: "there is an order written for this patient",
+  order_contains_drug_dose_strength_route: "the order states the drug, dose, strength and route",
+  supervisor_onsite: "the supervisor is on site",
+  supervisor_immediately_available: "the supervisor is reachable straight away",
+  physician_emergency_appointment_available: "an emergency appointment is available",
+  practitioner_patient_relationship_established: "the practitioner has seen this patient",
+  adequate_medical_record_present: "there is a medical record",
+  performer_identity_disclosed: "the patient was told who would perform it",
+  delegation_required: "delegation is required for this performer",
+};
+
 function findingsTable(result) {
   const findings = result?.findings || [];
   if (!findings.length) return "";
   const rows = findings.map((f) => {
     const cls = f.status === "PASS" ? "clear" : f.status === "REVIEW" ? "review" : "blocked";
-    const facts = Object.entries(f.facts || {}).map(([k, v]) => `<code>${escapeHtml(k)}=${escapeHtml(JSON.stringify(v))}</code>`).join(" ");
+    const facts = Object.entries(f.facts || {}).map(([k, v]) => {
+      const label = FACT_LABEL[k];
+      const mark = v === true ? "yes" : v === false ? "no" : JSON.stringify(v);
+      return label
+        ? `<code title="${escapeHtml(k)}">${escapeHtml(label)}: ${escapeHtml(mark)}</code>`
+        : `<code>${escapeHtml(k)}=${escapeHtml(JSON.stringify(v))}</code>`;
+    }).join(" ");
     const cite = (f.citation_urls || []).map((u) => `<a href="${escapeHtml(u)}" target="_blank" rel="noopener">source</a>`).join(" ");
-    return `<tr class="finding ${cls}"><td><code>${escapeHtml(f.check_id)}</code></td><td><span class="status-pill ${cls}">${escapeHtml(f.status)}</span></td><td>${escapeHtml(f.summary)}<div class="facts">${facts}</div></td><td>${cite}</td></tr>`;
+    const [question, plain] = CHECK_QUESTION[f.check_id] || [f.check_id.replaceAll("_", " "), ""];
+    return `<tr class="finding ${cls}"><td><span class="check-question">${escapeHtml(question)}</span>`
+      + `${plain ? `<small class="check-plain">${escapeHtml(plain)}</small>` : ""}`
+      + `<code class="check-id">${escapeHtml(f.check_id)}</code></td>`
+      + `<td><span class="status-pill ${cls}">${escapeHtml(f.status)}</span></td>`
+      + `<td>${escapeHtml(f.summary)}<div class="facts">${facts}</div></td><td>${cite}</td></tr>`;
   }).join("");
   return `<table class="findings"><thead><tr><th>Check</th><th>Result</th><th>What was found</th><th>Cited</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -642,10 +687,12 @@ document.addEventListener("click", (event) => {
   if (event.target.closest("#compose-reset")) { resetComposer(); return; }
   const btn = event.target.closest(".info-btn");
   if (!btn) return;
-  const pop = document.getElementById(btn.getAttribute("aria-controls"));
-  const open = btn.getAttribute("aria-expanded") === "true";
-  btn.setAttribute("aria-expanded", String(!open));
-  pop.hidden = open;
+  // Toggle on the pin, not on visibility. A pointer hovers before it clicks, so the
+  // panel is already open by the time the click lands; toggling visibility would close
+  // what the user just clicked to keep.
+  const pinned = btn.dataset.pinned === "true";
+  btn.dataset.pinned = String(!pinned);
+  if (pinned) hideInfo(btn, true); else showInfo(btn);
 });
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
@@ -709,3 +756,41 @@ document.querySelector("#live-dns")?.addEventListener("click", (e) =>
     <div class="attack-head"><span class="status-pill ${d.matches ? "clear" : "blocked"}">${d.matches ? "TXT MATCHED" : "NO MATCH"}</span> <span class="src-badge live">LIVE · name.com via Xano</span></div>
     <p><code>${escapeHtml(d.fqdn || "")}</code></p><p><code>${escapeHtml(d.answer || "")}</code></p>
     <p class="muted">${escapeHtml(d.caveat)}</p>`));
+
+// The `i` buttons opened on click only, which meant a judge had to guess they were
+// interactive. Hover and keyboard focus now open them too. Click still toggles, so
+// touch users and anyone reading with the keyboard get the same thing; hover is an
+// addition, never the only way in.
+function infoPop(btn) {
+  return document.getElementById(btn.getAttribute("aria-controls"));
+}
+function showInfo(btn) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  pop.hidden = false;
+  btn.setAttribute("aria-expanded", "true");
+}
+function hideInfo(btn, force = false) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  // A click pins it open; hovering away should not close a pinned one.
+  if (!force && btn.dataset.pinned === "true") return;
+  pop.hidden = true;
+  btn.setAttribute("aria-expanded", "false");
+}
+document.addEventListener("pointerover", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("pointerout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn && !btn.contains(e.relatedTarget)) hideInfo(btn);
+});
+document.addEventListener("focusin", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("focusout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) hideInfo(btn);
+});

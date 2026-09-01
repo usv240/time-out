@@ -551,3 +551,10 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
   font-weight: 600; }
 .reset-button:hover:not(:disabled){ background: var(--ok); color: var(--bg); }
 .reset-button:focus-visible{ outline: 2px solid var(--ok); outline-offset: 2px; }
+
+/* A hovered explanation must not be clipped by the row it sits in. */
+.info-pop{ position: relative; z-index: 20; }
+.check-question{ display: block; font-weight: 600; }
+.check-plain{ display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--step--2); line-height: 1.45; }
+.check-id{ display: inline-block; margin-top: 4px; font-size: var(--step--3); color: var(--ink-3); }
+.findings td:first-child{ min-width: 15rem; }

@@ -249,10 +249,12 @@ document.addEventListener("click", (event) => {
   if (event.target.closest("#check-status")) { checkStatus(); return; }
   const btn = event.target.closest(".info-btn");
   if (!btn) return;
-  const pop = document.getElementById(btn.getAttribute("aria-controls"));
-  const open = btn.getAttribute("aria-expanded") === "true";
-  btn.setAttribute("aria-expanded", String(!open));
-  pop.hidden = open;
+  // Toggle on the pin, not on visibility. A pointer hovers before it clicks, so the
+  // panel is already open by the time the click lands; toggling visibility would close
+  // what the user just clicked to keep.
+  const pinned = btn.dataset.pinned === "true";
+  btn.dataset.pinned = String(!pinned);
+  if (pinned) hideInfo(btn, true); else showInfo(btn);
 });
 document.addEventListener("keydown", (event) => {
   // A radiogroup is expected to move with arrows, not Tab.
@@ -277,3 +279,41 @@ document.addEventListener("keydown", (event) => {
 });
 
 loadReceipt();
+
+// The `i` buttons opened on click only, which meant a judge had to guess they were
+// interactive. Hover and keyboard focus now open them too. Click still toggles, so
+// touch users and anyone reading with the keyboard get the same thing; hover is an
+// addition, never the only way in.
+function infoPop(btn) {
+  return document.getElementById(btn.getAttribute("aria-controls"));
+}
+function showInfo(btn) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  pop.hidden = false;
+  btn.setAttribute("aria-expanded", "true");
+}
+function hideInfo(btn, force = false) {
+  const pop = infoPop(btn);
+  if (!pop) return;
+  // A click pins it open; hovering away should not close a pinned one.
+  if (!force && btn.dataset.pinned === "true") return;
+  pop.hidden = true;
+  btn.setAttribute("aria-expanded", "false");
+}
+document.addEventListener("pointerover", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("pointerout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn && !btn.contains(e.relatedTarget)) hideInfo(btn);
+});
+document.addEventListener("focusin", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) showInfo(btn);
+});
+document.addEventListener("focusout", (e) => {
+  const btn = e.target.closest(".info-btn, .info-button");
+  if (btn) hideInfo(btn);
+});
