@@ -211,3 +211,48 @@ def test_every_page_loads_the_glossary() -> None:
     missing = [p.name for p in sorted(site.glob("*.html"))
                if "glossary.js" not in p.read_text(encoding="utf-8")]
     assert not missing, f"pages with no glossary: {missing}"
+
+
+def test_every_nav_destination_explains_itself() -> None:
+    """A nav that names seven pages and explains none of them is a guessing game.
+
+    "Assumptions" and "Evidence" are indistinguishable to someone who has not already
+    read the argument, and "Receipt" reads like billing.
+    """
+    import re
+    site = ROOT / "before" / "site"
+    guide = (site / "nav-guide.js").read_text(encoding="utf-8")
+    described = set(re.findall(r'^\s*"(/[^"]*)":\s*\{', guide, re.M))
+
+    linked = set()
+    for page in site.glob("*.html"):
+        html = page.read_text(encoding="utf-8")
+        nav = re.search(r'<div class="nav-links"[^>]*>(.*?)</div>', html, re.S)
+        if nav:
+            # anchors on the home page are sections, not destinations
+            linked |= {h for h in re.findall(r'href="([^"]+)"', nav.group(1)) if "#" not in h}
+
+    missing = sorted(linked - described)
+    assert not missing, f"nav links with no what/why: {missing}"
+
+
+def test_no_page_dead_ends() -> None:
+    """Every page routes onward to two others, so a reader never has to use Back."""
+    import re
+    guide = (ROOT / "before" / "site" / "nav-guide.js").read_text(encoding="utf-8")
+    pages = set(re.findall(r'^\s*"(/[^"]*)":\s*\{', guide, re.M))
+    nxt = dict(re.findall(r'^\s*"(/[^"]*)":\s*\[([^\]]*)\]', guide, re.M))
+
+    assert set(nxt) == pages, f"pages with no onward route: {sorted(pages - set(nxt))}"
+    for src, targets in nxt.items():
+        dests = re.findall(r'"([^"]+)"', targets)
+        assert len(dests) == 2, f"{src} offers {len(dests)} next steps, expected 2"
+        assert src not in dests, f"{src} points at itself"
+        assert all(d in pages for d in dests), f"{src} points somewhere undescribed: {dests}"
+
+
+def test_every_page_loads_the_nav_guide() -> None:
+    site = ROOT / "before" / "site"
+    missing = [p.name for p in sorted(site.glob("*.html"))
+               if "nav-guide.js" not in p.read_text(encoding="utf-8")]
+    assert not missing, f"pages with an unexplained nav: {missing}"

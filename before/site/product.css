@@ -596,3 +596,53 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 }
 .glossary-hint-x:hover{ border-color: var(--accent); color: var(--accent); }
 @media (max-width: 48rem){ .glossary-hint{ margin: 0 16px 8px; } }
+
+/* Nav links explain themselves: what the page is, why you would open it. */
+.nav-links a{ position: relative; }
+.nav-links a[aria-current="page"]{ color: var(--ink-0); }
+.nav-links a[aria-current="page"]::after{
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+  height: 2px; background: var(--accent); border-radius: 2px;
+}
+.nav-hint{
+  display: none; position: absolute; top: calc(100% + 12px); left: 0; z-index: 60;
+  width: 17rem; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface-1); color: var(--ink-2);
+  font-size: var(--step--1); font-weight: 400; line-height: 1.5; text-align: left;
+  box-shadow: 0 12px 30px rgba(0,0,0,.22);
+}
+.nav-hint b{
+  display: block; margin-bottom: 2px; color: var(--ink-3);
+  font-size: 10.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+}
+.nav-hint b + b, .nav-hint b:not(:first-child){ margin-top: 8px; }
+.nav-links a:hover > .nav-hint, .nav-links a:focus-visible > .nav-hint{ display: block; }
+.nav-hint.nav-hint-right{ left: auto; right: 0; }
+
+/* Nothing should dead-end. Two routes off every page. */
+.next-step{ margin: 56px auto 8px; padding-top: 28px; border-top: 1px solid var(--line); }
+.next-step-title{ margin: 0 0 16px; font-size: var(--step-1); }
+.next-step-cards{ display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 16px; }
+.next-step-card{
+  display: block; padding: 18px 20px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface-2); text-decoration: none;
+}
+.next-step-card:hover{ border-color: var(--accent); }
+.next-step-name{ display: block; margin-bottom: 6px; color: var(--ink-0); font-weight: 600; }
+.next-step-what{ display: block; color: var(--ink-2); font-size: var(--step--1); line-height: 1.55; }
+.next-step-why{ display: block; margin-top: 6px; color: var(--ink-3); font-size: var(--step--1); line-height: 1.55; }
+@media (max-width: 48rem){
+  .next-step{ margin: 40px 16px 8px; }
+  .next-step-cards{ grid-template-columns: 1fr; }
+  /* No hover on a phone, and the open menu is a vertical list, so show it inline.
+     Only the "what" line: with both lines the seven-item menu grew to 852px and ran
+     off the bottom of an 844px phone with no way to scroll to the last two links. */
+  .nav-hint{ display: block; position: static; width: auto; margin: 2px 0 0;
+             box-shadow: none; background: transparent; border: 0; padding: 0; }
+  .nav-hint b{ display: none; }
+  .nav-hint-why{ display: none; }
+  .nav-links a{ min-height: 0; flex-direction: column; align-items: flex-start;
+                justify-content: center; padding: 10px 12px; }
+  /* Whatever the copy does later, the menu stays inside the screen. */
+  .nav-links.is-open{ max-height: calc(100vh - 88px); overflow-y: auto; }
+}
