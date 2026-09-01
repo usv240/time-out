@@ -9,7 +9,7 @@ guessed. Every wait, timed twice on production:
 
 | Wait | Measured |
 |---|---|
-| Fresh load of `/` to a painted verdict | under 1s |
+| Fresh load of `/` to all seven rows resolved | ~2.0s (first row ~1.1s) |
 | "Run the complete safety workflow" on `/try` | 0.5–0.7s |
 | Each of the three attacks | 0.4–0.6s |
 | "Check this receipt's status now" | ~0.1s to respond |
@@ -44,67 +44,146 @@ Slow down on the numbers. The screen is doing the proving — you're just pointi
 
 ## The script
 
-Timings are cumulative. Narration is what you say out loud; everything in brackets is
-what you do.
+Ten beats. Each one tells you **where to be**, **what to do**, **what to point at**,
+and **what to say**. The words in `>` blocks are the narration and nothing else — say
+those, do everything else silently.
 
-### 0:00 – 0:20 · The hook  →  *Concept*
+Positions below are described by what you can see on screen, not pixel counts, because
+dismissing the glossary tip shifts everything up by about 60px.
 
-**On screen:** `/` landing page, top of the hero. Don't move the mouse yet.
+---
 
-> Before any surgery, the team stops and confirms out loud: right patient, right
-> place, right procedure. It's called a time-out. Complications dropped from eleven
-> percent to seven. Med spas have no equivalent pause. Thirteen thousand of them in
-> the US, injecting Botox thousands of times a day.
+### Beat 1 · 0:00 – 0:20 · The hook  →  *Concept*
 
-### 0:20 – 0:34 · Why it matters  →  *Concept*
+**Where:** tab 1, `/`. **Start the recording on a fresh page load** so nothing is
+mid-animation.
 
-**On screen:** scroll slowly to the "Med spas are among the fastest-growing venues"
-section.
+**On screen:** the top of the page. You should see the eyebrow line
+`TEXAS · NEUROTOXIN · SYNTHETIC DEMONSTRATION`, the headline **"Some treatments cannot
+be undone."**, and the numbers column on the right.
+
+**Point at:** nothing for the first sentence — let them read the headline. On "eleven
+percent to seven", move the cursor to the **11% → 7%** figure in the right-hand column
+and leave it there. On "thirteen thousand", drop it to **13,000** just below.
+
+> Before any surgery, the team stops and confirms out loud: right patient, right place,
+> right procedure. It's called a time-out. Complications dropped from eleven percent to
+> seven.
+>
+> Med spas have no equivalent pause. Thirteen thousand of them in the US, injecting
+> Botox thousands of times a day.
+
+---
+
+### Beat 2 · 0:20 – 0:34 · Why it matters  →  *Concept*
+
+**Where:** same page, no navigation.
+
+**Do:** scroll down slowly through the hero paragraph. Stop when the sentence
+**"paperwork failures, every one of them before the needle"** is in the middle of the
+screen. It is in bold, in the second half of the opening paragraph.
+
+**Point at:** that bold phrase as you say "It's paperwork." Then move away — you are
+about to change screens.
 
 > And when one goes wrong in court, the cause usually isn't a shaky hand. It's
 > paperwork. No proper consent. Nobody checked whether the person holding the needle
-> was allowed to. So I built the pause.
+> was allowed to.
+>
+> So I built the pause.
 
-### 0:34 – 0:52 · The check runs  →  *Progress*
+---
 
-**On screen:** start this take on a **fresh load** of `/`, then scroll to the encounter
-card and pause on the patient line.
+### Beat 3 · 0:34 – 0:52 · The check runs  →  *Progress*
 
-Measured on production: the landing page runs the check by itself and paints the
-verdict in under a second, and the "Run the safety check" button is gone about a second
-after load. There is no click-and-watch moment here — the fresh load *is* the moment.
-Don't pause waiting for something to happen after your line; it already happened.
+**Where:** same page. Keep scrolling — the encounter card is the next thing, about one
+screen further down.
+
+**On screen:** the white card headed `Encounter SYN-ENC-BLOCKED-002`, with
+`Ava Chen · Neurotoxin · Austin, TX` under it, then a blue strip reading
+**"Live call to Xano"**, then seven rows.
+
+**Timed over five loads:** the rows start resolving about **1.1s** after the page
+loads and the last one lands with the red panel at about **2.0s**. So there *is* a
+visible run, and it is the best two seconds of the opening — the rows tick over one by
+one while you speak.
+
+You do not click anything to start it. The page evaluates on load, and the "Run the
+safety check" button is gone about a second later. So the timing you want is: begin
+your line as the page settles, and let the rows finish under your voice.
+
+**Point at:** the patient line `Ava Chen · Neurotoxin · Austin, TX` on the first
+sentence. Then draw the cursor slowly down the seven check rows — Provider licence,
+Authority pathway, Delegation, Pre-procedure assessment, Product lot, Comprehension,
+Disciplinary status — as you say "seven things have to be true". Land on the two red
+`×` rows for the last line.
 
 > Here's a patient booked for an injection today. Every person in this demo is
 > invented. Before it can go ahead, seven things have to be true.
 >
 > About a second. Blocked.
 
-### 0:52 – 1:14 · Why blocking well is the whole product  →  *Concept*
+---
 
-**On screen:** the red BLOCKED card. Move the cursor down the four "not documented"
-rows as you say them, then rest it on the citation.
+### Beat 4 · 0:52 – 1:14 · Why blocking well is the whole product  →  *Concept*
 
-> And look at what it actually says. Not "error." Not "denied."
->
-> It names the four documents that are missing. It cites the Texas rule it's applying.
-> And it tells the clinic exactly how to fix it.
->
-> That's the difference between software that stops you and software that helps you.
+**Where:** same page, scroll on so the red panel fills the screen.
 
-### 1:14 – 1:44 · Break it yourself  →  *Progress*
+**On screen:** the pink/red block headed **"BLOCKED · DO NOT PROCEED"** and
+**"This encounter cannot produce a safety receipt."** Below it, four monospaced rows
+each ending `not documented`, then `SOURCE  22 TAC Chapter 169`, then `SNAPSHOT` and a
+long hash, then `REMEDY`.
 
-**On screen:** `/try.html`. **The attack buttons are not on the page yet.** They appear
-only after you click **"Run the complete safety workflow"**, because there has to be a
-live encounter to attack. Click that first, on camera: it answers in about half a
-second and the whole "Break it yourself" section appears. Let that reveal land before
-you start the next line.
+**This is the most important twenty seconds in the video.** Your cursor is doing the
+teaching here — move deliberately, one item per phrase.
 
-Give each attack its own punchline. Three clicks, three different *kinds* of failure —
-that's what shows this isn't just a permission checker.
+**Point at, in this order:**
 
-> Now don't take my word for it. Break it. Each of these takes the valid record,
-> breaks one thing, and runs all seven checks again. Live.
+| As you say | Put the cursor on |
+|---|---|
+| "Not error. Not denied." | the words **BLOCKED · DO NOT PROCEED** |
+| "the four documents that are missing" | run down all four `not documented` rows, one per beat |
+| "It cites the Texas rule" | the link **22 TAC Chapter 169** |
+| "tells the clinic exactly how to fix it" | the **REMEDY** line |
+
+> And look at what it actually says. Not "error." Not "denied." It names the four
+> documents that are missing. It cites the Texas rule it's applying. And it tells the
+> clinic exactly how to fix it. That's the difference between software that stops you
+> and software that helps you.
+
+---
+
+### Beat 5 · 1:14 – 1:44 · Break it yourself  →  *Progress*
+
+**Where:** switch to tab 2, `/try.html`.
+
+**Do this first, before you say anything.** The attack buttons **do not exist yet**.
+Scroll down about half a screen to the big teal button **"Run the complete safety
+workflow"** and click it. It answers in about half a second, and a new section headed
+**"Try to get an unsafe procedure through."** appears below with six buttons in two
+rows of three. Let that appear, then start talking.
+
+**On screen after the click:** six buttons. Top row: *Swap in the aesthetician* /
+*Delete the delegation protocol* / *Skip the patient-specific order*. Bottom row:
+*Use the FDA-flagged lot* / *Skip the teach-back* / *Let BLS lapse, supervisor
+off-site*.
+
+**Know this before you click:** the answer appears **above** the buttons, and the
+buttons shift down the page as it does. Don't chase the button with your cursor — after
+each click, move up to the result panel instead. It is headed `BLOCKED`, with a
+`LIVE · Xano` tag beside it and the line "You tried: ..." naming the attack you chose.
+
+**Sequence, one at a time:**
+
+1. Say the intro lines.
+2. Click **Swap in the aesthetician**. Wait for BLOCKED. Point at the `LIVE · Xano`
+   tag. Say the punchline.
+3. Click **Use the FDA-flagged lot**. Wait. Point at the "You tried:" line so it is
+   obvious the attack changed. Say the punchline.
+4. Click **Skip the teach-back**. Wait. Say the punchline, then the audit-log line.
+
+> Now don't take my word for it. Break it. Each of these takes the valid record, breaks
+> one thing, and runs all seven checks again. Live.
 
 **[Click "Swap in the aesthetician." Wait for BLOCKED.]**
 
@@ -116,46 +195,93 @@ that's what shows this isn't just a permission checker.
 
 **[Click "Skip the teach-back." Wait.]**
 
-> And consent isn't a checkbox. Every attempt lands in the audit log, with whoever
-> tried it named.
+> And consent isn't a checkbox.
+>
+> Every attempt lands in the audit log, with whoever tried it named.
 
-### 1:44 – 1:52 · Your data, not mine  →  *Progress*
+---
 
-**On screen:** scroll to "Or compose your own encounter." Keep this short and moving.
+### Beat 6 · 1:44 – 1:52 · Your data, not mine  →  *Progress*
+
+**Where:** same page, scroll down past the attack result.
+
+**Do first:** the composer is **collapsed by default**. Click the line
+**"Or compose your own encounter"** to expand it, then let it open before you speak.
+
+**On screen once open:** a grid of five labelled groups (WHO IS PERFORMING IT, SUPERVISION AND THE ORDER, THE PRE-PROCEDURE
+RECORD, THE PRODUCT, DID THE PATIENT UNDERSTAND) with checkboxes and dropdowns, and a
+**"Run the Gate on my evidence"** button at the bottom.
+
+**Point at:** sweep the cursor across the five groups. Don't click anything — there
+isn't time, and the point is that the controls exist.
+
+**If your dry run is over 3:00, this is the beat to cut.** It buys back eight seconds.
 
 > Don't trust my examples? Every field is here. Change anything and run it yourself.
 
-### 1:52 – 2:10 · What the patient gets  →  *Concept*
+---
 
-**On screen:** `/receipt.html`. Scroll slowly through it.
+### Beat 7 · 1:52 – 2:10 · What the patient gets  →  *Concept*
+
+**Where:** switch to tab 3, `/receipt.html`.
+
+**Do:** scroll steadily from the top. You will pass, in this order: the header
+**"Safety receipt"** with a `Synthetic` chip, the list of what was checked, the named
+people, then a face image with **twelve scored skin concerns** beside it (Oiliness 64,
+Pore visibility 68, and so on).
+
+**Point at:** the checks list on "what was checked", the named people on "who was
+responsible", the skin scores on "their skin baseline".
+
+**Then:** keep scrolling to the button **"Check this receipt's status now"** — it is
+roughly two-thirds down, in the section about the published record. Click it. It
+responds in about a tenth of a second with *"Reading the clinic's DNS through
+name.com"*. Point at the status line it returns while you say the last sentence.
 
 > When everything checks out, this is what the patient walks out holding. What was
 > checked, who was responsible, their skin baseline from before, and a fingerprint of
 > the exact rules used that day.
 
-**[Click "Check this receipt’s status now."]** That is the real label; it answers
-in about a tenth of a second with "Reading the clinic’s DNS through name.com".
+**[Click "Check this receipt's status now."]**
 
 > It's published outside Time-Out, so years later the patient can check the record
 > hasn't silently changed.
 
-### 2:10 – 2:26 · How it's built  →  *Progress*
+---
 
-**On screen:** `/how-it-works.html` at the top, then scroll once so the sponsor names
-are visible. Let the screen carry the names; don't read them out.
+### Beat 8 · 2:10 – 2:26 · How it's built  →  *Progress*
+
+**Where:** navigate to `/how-it-works.html`.
+
+**On screen:** start at the top — the headline **"Models extract. Humans resolve. Code
+decides the hold."** says your first line before you do.
+
+**Do:** scroll once, slowly, to the section headed **"No black box and no short
+circuit."** Keep scrolling gently underneath it while you speak so the sponsor names
+pass through the frame on their own.
+
+**Point at:** nothing specific. This is the one beat where the cursor should rest. Let
+the page move instead. **Do not read the sponsor names aloud** — the screen is showing
+them, and seven proper nouns spoken in fifteen seconds is nothing anyone retains.
 
 > One rule shapes the whole system. AI reads the evidence; it never decides what's
 > legal. Code runs every check. Anything uncertain stops for a named human, and a live
-> FDA warning can pull a cleared encounter back into review. Xano runs that workflow
-> end to end. Seven other APIs handle the documents, consent, skin evidence, signing,
-> and outside verification.
+> FDA warning can pull a cleared encounter back into review.
+>
+> Xano runs that workflow end to end. Seven other APIs handle the documents, consent,
+> skin evidence, signing, and outside verification.
 
-### 2:26 – 2:50 · Who buys it  →  *Feasibility*
+---
 
-**On screen:** back to `/`, hero visible.
+### Beat 9 · 2:26 – 2:44 · Who buys it  →  *Feasibility*
 
-This is the beat that was thin. It answers the question the criterion actually asks:
-customer, wedge, expansion, economics.
+**Where:** back to tab 1, `/`. Scroll to the top so the headline is on screen again.
+
+Returning to the opening image while you make the business case is deliberate: it ties
+the money back to the problem the judge met ninety seconds ago.
+
+**Point at:** nothing. Just talk. Slow down here — this is a third of the score, and it
+is the part a rushed delivery ruins.
 
 > The customer is the clinic, and this sits in front of every procedure they book.
 >
@@ -167,10 +293,38 @@ customer, wedge, expansion, economics.
 >
 > Before the needle.
 
-**[One beat of silence here. That line is the positioning; don't run into the next one.]**
+---
+
+### Beat 10 · 2:44 – 2:55 · Close
+
+**[One beat of silence. Count one, silently. That line is the positioning — don't run
+into the next one.]**
+
+**On screen:** stay on the hero. Move the cursor over the **"Try to break it →"**
+button as you say the last line, but **don't click it.** Ending on a button the judge
+could press is the invitation; pressing it yourself takes it away.
 
 > It's live right now. The backend is real, the attacks are real. Go and try to break
 > it.
+
+---
+
+## Quick reference: the whole run, one line each
+
+Tape this next to your screen.
+
+| # | Go | Do | Say |
+|---|---|---|---|
+| 1 | `/` fresh load | nothing | surgery has a time-out |
+| 2 | scroll to bold "paperwork failures" | nothing | it's paperwork → so I built the pause |
+| 3 | scroll to the encounter card | nothing; rows resolve over ~2s | seven things → blocked |
+| 4 | scroll to the red panel | cursor down 4 rows, then citation, then remedy | not error, not denied |
+| 5 | `/try.html` | **click "Run the complete safety workflow" first**, then 3 attacks | break it → 3 punchlines |
+| 6 | scroll to the composer | **click it open**, sweep the five groups | every field is here |
+| 7 | `/receipt.html` | scroll, then click "Check this receipt's status now" | what the patient holds |
+| 8 | `/how-it-works.html` | scroll slowly, cursor still | AI reads, code decides |
+| 9 | back to `/`, top | nothing | the customer is the clinic |
+| 10 | hover "Try to break it →" | **don't click** | go and try to break it |
 
 ---
 
