@@ -120,7 +120,7 @@ are visible. Let the screen carry the names; don't read them out.
 
 > One rule shapes the whole system. AI reads the evidence; it never decides what's
 > legal. Code runs every check. Anything uncertain stops for a named human, and a live
-> FDA warning can pull an approved encounter back into review. Xano runs that workflow
+> FDA warning can pull a cleared encounter back into review. Xano runs that workflow
 > end to end. Seven other APIs handle the documents, consent, skin evidence, signing,
 > and outside verification.
 
@@ -131,12 +131,20 @@ are visible. Let the screen carry the names; don't read them out.
 This is the beat that was thin. It answers the question the criterion actually asks:
 customer, wedge, expansion, economics.
 
-> The customer is the clinic, and this sits in front of every procedure they book. It
-> starts narrow on purpose: Texas, one drug. Every new state or procedure is a rules
-> file, not a rewrite. Today, insurers and defence lawyers deal with these failures
-> after somebody has been hurt. Time-Out moves the check to the one moment it's still
-> cheap to fix. Before the needle. It's live right now. The backend is real, the
-> attacks are real. Go and try to break it.
+> The customer is the clinic, and this sits in front of every procedure they book.
+>
+> It starts narrow on purpose: Texas neurotoxin. Every new state or procedure is a
+> rules file, not a rewrite.
+>
+> Today, insurers and defence lawyers deal with these failures after somebody has been
+> hurt. Time-Out moves the check to the one moment it's still cheap to fix.
+>
+> Before the needle.
+
+**[One beat of silence here. That line is the positioning; don't run into the next one.]**
+
+> It's live right now. The backend is real, the attacks are real. Go and try to break
+> it.
 
 ---
 
@@ -180,15 +188,23 @@ is a third of the score.
 > the exact rules used that day. It's published outside Time-Out, so years later the
 > patient can check the record hasn't silently changed. One rule shapes the whole
 > system. AI reads the evidence; it never decides what's legal. Code runs every check.
-> Anything uncertain stops for a named human, and a live FDA warning can pull an
-> approved encounter back into review. Xano runs that workflow end to end. Seven other
+> Anything uncertain stops for a named human, and a live FDA warning can pull a
+> cleared encounter back into review. Xano runs that workflow end to end. Seven other
 > APIs handle the documents, consent, skin evidence, signing, and outside
-> verification. The customer is the clinic, and this sits in front of every procedure
-> they book. It starts narrow on purpose: Texas, one drug. Every new state or
-> procedure is a rules file, not a rewrite. Today, insurers and defence lawyers deal
-> with these failures after somebody has been hurt. Time-Out moves the check to the
-> one moment it's still cheap to fix. Before the needle. It's live right now. The
-> backend is real, the attacks are real. Go and try to break it.
+> verification.
+>
+> The customer is the clinic, and this sits in front of every procedure they book.
+>
+> It starts narrow on purpose: Texas neurotoxin. Every new state or procedure is a
+> rules file, not a rewrite.
+>
+> Today, insurers and defence lawyers deal with these failures after somebody has been
+> hurt. Time-Out moves the check to the one moment it's still cheap to fix.
+>
+> Before the needle.
+>
+> It's live right now. The backend is real, the attacks are real. Go and try to break
+> it.
 
 ---
 
