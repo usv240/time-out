@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Run the live Time-Out synthetic safety Gate.">
-  <title>Clinic console — Time-Out</title>
+  Clinic console · Time-Out
   <script>(()=>{const t=localStorage.getItem("before-theme");if(t)document.documentElement.dataset.theme=t})();</script>
-  <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=27b3e302"><link rel="stylesheet" href="/integration-proof.css?v=028dc2d3"><script src="/console-v2.js?v=78acc780" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=eef05c3d"><link rel="stylesheet" href="/integration-proof.css?v=70682250"><script src="/console-v2.js?v=19efb22f" defer></script>
 <script src="/shell.js?v=a617e33f" defer></script></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -31,7 +31,7 @@
               <span class="compose-summary-hint">Every field, yours to set. Same Gate, same citations.</span></summary>
             <div class="compose-body">
               <p class="muted">Six buttons above break one thing each. This hands you the whole evidence set.
-                Change anything, run it, and read what the Gate says &mdash; it is the same live call, and every
+                Change anything, run it, and read what the Gate says; it is the same live call, and every
                 attempt lands in the audit log with you as the actor.
                 <strong>Nothing is uploaded:</strong> this product refuses real patient data, so it would be
                 strange to ask you for some.</p>
@@ -45,7 +45,7 @@
                 <summary>Or paste your own JSON</summary>
                 <p class="muted">Download <a href="/artifacts/sample-evidence-clear.json" download>an evidence set</a>,
                   edit it in your own editor, paste it back. It goes to the same public endpoint you could
-                  <code>curl</code> yourself. <strong>Send invented data only</strong> &mdash; the API refuses
+                  <code>curl</code> yourself. <strong>Send invented data only</strong>: the API refuses
                   anything shaped like an email address, phone number or national identifier, and you can watch
                   it refuse.</p>
                 <label class="sr-only" for="paste-json">Evidence set as JSON</label>
@@ -71,14 +71,14 @@
         <section class="demo-data" aria-labelledby="data-title">
           <p class="eyebrow">See the data</p>
           <h2 id="data-title">Every artifact this pipeline reads and writes.</h2>
-          <p class="lead"><strong>Click View and it opens here on the page</strong> &mdash; no download, no unzipping, nothing to install. These are the real files: what the extractor read,
+          <p class="lead"><strong>Click View and it opens here on the page</strong>: no download, no unzipping, nothing to install. These are the real files: what the extractor read,
             what Doctavian generated, what an agent assembled, what a human signed. Every one is synthetic:
             no real patient, clinic, licence, lot or face appears anywhere in this project.</p>
 
           <div class="data-grid">
             <article class="data-card"><h3>Feed the Gate yourself</h3><ul>
-              <li><div class="data-item"><span class="data-name">Evidence set — clears</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-evidence-clear.json" data-kind="json" data-title="Evidence set — clears">View</button><a href="/artifacts/sample-evidence-clear.json" download>Download</a></span></div><small>Delegated RN with complete evidence. POST it and the Gate returns CLEAR.</small></li>
-              <li><div class="data-item"><span class="data-name">Evidence set — blocked</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-evidence-blocked.json" data-kind="json" data-title="Evidence set — blocked">View</button><a href="/artifacts/sample-evidence-blocked.json" download>Download</a></span></div><small>Same set, delegation removed, aesthetician performing. Cites 22 TAC Ch.169.</small></li>
+              <li><div class="data-item"><span class="data-name">Evidence set that clears</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-evidence-clear.json" data-kind="json" data-title="Evidence set that clears">View</button><a href="/artifacts/sample-evidence-clear.json" download>Download</a></span></div><small>Delegated RN with complete evidence. POST it and the Gate returns CLEAR.</small></li>
+              <li><div class="data-item"><span class="data-name">Evidence set that blocks</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-evidence-blocked.json" data-kind="json" data-title="Evidence set that blocks">View</button><a href="/artifacts/sample-evidence-blocked.json" download>Download</a></span></div><small>Same set, delegation removed, aesthetician performing. Cites 22 TAC Ch.169.</small></li>
               <li><div class="data-item"><span class="data-name">A real verdict</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-gate-verdict.json" data-kind="json" data-title="A real verdict">View</button><a href="/artifacts/sample-gate-verdict.json" download>Download</a></span></div><small>Seven findings with the facts each one read and the rule it applied.</small></li>
             </ul></article>
             <article class="data-card"><h3>What the documents look like</h3><ul>
@@ -87,8 +87,8 @@
               <li><div class="data-item"><span class="data-name">The synthetic face</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/sample-synthetic-face.png" data-kind="img" data-title="The synthetic face">View</button><a href="/artifacts/sample-synthetic-face.png" download>Download</a></span></div><small>AI-generated and fictional. Perfect Corp analysed this, never a real person.</small></li>
             </ul></article>
             <article class="data-card"><h3>What came out the other end</h3><ul>
-              <li><div class="data-item"><span class="data-name">Consent — generated by Doctavian</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/doctavian-consent.pdf" data-kind="pdf" data-title="Consent — generated by Doctavian">View</button><a href="/artifacts/doctavian-consent.pdf" download>Download</a></span></div><small>Two pages. The disclosure count was calculated on their platform, not by us.</small></li>
-              <li><div class="data-item"><span class="data-name">Safety record — assembled by a Foxit agent</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/time-out-safety-record.pdf" data-kind="pdf" data-title="Safety record — assembled by a Foxit agent">View</button><a href="/artifacts/time-out-safety-record.pdf" download>Download</a></span></div><small>Three pages, watermarked, then the agent stopped.</small></li>
+              <li><div class="data-item"><span class="data-name">Consent, generated by Doctavian</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/doctavian-consent.pdf" data-kind="pdf" data-title="Consent, generated by Doctavian">View</button><a href="/artifacts/doctavian-consent.pdf" download>Download</a></span></div><small>Two pages. The disclosure count was calculated on their platform, not by us.</small></li>
+              <li><div class="data-item"><span class="data-name">Safety record, assembled by a Foxit agent</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/time-out-safety-record.pdf" data-kind="pdf" data-title="Safety record, assembled by a Foxit agent">View</button><a href="/artifacts/time-out-safety-record.pdf" download>Download</a></span></div><small>Three pages, watermarked, then the agent stopped.</small></li>
               <li><div class="data-item"><span class="data-name">The same record, signed</span><span class="data-actions"><button class="data-view" type="button" data-src="/artifacts/time-out-safety-record-signed.pdf" data-kind="pdf" data-title="The same record, signed">View</button><a href="/artifacts/time-out-safety-record-signed.pdf" download>Download</a></span></div><small>Signed by a named human through eSign. The agent only read the outcome back.</small></li>
             </ul></article>
           </div>
@@ -96,7 +96,7 @@
           <div class="data-viewer" id="data-viewer" hidden></div>
 
           <p class="data-all"><a href="/artifacts/time-out-demo-data.zip" download>Or take all nine as a zip (1.8&nbsp;MB)</a>
-            <span class="muted">Or call the API yourself &mdash; no key, no signup: <code>POST /v1/encounters/demo/evaluate</code></span></p>
+            <span class="muted">Or call the API yourself, no key, no signup: <code>POST /v1/encounters/demo/evaluate</code></span></p>
         </section>
 
         <section class="live-now" aria-labelledby="live-title">

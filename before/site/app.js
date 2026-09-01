@@ -173,7 +173,7 @@ for (const link of navLinks.querySelectorAll("a")) {
   const io = new MutationObserver(() => {
     if (!done()) return;
     io.disconnect();
-    banner.innerHTML = '<span aria-hidden="true">●</span> <strong>Live call to Xano.</strong> Seven checks against the frozen Texas ruleset. Synthetic patient — no real person, clinic, or licence appears anywhere.';
+    banner.innerHTML = '<span aria-hidden="true">●</span> <strong>Live call to Xano.</strong> Seven checks against the frozen Texas ruleset. Synthetic patient, no real person, clinic, or licence appears anywhere.';
     banner.classList.add("is-done");
   });
   io.observe(document.body, { subtree: true, childList: true, characterData: true });

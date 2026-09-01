@@ -1,6 +1,6 @@
 /* Every proof block is a child of .timeline-item, whose first track is the 40px
    step-number column. Any block missing from this list renders 40px wide with its
-   text wrapped one word per line — which is exactly what nutrient-proof, foxit-proof
+   text wrapped one word per line, which is exactly what nutrient-proof, foxit-proof
    and dns-receipt-proof were doing. */
 .perfect-proof, .dns-proof, .machine-evidence,
 .nutrient-proof, .foxit-proof, .dns-receipt-proof { grid-column: 2 / -1; }

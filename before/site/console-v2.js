@@ -46,18 +46,18 @@ const STEP_COPY = {
 const INFO = {
   blocked: ["The seven checks ran on a fresh synthetic encounter and at least one failed.", "A failed check means the evidence to proceed safely is not on file. Nothing about the patient is judged; only the record.", "Texas Medical Board 22 TAC §169.25; Tex. Occ. Code §157.001"],
   gate_clear: ["A person attached the missing evidence and re-ran the same checks.", "Remediation is a human act with a name on it, never a database edit.", "Audit event: remediation_applied (below)"],
-  nutrient_review: ["A required extracted field fell below the confidence floor.", "Uncertain evidence is shown to a named person before an irreversible step, not after.", "Nutrient DWS Data Extraction — per-element confidence and page coordinates"],
+  nutrient_review: ["A required extracted field fell below the confidence floor.", "Uncertain evidence is shown to a named person before an irreversible step, not after.", "Nutrient DWS Data Extraction, per-element confidence and page coordinates"],
   gate_clear_after_review: ["The reviewer's resolution was recorded and the Gate ran again.", "Same rules, same snapshot, one more fact on file.", "Frozen rule snapshot SHA-256 (unchanged between runs)"],
-  consent: ["Doctavian generated the consent document from a template and this encounter's data.", "Consent that carries the disclosures a rules engine actually cited beats a static form that says the same thing to everyone.", "Doctavian document/generate — live; the disclosure count is calculated on their platform"],
+  consent: ["Doctavian generated the consent document from a template and this encounter's data.", "Consent that carries the disclosures a rules engine actually cited beats a static form that says the same thing to everyone.", "Doctavian document/generate, live; the disclosure count is calculated on their platform"],
   consent_signed: ["Patient and injector signed the treatment consent.", "Two treatment-party signatures are required before a baseline is captured.", "Doctavian signature record"],
   teach_back_held: ["The patient answered a risk question incorrectly.", "A signature proves someone clicked. Teach-back checks they understood.", "Systematic review, PubMed 31948345"],
   teach_back_passed: ["After re-explanation, the patient answered correctly.", "Attempts are recorded, not hidden, and versioned to the ruleset.", "Comprehension record bound to rule_snapshot_sha256"],
   baseline: ["A standardized skin analysis captured concern scores and overlays.", "An objective starting point the patient keeps. It is never a diagnosis.", "Perfect Corp YouCam Skin Analysis (SD), synthetic face"],
   foxit_pause: ["An agent assembled the record through the Foxit MCP server and stopped.", "The agent does reversible work; a licensed person takes the irreversible step.", "Foxit PDF Services + eSign draft folder (below)"],
-  human_attestation: ["The Medical Director's attestation was requested through eSign.", "Only a named human can apply this signature.", "Foxit eSign folder — created as a draft, sent on a person's command"],
+  human_attestation: ["The Medical Director's attestation was requested through eSign.", "Only a named human can apply this signature.", "Foxit eSign folder, created as a draft, sent on a person's command"],
   alert_reversion: ["A live search surfaced an FDA warning letter matching the product context.", "New public information can reopen a ready encounter. That is the point of a hold.", "SerpApi → fda.gov warning letter, April 2026"],
   alert_dismissed: ["A named reviewer examined the candidate and dismissed it.", "Search results never decide anything; people do, and the decision is audited.", "Audit event: alert_candidate_dismissed"],
-  receipt: ["The record was hashed and the hash published as a DNS TXT record.", "Anyone holding the receipt can check it matches what was published.", "name.com CORE sandbox — non-propagating, owner-mutable; a verification channel, not a notary"],
+  receipt: ["The record was hashed and the hash published as a DNS TXT record.", "Anyone holding the receipt can check it matches what was published.", "name.com CORE sandbox, non-propagating, owner-mutable; a verification channel, not a notary"],
 };
 
 // The complete, valid evidence set for a delegated RN in Texas. Every attack below is this set
@@ -182,17 +182,17 @@ function foxitProof() {
     <ol class="tool-calls">${calls}</ol>
     <p><strong>Output</strong> <code>${escapeHtml(foxitRun.output_pdf)}</code> · SHA-256 <code>${escapeHtml((foxitRun.output_sha256 || "").slice(0, 16))}…</code> · 3/3 pages watermarked</p>
     <p class="boundary"><strong>Paused at the boundary.</strong> ${escapeHtml(foxitRun.boundary_note)}</p>
-    ${tamperCompare ? `<div class="tamper-proof"><p class="integration-kicker">TAMPER CHECK — FOXIT PDF-COMPARE</p><p>We altered one line of the sealed record and asked Foxit to compare the two. It found ${tamperCompare.differences.length} difference on page ${tamperCompare.differences[0]?.page} of ${tamperCompare.pages_compared} — the attestation page: <code>${escapeHtml(tamperCompare.differences[0]?.text || "")}</code></p><p class="muted">The receipt fingerprint catches any change; this shows a reviewer <em>where</em> it happened.</p></div>` : ""}
+    ${tamperCompare ? `<div class="tamper-proof"><p class="integration-kicker">TAMPER CHECK, FOXIT PDF-COMPARE</p><p>We altered one line of the sealed record and asked Foxit to compare the two. It found ${tamperCompare.differences.length} difference on page ${tamperCompare.differences[0]?.page} of ${tamperCompare.pages_compared}, the attestation page: <code>${escapeHtml(tamperCompare.differences[0]?.text || "")}</code></p><p class="muted">The receipt fingerprint catches any change; this shows a reviewer <em>where</em> it happened.</p></div>` : ""}
     ${(() => {
       const a = esignFolder?.attestation;
       const role = escapeHtml(esignFolder?.signer_role || "Medical Director");
       const env = escapeHtml(String(folder.folderId ?? ""));
       if (!a?.executed) {
-        return `<p><strong>eSign handoff</strong> — envelope <code>${env}</code> for the ${role}: <em>${escapeHtml(esignFolder?.mode || "")}</em>. Sending is a human choice; the default emails nobody.</p>`;
+        return `<p><strong>eSign handoff</strong>: envelope <code>${env}</code> for the ${role}: <em>${escapeHtml(esignFolder?.mode || "")}</em>. Sending is a human choice; the default emails nobody.</p>`;
       }
       const who = (a.signed_by || []).map((s) => escapeHtml(s.name)).filter(Boolean).join(", ");
-      return `<p><strong>eSign handoff — signed.</strong> Envelope <code>${env}</code> was signed by ${who} as ${role} (<code>${escapeHtml(a.folder_status)}</code>). The agent then read the outcome back and downloaded the executed PDF; it never applied the signature.</p>
-        <p class="muted">Signed fingerprint <code>${escapeHtml((a.signed_pdf_sha256 || "").slice(0, 16))}…</code> differs from the assembled one by design — signing appends a signature and certificate page. <a href="/receipt.html">See both on the receipt</a>.</p>`;
+      return `<p><strong>eSign handoff, signed.</strong> Envelope <code>${env}</code> was signed by ${who} as ${role} (<code>${escapeHtml(a.folder_status)}</code>). The agent then read the outcome back and downloaded the executed PDF; it never applied the signature.</p>
+        <p class="muted">Signed fingerprint <code>${escapeHtml((a.signed_pdf_sha256 || "").slice(0, 16))}…</code> differs from the assembled one by design, signing appends a signature and certificate page. <a href="/receipt.html">See both on the receipt</a>.</p>`;
     })()}
   </section>`;
 }
@@ -307,7 +307,7 @@ async function openSyntheticEncounter() {
 }
 
 // A CLEAR verdict advances the encounter past REMEDIATION, and the state machine
-// correctly refuses to re-open a cleared encounter by editing its evidence — you do not
+// correctly refuses to re-open a cleared encounter by editing its evidence; you do not
 // get to un-clear a decision by rewriting the facts. So once an encounter clears it is
 // spent, and the next attempt opens a fresh one rather than provoking a 400 and
 // recovering from it. Clicking Reset and then any attack used to show the previous
@@ -320,8 +320,7 @@ async function remediateAndEvaluate(patch, label) {
     encounterSpent = false;
   }
   // The caller's own actor is preserved when they supplied one, so a pasted value
-  // reaches the server's PHI guard instead of being quietly overwritten by ours —
-  // otherwise pasting an email returned CLEAR and looked accepted.
+  // reaches the server's PHI guard instead of being quietly overwritten by ours, // otherwise pasting an email returned CLEAR and looked accepted.
   const actor = patch.actor ? `Judge: ${patch.actor}` : `Judge: ${label}`;
   const body = { ...CLEARED, ...patch, encounter_id: liveEncounterId, actor };
   const r = await fetch(`${V1}/encounters/${encodeURIComponent(liveEncounterId)}/remediate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -336,14 +335,14 @@ async function remediateAndEvaluate(patch, label) {
 function renderAttack(attack, verdict) {
   const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
   const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-  const headline = verdict.verdict === "BLOCKED" ? "TIME OUT — this encounter cannot proceed."
-    : verdict.verdict === "REVIEW" ? "HOLD — a person has to decide." : "CLEAR — every check passed.";
+  const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
+    : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide." : "CLEAR, every check passed.";
   attackResult.className = `attack-result ${cls}`;
   attackResult.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
     <h3>${escapeHtml(headline)}</h3>
-    <p class="muted">You tried: <strong>${escapeHtml(attack ? attack.label : "Reset to the complete evidence set")}</strong>${attack ? ` — ${escapeHtml(attack.claim)}` : ""}</p>
+    <p class="muted">You tried: <strong>${escapeHtml(attack ? attack.label : "Reset to the complete evidence set")}</strong>${attack ? `, ${escapeHtml(attack.claim)}` : ""}</p>
     ${failed.length ? findingsTable({ findings: failed }) : `<p>All seven checks passed on the complete evidence set.</p>`}
-    <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code> — the same frozen rules every time.</p>`;
+    <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code>: the same frozen rules every time.</p>`;
   attackResult.hidden = false;
   attackResult.setAttribute("role", verdict.verdict === "BLOCKED" ? "alert" : "status");
 }
@@ -456,7 +455,7 @@ async function runComposed() {
   if (!liveEncounterId) {
     out.hidden = false;
     out.className = "attack-result review";
-    out.innerHTML = `<p>Run the safety check first — that opens the synthetic encounter this evaluates.</p>`;
+    out.innerHTML = `<p>Run the safety check first; that opens the synthetic encounter this evaluates.</p>`;
     return;
   }
   readComposer();
@@ -468,15 +467,15 @@ async function runComposed() {
     const verdict = await remediateAndEvaluate(composed, "Composed by a judge");
     const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
     const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT — this encounter cannot proceed."
-      : verdict.verdict === "REVIEW" ? "HOLD — a person has to decide."
-      : "CLEAR — every check passed on your evidence.";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide."
+      : "CLEAR, every check passed on your evidence.";
     out.className = `attack-result ${cls}`;
     out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
       <h3>${escapeHtml(headline)}</h3>
       <p class="muted">Your evidence set, evaluated by the same Gate the rest of this page uses.</p>
       ${failed.length ? findingsTable({ findings: failed })
-        : `<p>All seven checks passed. Nothing here says the procedure is safe or lawful — only that the evidence to proceed was on file.</p>`}
+        : `<p>All seven checks passed. Nothing here says the procedure is safe or lawful, only that the evidence to proceed was on file.</p>`}
       <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code></p>`;
     await renderAudit(liveEncounterId);
   } catch (error) {
@@ -498,7 +497,7 @@ function resetComposer() {
 // A judge can download an evidence set, edit it anywhere, and send it back. Unknown
 // keys are dropped rather than forwarded, so a stray field cannot become a stored
 // value. The server refuses anything PHI-shaped and this shows that refusal rather
-// than hiding it — the boundary is the feature.
+// than hiding it, the boundary is the feature.
 const ALLOWED_KEYS = new Set(Object.keys(CLEARED));
 
 function fillPaste() {
@@ -540,9 +539,9 @@ async function runPasted() {
     const verdict = await remediateAndEvaluate(patch, "Pasted by a judge");
     const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
     const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
-    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT — this encounter cannot proceed."
-      : verdict.verdict === "REVIEW" ? "HOLD — a person has to decide."
-      : "CLEAR — every check passed on your JSON.";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT; this encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD, a person has to decide."
+      : "CLEAR, every check passed on your JSON.";
     out.className = `attack-result ${cls}`;
     out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
       <h3>${escapeHtml(headline)}</h3>
@@ -694,7 +693,7 @@ async function liveCall(button, out, path, body, render) {
     out.className = "attack-result clear"; out.innerHTML = render(d);
   } catch (e) {
     out.className = "attack-result review";
-    out.innerHTML = `<p>${escapeHtml(e.message)}</p><p class="muted">The cached result recorded 26 Aug remains on this page — the demo never depends on a third party answering.</p>`;
+    out.innerHTML = `<p>${escapeHtml(e.message)}</p><p class="muted">The cached result recorded 26 Aug remains on this page, the demo never depends on a third party answering.</p>`;
   } finally { button.disabled = false; button.textContent = label; }
 }
 

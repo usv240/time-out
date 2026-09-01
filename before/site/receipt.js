@@ -17,7 +17,7 @@ async function loadReceipt() {
         <div class="receipt-field"><dt>Receipt hash</dt><dd><code>${escapeHtml(receipt.receipt_hash)}</code></dd></div>
         <div class="receipt-field"><dt>Consent</dt><dd><code>${escapeHtml(receipt.consent_document_id)}</code></dd></div>
         <div class="receipt-field"><dt>Medical director attestation</dt><dd><code>${escapeHtml(receipt.attestation_id)}</code></dd></div>
-      </dl><a class="button button-primary" href="/artifacts/synthetic-safety-evidence-record.pdf" target="_blank">Open assembled evidence record</a><div class="receipt-boundary"><strong>What this proves—and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
+      </dl><a class="button button-primary" href="/artifacts/synthetic-safety-evidence-record.pdf" target="_blank">Open assembled evidence record</a><div class="receipt-boundary"><strong>What this proves, and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
       <div class="snapshot-proof"><div><p class="eyebrow">Sandbox verification channel</p><h3>${escapeHtml(receipt.dns_verification.domain)}</h3></div><code>${escapeHtml(receipt.dns_verification.txt_name)} = ${escapeHtml(receipt.dns_verification.txt_value)}</code></div>
       <p class="muted">Verified through the name.com sandbox API. Sandbox DNS does not propagate publicly, and the record remains mutable by its owner.</p>
       <pre><code>${escapeHtml(JSON.stringify(verification, null, 2))}</code></pre>`;

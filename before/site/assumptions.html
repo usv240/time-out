@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Every assumption Time-Out makes, every case it handles, and what happens when each one fails — each pinned by a named test in the public repository.">
+    <meta name="description" content="Every assumption Time-Out makes, every case it handles, and what happens when each one fails, each pinned by a named test in the public repository.">
     <meta name="color-scheme" content="light dark">
-    <title>Assumptions and edge cases — Time-Out</title>
+    Assumptions and edge cases · Time-Out
     <script>
       (() => {
         const saved = localStorage.getItem("before-theme");
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
       })();
     </script>
-    <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=27b3e302"><link rel="stylesheet" href="/integration-proof.css?v=028dc2d3">
+    <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=eef05c3d"><link rel="stylesheet" href="/integration-proof.css?v=70682250">
     <script src="/shell.js?v=a617e33f" defer></script>
   </head>
   <body>
@@ -23,7 +23,7 @@
       <section class="page-hero">
         <p class="eyebrow">Assumptions and edge cases</p>
         <h1>No clinic has used this yet. Here is everything we thought about instead.</h1>
-        <p class="lead">We can&rsquo;t show you customers. What we can show you is every assumption this design rests on, every case the Gate actually handles, and what happens when each one fails &mdash; with the named test that pins it. <strong>84 tests, all of them in the public repository.</strong> If a claim on this page ever stops being true, a test goes red.</p>
+        <p class="lead">We can&rsquo;t show you customers. What we can show you is every assumption this design rests on, every case the Gate actually handles, and what happens when each one fails, with the named test that pins it. <strong>85 tests, all of them in the public repository.</strong> If a claim on this page ever stops being true, a test goes red.</p>
         <p class="muted">Nothing below is aspirational. Anything we have not built says so.</p>
       </section>
 
@@ -31,7 +31,7 @@
         <div class="section-heading"><p class="eyebrow">01</p><h2>What we assume, and why</h2></div>
         <div class="assumption-list">
           <article><h3>A job title never establishes authority</h3>
-            <p>Texas delegation law turns on documented evidence, not on what someone is called. An aesthetician is not automatically barred and a nurse is not automatically permitted &mdash; the delegation agreement, the protocol, the order and the supervisor decide.</p>
+            <p>Texas delegation law turns on documented evidence, not on what someone is called. An aesthetician is not automatically barred and a nurse is not automatically permitted. The delegation agreement, the protocol, the order and the supervisor decide.</p>
             <p class="src">22 TAC Chapter 169 &middot; Texas Occupations Code Ch. 157 &middot; <code>test_aesthetician_without_delegation_is_blocked_but_title_is_reviewed</code></p></article>
 
           <article><h3>An unrecognised title is a question, not an answer</h3>
@@ -39,7 +39,7 @@
             <p class="src"><code>before_v1_gate</code> authority pathway branch</p></article>
 
           <article><h3>Low confidence outranks an apparent pass</h3>
-            <p>If an extraction that a check depends on came back below the confidence floor, the check cannot report PASS &mdash; it routes to a named human, even when the extracted value would have satisfied the rule. A confident-looking wrong value is more dangerous than a missing one.</p>
+            <p>If an extraction that a check depends on came back below the confidence floor, the check cannot report PASS; it routes to a named human, even when the extracted value would have satisfied the rule. A confident-looking wrong value is more dangerous than a missing one.</p>
             <p class="src"><code>test_low_confidence_has_precedence_over_apparent_pass</code></p></article>
 
           <article><h3>Absence is never validity</h3>
@@ -51,7 +51,7 @@
             <p class="src"><code>test_rule_snapshot_is_canonical_and_tamper_evident</code> &middot; <code>test_rule_updates_require_human_review_before_activation</code></p></article>
 
           <article><h3>Teach-back measures understanding; a signature measures nothing</h3>
-            <p>Interactive and teach-back interventions outperform ordinary written consent for measured comprehension. So comprehension is scored against a threshold and bound to the same frozen ruleset &mdash; a signature alone cannot satisfy it.</p>
+            <p>Interactive and teach-back interventions outperform ordinary written consent for measured comprehension. So comprehension is scored against a threshold and bound to the same frozen ruleset, a signature alone cannot satisfy it.</p>
             <p class="src">AHRQ informed-choice guidance &middot; <a href="https://pubmed.ncbi.nlm.nih.gov/31948345/" target="_blank" rel="noopener">Systematic review, Med Decis Making 2020</a></p></article>
         </div>
       </section>
@@ -64,19 +64,19 @@
         <table class="built-table">
           <thead><tr><th>Case</th><th>What happens</th><th>Pinned by</th></tr></thead>
           <tbody>
-            <tr><td>Licence expired, out of state, or inactive</td><td><span class="status-pill blocked">BLOCKED</span> with the failing fact named</td><td><code>test_each_of_the_seven_checks_can_prevent_clear</code></td></tr>
-            <tr><td>Licence evidence below the confidence floor</td><td><span class="status-pill review">REVIEW</span> &mdash; a named human, not a guess</td><td><code>test_low_confidence_input_routes_to_review</code></td></tr>
-            <tr><td>Title not mapped to a reviewed pathway</td><td><span class="status-pill review">REVIEW</span> &mdash; explicitly neither establishes nor disproves</td><td>Gate authority branch</td></tr>
-            <tr><td>Delegation asserted, protocol missing</td><td><span class="status-pill blocked">BLOCKED</span> &mdash; order, protocol, BLS and availability are all required</td><td><code>test_aesthetician_without_delegation_is_blocked_but_title_is_reviewed</code></td></tr>
-            <tr><td>Physician performing directly</td><td><span class="status-pill clear">PASS</span> &mdash; no delegation is asserted, so none is required</td><td>Gate direct-performer branch</td></tr>
+            <tr><td>Licence expired, out of state, or inactive</td><td><span class="status-pill blocked">BLOCKED</span>, with the failing fact named</td><td><code>test_each_of_the_seven_checks_can_prevent_clear</code></td></tr>
+            <tr><td>Licence evidence below the confidence floor</td><td><span class="status-pill review">REVIEW</span>: a named human, not a guess</td><td><code>test_low_confidence_input_routes_to_review</code></td></tr>
+            <tr><td>Title not mapped to a reviewed pathway</td><td><span class="status-pill review">REVIEW</span>: explicitly neither establishes nor disproves</td><td>Gate authority branch</td></tr>
+            <tr><td>Delegation asserted, protocol missing</td><td><span class="status-pill blocked">BLOCKED</span>: order, protocol, BLS and availability are all required</td><td><code>test_aesthetician_without_delegation_is_blocked_but_title_is_reviewed</code></td></tr>
+            <tr><td>Physician performing directly</td><td><span class="status-pill clear">PASS</span>: no delegation is asserted, so none is required</td><td>Gate direct-performer branch</td></tr>
             <tr><td>Product lot captured, no alert matched</td><td><span class="status-pill clear">PASS</span>, stated as <em>not</em> authenticity verification</td><td><code>test_receipt_boundary_remains_bounded</code></td></tr>
             <tr><td>Confirmed product alert</td><td><span class="status-pill blocked">BLOCKED</span></td><td><code>test_each_of_the_seven_checks_can_prevent_clear</code></td></tr>
             <tr><td>Alert lands <em>after</em> the encounter is ready</td><td>Returns to <span class="status-pill review">HUMAN REVIEW</span>. Ready is reversible.</td><td><code>test_every_transition_is_audited_and_sequence_is_reversible</code></td></tr>
             <tr><td>Alert lands after a receipt was issued</td><td>Receipt status flips to <code>REVOKED</code> on the clinic&rsquo;s domain, with a reason</td><td><code>test_receipt_status_is_a_separate_record_from_the_digest</code></td></tr>
-            <tr><td>Teach-back not recorded, or below threshold</td><td><span class="status-pill blocked">BLOCKED</span> &mdash; signatures do not substitute</td><td><code>test_each_of_the_seven_checks_can_prevent_clear</code></td></tr>
-            <tr><td>Disciplinary status unknown or stale</td><td><span class="status-pill review">REVIEW</span> &mdash; stale is not clear</td><td>Gate board-status branch</td></tr>
+            <tr><td>Teach-back not recorded, or below threshold</td><td><span class="status-pill blocked">BLOCKED</span>: signatures do not substitute</td><td><code>test_each_of_the_seven_checks_can_prevent_clear</code></td></tr>
+            <tr><td>Disciplinary status unknown or stale</td><td><span class="status-pill review">REVIEW</span>: stale is not clear</td><td>Gate board-status branch</td></tr>
             <tr><td>Consent with one signature</td><td>Holds. Exactly two treatment-party signatures are required.</td><td><code>test_consent_waits_for_exactly_two_treatment_party_signatures</code></td></tr>
-            <tr><td>Someone tries to skip attestation</td><td>Transition refused &mdash; the state machine has no such edge</td><td><code>test_invalid_transition_cannot_skip_human_attestation</code></td></tr>
+            <tr><td>Someone tries to skip attestation</td><td>Transition refused, the state machine has no such edge</td><td><code>test_invalid_transition_cannot_skip_human_attestation</code></td></tr>
             <tr><td>A blocked encounter asks for a receipt</td><td>Refused. A receipt cannot exist without a clear determination.</td><td><code>test_blocked_encounter_cannot_produce_receipt</code></td></tr>
             <tr><td>The same transition is retried</td><td>No-op. Retries do not duplicate audit events.</td><td><code>test_transition_is_guarded_idempotent_and_audited</code></td></tr>
           </tbody>
@@ -119,14 +119,14 @@
         <div class="section-heading"><p class="eyebrow">04</p><h2>What we have not proven</h2></div>
         <p class="lead">The honest list, because a judge will ask and we would rather answer first.</p>
         <ul class="limit-list">
-          <li><strong>No clinic has run a real encounter through this.</strong> The demand evidence is case law, FDA enforcement and state rulemaking &mdash; not customers. The next step is one clinic running one week in shadow mode against their existing paperwork, which tells us whether the refusals are the <em>right</em> refusals.</li>
-          <li><strong>One jurisdiction, one procedure.</strong> Texas neurotoxin. Other states are a rule-authoring exercise for a licensed reviewer, not a rewrite &mdash; but we have not done it, so we do not claim it.</li>
+          <li><strong>No clinic has run a real encounter through this.</strong> The demand evidence is case law, FDA enforcement and state rulemaking, not customers. The next step is one clinic running one week in shadow mode against their existing paperwork, which tells us whether the refusals are the <em>right</em> refusals.</li>
+          <li><strong>One jurisdiction, one procedure.</strong> Texas neurotoxin. Other states are a rule-authoring exercise for a licensed reviewer, not a rewrite, but we have not done it, so we do not claim it.</li>
           <li><strong>The rules were authored by us, from primary sources.</strong> They have not been reviewed by a Texas-licensed clinician or a health lawyer. In production that review is the gate on activation, and the system already requires it.</li>
           <li><strong>Confidence thresholds are chosen, not calibrated.</strong> The 0.80 floor is a defensible starting point, not an empirically tuned one. Calibrating it needs real documents at volume.</li>
           <li><strong>Sandbox DNS does not resolve publicly</strong>, and a TXT record stays mutable by whoever owns the domain. Giving the clinic its own domain removes us from the trust path; it does not make the record notarised.</li>
           <li><strong>Every clinic, patient, face, licence, lot and document here is synthetic.</strong> That is a deliberate constraint, and it is also a limit on what this demonstrates.</li>
         </ul>
-        <p class="muted">Each of the seven checks, the state machine, the audit trail and the receipt are pinned by the 84 tests in <a href="https://github.com/usv240/time-out" target="_blank" rel="noopener">the public repository</a>. Run <code>python -m pytest tests -q</code> from a clean clone with the network disabled and you get the same receipt hash we do.</p>
+        <p class="muted">Each of the seven checks, the state machine, the audit trail and the receipt are pinned by the 85 tests in <a href="https://github.com/usv240/time-out" target="_blank" rel="noopener">the public repository</a>. Run <code>python -m pytest tests -q</code> from a clean clone with the network disabled and you get the same receipt hash we do.</p>
         </div>
       </section>
     </main>

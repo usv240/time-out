@@ -24,7 +24,7 @@ function info(id, what, why, source) {
 
 const CHECK_COPY = {
   provider_license: "Licence active, in-state, unexpired",
-  authority_pathway: "Authorised to perform this — directly or under documented delegation",
+  authority_pathway: "Authorised to perform this, directly or under documented delegation",
   delegation_and_supervision: "Patient-specific order, signed protocol, BLS, supervisor available",
   preprocedure_assessment: "Pre-procedure assessment recorded",
   good_faith_exam: "Pre-procedure assessment recorded",
@@ -89,9 +89,9 @@ function baselineBlock(b) {
       <p class="mask-caption" id="mask-caption" aria-live="polite"></p>
     </div>
     <div class="baseline-data">
-      <p class="integration-kicker">YOUR BASELINE — BEFORE TREATMENT ${info("i-baseline", "A standardized skin analysis taken before anything was done, with a score and an overlay for each of twelve concerns.", "An objective starting point you keep. If something looks different later, this is what it looked like first — and you can see exactly which mark produced which score.", "Perfect Corp YouCam Skin Analysis (SD) · synthetic face")}</p>
+      <p class="integration-kicker">YOUR BASELINE, BEFORE TREATMENT ${info("i-baseline", "A standardized skin analysis taken before anything was done, with a score and an overlay for each of twelve concerns.", "An objective starting point you keep. If something looks different later, this is what it looked like first, and you can see exactly which mark produced which score.", "Perfect Corp YouCam Skin Analysis (SD) · synthetic face")}</p>
       <div class="metric-pair"><div><span>Overall</span><strong>${Number(b.overall_score).toFixed(1)}</strong></div><div><span>Skin age (synthetic)</span><strong>${escapeHtml(b.skin_age)}</strong></div></div>
-      <p class="muted concern-hint">Select a concern to see it on the face. Lowest scores first &mdash; those are the ones worth watching.</p>
+      <p class="muted concern-hint">Select a concern to see it on the face. Lowest scores first; those are the ones worth watching.</p>
       <div class="concern-list" role="radiogroup" aria-label="Skin concerns">${rows}</div>
       <p class="evidence-boundary">${escapeHtml(b.boundary)}</p>
     </div>
@@ -112,8 +112,8 @@ function selectConcern(btn) {
   const caption = wrap.querySelector("#mask-caption");
   if (caption) {
     caption.textContent = btn.dataset.nomask
-      ? `${btn.dataset.label} — scored, no overlay returned for this concern.`
-      : `${btn.dataset.label} — ${btn.dataset.blurb}`;
+      ? `${btn.dataset.label}, scored, no overlay returned for this concern.`
+      : `${btn.dataset.label}, ${btn.dataset.blurb}`;
   }
   btn.focus();
 }
@@ -127,8 +127,8 @@ const XANO_V1 = ["localhost", "127.0.0.1"].includes(location.hostname)
 
 function statusBlock() {
   return `<section class="dns-receipt-proof" id="status-proof">
-    <p class="integration-kicker">IS THIS RECEIPT STILL GOOD? ${info("i-status", "A separate status record published on your clinic's own domain, read live through the name.com API.", "A receipt says the checks passed on the day. If an FDA alert or a board action lands afterwards, this is how you find out — without calling the clinic that gave it to you.", "name.com CORE sandbox · _status.<receipt-id>.<clinic domain>")}</p>
-    <p class="muted">Checks the clinic&rsquo;s own domain, not ours. A missing record reports <code>UNKNOWN</code>, never valid &mdash; absence is not validity.</p>
+    <p class="integration-kicker">IS THIS RECEIPT STILL GOOD? ${info("i-status", "A separate status record published on your clinic's own domain, read live through the name.com API.", "A receipt says the checks passed on the day. If an FDA alert or a board action lands afterwards, this is how you find out, without calling the clinic that gave it to you.", "name.com CORE sandbox · _status.<receipt-id>.<clinic domain>")}</p>
+    <p class="muted">Checks the clinic&rsquo;s own domain, not ours. A missing record reports <code>UNKNOWN</code>, never valid, absence is not validity.</p>
     <button class="button button-primary" id="check-status" type="button">Check this receipt&rsquo;s status now</button>
     <div id="status-out" hidden></div>
   </section>`;
@@ -146,8 +146,8 @@ async function checkStatus() {
     if (!r.ok) throw new Error(d.message || "status lookup failed");
     const cls = d.status === "VALID" ? "dns-match" : d.status === "REVOKED" ? "dns-unverified" : "";
     const headline = d.status === "VALID" ? "STILL VALID"
-      : d.status === "REVOKED" ? "REVOKED — DO NOT RELY ON THIS RECEIPT"
-      : "UNKNOWN — no status published";
+      : d.status === "REVOKED" ? "REVOKED, DO NOT RELY ON THIS RECEIPT"
+      : "UNKNOWN, no status published";
     document.querySelector("#status-proof").className = `dns-receipt-proof ${cls}`;
     out.innerHTML = `<strong>${escapeHtml(headline)}</strong>
       <span class="src-badge live">LIVE · name.com via Xano</span>
@@ -166,7 +166,7 @@ async function checkStatus() {
 function dnsBlock(dns) {
   const ok = Boolean(dns?.matches);
   return `<section class="dns-receipt-proof ${ok ? "dns-match" : "dns-unverified"}">
-    <p class="integration-kicker">PUBLISHED RECORD ${info("i-dns", "The receipt's fingerprint (SHA-256) was published as a DNS TXT record under the registry domain, then read back through the name.com API.", "So you can check the receipt you hold matches what was published — without an account and without trusting this site.", "name.com CORE sandbox · " + (dns?.verified_through || "API read-back"))}</p>
+    <p class="integration-kicker">PUBLISHED RECORD ${info("i-dns", "The receipt's fingerprint (SHA-256) was published as a DNS TXT record under the registry domain, then read back through the name.com API.", "So you can check the receipt you hold matches what was published, without an account and without trusting this site.", "name.com CORE sandbox · " + (dns?.verified_through || "API read-back"))}</p>
     <strong>${ok ? "TXT READ-BACK MATCHED" : "TXT NOT VERIFIED"}</strong> <span class="src-badge cached">CACHED · verified ${escapeHtml((dns?.verified_at || "2026-08-26").slice(0, 10))}</span>
     <h3>${escapeHtml(dns?.txt_name || "")}.${escapeHtml(dns?.domain || "")}</h3>
     <code>${escapeHtml(dns?.txt_value || "")}</code>
@@ -236,7 +236,7 @@ async function loadReceipt() {
       ${dnsBlock(dns)}
       ${statusBlock()}
       ${attestationBlock(esign)}
-      <div class="receipt-boundary"><strong>What this proves — and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
+      <div class="receipt-boundary"><strong>What this proves, and what it does not</strong><p>${escapeHtml(receipt.boundary)}</p></div>
       <details class="machine-evidence"><summary>Machine evidence</summary><pre class="timeline-detail">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre></details>`);
   } catch (error) {
     target.innerHTML = `<p class="console-error" role="alert">${escapeHtml(error.message)} Run the safety check in <a href="/try.html">the clinic console</a>, then open its receipt link.</p>`;

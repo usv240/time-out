@@ -170,3 +170,14 @@ def test_every_artifact_can_be_viewed_without_downloading() -> None:
     missing = sorted(f for f in linked if f not in viewable and not f.endswith(".zip"))
     assert not missing, f"artifacts that can only be downloaded, never viewed: {missing}"
     assert len(viewable) >= 9, f"expected every artifact viewable, found {len(viewable)}"
+
+
+def test_no_em_dashes_in_anything_we_ship() -> None:
+    """Em dashes were removed from the site copy deliberately; keep them out."""
+    site = ROOT / "before" / "site"
+    offenders = []
+    for path in list(site.glob("*.html")) + list(site.glob("*.js")) + list(site.glob("*.css")):
+        text = path.read_text(encoding="utf-8")
+        if "\u2014" in text or "&mdash;" in text:
+            offenders.append(path.name)
+    assert not offenders, f"em dashes are back in: {sorted(offenders)}"

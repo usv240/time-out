@@ -15,7 +15,7 @@ const STEP_COPY = {
   consent_signed: ["Both treatment parties sign", "Doctavian records Patient plus Injector completion; Medical Director attestation remains separate."],
   teach_back_held: ["Teach-back holds the encounter", "A wrong answer triggers re-explanation and a named Injector review task."],
   teach_back_passed: ["Teach-back passes on retry", "The versioned answers are bound to the frozen rule snapshot."],
-  baseline: ["Perfect Corp captures the SD baseline", "Standardized geometry, concern scores, and overlay are communication aids—not diagnosis."],
+  baseline: ["Perfect Corp captures the SD baseline", "Standardized geometry, concern scores, and overlay are communication aids, not diagnosis."],
   foxit_pause: ["Foxit agent assembles, then stops", "Reversible record assembly ends at the human-signature boundary."],
   human_attestation: ["Medical Director attests", "A licensed human completes the irreversible eSign action."],
   alert_reversion: ["SerpApi candidate reopens review", "A prepared encounter moves backward; search data makes no conclusion."],

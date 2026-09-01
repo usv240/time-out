@@ -141,7 +141,7 @@
 .live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:1.25rem;margin-top:1rem}
 
 /* ============================================================================
-   TYPOGRAPHY PASS — smaller, quieter, regular/medium weights.
+   TYPOGRAPHY PASS, smaller, quieter, regular/medium weights.
    A safety interlock should read like an instrument, not a billboard.
    Loaded after styles.css, so these win.
    ========================================================================= */
@@ -173,7 +173,7 @@ h4{ font-size: var(--step-1) !important; font-weight: 600 !important; }
 p{ max-width: 72ch; }
 .muted{ color: var(--ink-3); font-size: var(--step--1); }
 
-/* eyebrows and labels: small, spaced, mono — a label, not a heading */
+/* eyebrows and labels: small, spaced, mono, a label, not a heading */
 .eyebrow, .integration-kicker{
   font-family: var(--f-mono); font-size: 11.5px !important; font-weight: 600 !important;
   letter-spacing: .13em; text-transform: uppercase; color: var(--accent-ink);
@@ -187,7 +187,7 @@ p{ max-width: 72ch; }
 .synthetic-chip{ font-weight: 600 !important; font-size: var(--step--2) !important; letter-spacing: .07em; }
 strong, b{ font-weight: 600; }
 
-/* mono means "verbatim evidence" — keep it legible, never decorative */
+/* mono means "verbatim evidence", keep it legible, never decorative */
 code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--2); }
 .findings{ font-size: var(--step--1); }
 .findings th{ font-size: var(--step--3); letter-spacing: .11em; }
@@ -209,7 +209,7 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 .page-hero{ padding-block: 48px 24px; }
 
 /* ============================================================================
-   DARK MODE — its own identity, not an inversion.
+   DARK MODE, its own identity, not an inversion.
    Cooler, slightly blue-violet ground; mint accent; softened text contrast so
    long evidence tables stay readable at night.
    ========================================================================= */
@@ -337,7 +337,7 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 .docs-card code, .docs-card p, .docs-card li { overflow-wrap: anywhere; }
 
 /* Touch targets. WCAG 2.5.8 exempts links inline in a sentence, so citation links inside
-   prose are deliberately left alone — padding them would break the line box. These two are
+   prose are deliberately left alone, padding them would break the line box. These two are
    standalone controls, so they get a real finger-sized target on touch devices. */
 @media (pointer: coarse) {
   .wordmark { min-height: 44px; display: inline-flex; align-items: center; }
@@ -359,7 +359,7 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 @media (prefers-reduced-motion: reduce){ .section-nav{ transition: none; } }
 
 /* Wide screens left ~700px of dead space beside the hero prose while the result card
-   below ran full width. The numbers that justify the project go there — judges scan
+   below ran full width. The numbers that justify the project go there, judges scan
    figures before they read paragraphs. Collapses to one column under 60rem. */
 @media (min-width: 60rem){
   .hero{ grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); align-items: start; }
