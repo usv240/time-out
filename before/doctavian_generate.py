@@ -20,9 +20,10 @@ The branch stays where every other decision in this product lives: the Gate reso
 the authority pathway from cited rules and passes the resolved sentence in as data. A
 document template is the wrong place to decide who may perform a procedure.
 
-Two contract details that cost real time, both verified:
-  * the uploaded JSON must be one root `data` object with every scalar leaf a string;
-    numbers and booleans make the template read fail with a misleading error
+Two contract details that cost real time, both verified by controlled runs:
+  * the uploaded JSON must be wrapped in one root `data` object. Omit it and the call
+    fails with `TEMPLATE_READ_FAILED` — "check the template format" — which names the
+    wrong artifact entirely. Scalar types do not matter; the envelope does.
   * `request/create` takes `dataSourceGuid`, not the documented `dataGuid`
 
     python -m before.doctavian_generate
@@ -68,9 +69,11 @@ def _headers(content_type: str | None = None, storage: str | None = None) -> dic
 def _stringify(value: Any) -> Any:
     """Every scalar leaf becomes a string; the object and array structure is kept.
 
-    Doctavian's Storage pipeline rejects a payload containing raw numbers or booleans,
-    and reports it as `TEMPLATE_READ_FAILED` — which points at the template rather than
-    the data and is why this took as long as it did to find.
+    Not required — a controlled run with the same template and raw booleans and numbers
+    also succeeds. What *is* required is the root `data` wrapper below. This is kept
+    because it makes rendering predictable: the platform formats a string exactly as
+    given, so a date or a score cannot be re-formatted into something a clinician did
+    not write.
     """
     if isinstance(value, dict):
         return {k: _stringify(v) for k, v in value.items()}

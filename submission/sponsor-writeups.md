@@ -209,12 +209,14 @@ perform a procedure. The template renders; the cited code decides.
    `400 REQUEST_DATA_ID_REQUIRED` — identical to omitting the field. It accepts
    **`dataSourceGuid`**, which is absent from that schema, and echoes it back in the
    response. Tested with freshly created GUIDs to rule out stale ids.
-2. **The data-contract failure is reported as a template failure.** A payload with raw
-   numbers or booleans fails with **`TEMPLATE_READ_FAILED` — "check the template
-   format"**. The template is fine; the fix is one root `data` object with every scalar
-   leaf stringified. We spent hours on the template, including proving a Word-authored
-   third-party `.docx` and your own bundled `default.docx` failed identically. An error
-   naming the data would have saved all of it.
+2. **A missing data envelope is reported as a template failure.** If the uploaded JSON
+   is not wrapped in a root `data` object, generation fails with **`TEMPLATE_READ_FAILED`
+   — "check the template format"**. Identical template bytes, only the payload differing:
+   with the wrapper it generates, without it that error. Because the message names the
+   template we spent hours there, far enough to prove a Word-authored third-party `.docx`
+   and your own bundled `default.docx` failed identically. Scalar types are not the
+   issue — we thought they were, then a control with raw booleans and numbers generated
+   fine.
 3. **Unsupported expressions return 200 and render blank.** A ternary and `$if(...)`
    both produced `HTTP 200` and an empty string in the PDF. Silent blanks in a consent
    document are worse than an error — we only caught it by downloading the output and
