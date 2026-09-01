@@ -1,0 +1,66 @@
+{
+  "_note": "The synthetic source documents this pipeline reads: intake, patient order, delegation protocol, consent, product packaging, and comprehension. Two are deliberately low-confidence so the human-review path fires.",
+  "_synthetic": "Every field is invented. No real patient, clinic, licence, lot or product.",
+  "documents": {
+    "01-intake.json": {
+      "synthetic": true,
+      "document_type": "patient_intake",
+      "patient_id": "SYN-PATIENT-001",
+      "allergies": [],
+      "medications": [],
+      "confidence": "HIGH"
+    },
+    "02-patient-order.json": {
+      "synthetic": true,
+      "document_type": "patient_specific_order",
+      "patient_id": "SYN-PATIENT-001",
+      "drug": "SYNTHETIC NEUROTOXIN \u2014 NOT FOR USE",
+      "dose": "20 invented units",
+      "strength": "100 invented units/vial",
+      "route": "intramuscular",
+      "delegating_physician_id": "SYN-PROV-MD-003",
+      "confidence": "HIGH"
+    },
+    "03-delegation-protocol.json": {
+      "synthetic": true,
+      "document_type": "delegation_protocol",
+      "delegating_physician_id": "SYN-PROV-MD-003",
+      "delegate_id": "SYN-PROV-RN-002",
+      "signed_on": "2026-08-18",
+      "patient_selection_criteria": "Synthetic adult fixture with completed assessment",
+      "appropriate_care": "Synthetic hero-path protocol only",
+      "complication_and_emergency_procedure": "Stop; initiate synthetic emergency workflow; contact delegating physician",
+      "feedback_channel": "Synthetic Xano audit event",
+      "confidence": "HIGH"
+    },
+    "04-consent.json": {
+      "synthetic": true,
+      "document_type": "procedure_consent",
+      "patient_id": "SYN-PATIENT-001",
+      "procedure": "NEUROTOXIN_INJECTION",
+      "signature_status": "PENDING",
+      "notice": "Synthetic demonstration document; not clinical consent",
+      "confidence": "HIGH"
+    },
+    "05-product-packaging-low-confidence.json": {
+      "synthetic": true,
+      "document_type": "product_packaging",
+      "manufacturer": "Fictional Therapeutics",
+      "product": "EXAMPLETOX \u2014 NOT A REAL PRODUCT",
+      "lot": "INVENTED-LOT-0007",
+      "expires_on": "2027-10-31",
+      "confidence": "LOW",
+      "review_reason": "Deliberately blurred/uncertain extraction fixture for the human-review demo"
+    },
+    "06-comprehension-low-confidence.json": {
+      "synthetic": true,
+      "document_type": "teach_back_record",
+      "patient_id": "SYN-PATIENT-001",
+      "attempt": 1,
+      "score": 4,
+      "threshold": 4,
+      "confidence": "LOW",
+      "review_reason": "Deliberately uncertain transcription fixture; must route to human review"
+    }
+  }
+}

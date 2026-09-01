@@ -494,3 +494,16 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
   font-size: var(--step--1); }
 .compose-hint{ flex-basis: 100%; color: var(--ink-3); font-size: var(--step--2); line-height: 1.45; }
 .compose-actions{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+
+/* ---- take the data with you ---- */
+.demo-data{ padding-block: 28px; border-top: 1px solid var(--rule); }
+.data-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 16px; margin: 20px 0 16px; }
+.data-card{ padding: 16px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+.data-card h3{ margin: 0 0 10px; font-size: var(--step-0) !important; }
+.data-card ul{ display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.data-card li{ display: grid; gap: 2px; }
+.data-card a{ font-size: var(--step--1); font-weight: 600; overflow-wrap: anywhere; }
+.data-card small{ color: var(--ink-3); font-size: var(--step--2); line-height: 1.5; }
+.data-all{ display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.data-all code{ font-size: var(--step--2); }

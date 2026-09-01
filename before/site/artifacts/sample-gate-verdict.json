@@ -1,0 +1,171 @@
+{
+  "_note": "A real verdict from the deployed Gate, captured for reference. Every finding names the facts it read and cites the rule it applied.",
+  "_reproduce": "curl -X POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate -H 'Content-Type: application/json' -d '{}'",
+  "verdict": "BLOCKED",
+  "determination_scope": "Pre-procedure safety determination for human review",
+  "findings": [
+    {
+      "check_id": "provider_license",
+      "status": "PASS",
+      "summary": "Provider licence evidence is active, in-state, and unexpired.",
+      "citation_urls": [
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+        "state": "TX",
+        "license_status": "ACTIVE",
+        "expires_on": "2027-12-31",
+        "scheduled_on": "2026-08-25",
+        "confidence": "HIGH"
+      }
+    },
+    {
+      "check_id": "authority_pathway",
+      "status": "REVIEW",
+      "summary": "This title alone neither establishes nor disproves delegated authority; reviewer must assess the other licence and delegation rules.",
+      "citation_urls": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+        "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+        "credential": "AESTHETICIAN",
+        "training_documented": false,
+        "complication_training_documented": false
+      }
+    },
+    {
+      "check_id": "delegation_and_supervision",
+      "status": "BLOCK",
+      "summary": "Delegation, order, BLS, or required availability evidence is incomplete.",
+      "citation_urls": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+        "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "facts": {
+        "delegation_required": true,
+        "delegation_document_present": false,
+        "protocol_signed_and_dated": false,
+        "delegating_physician_active": false,
+        "patient_specific_order_present": false,
+        "order_contains_drug_dose_strength_route": false,
+        "supervisor_onsite": false,
+        "supervisor_immediately_available": false,
+        "physician_emergency_appointment_available": false,
+        "bls_person_present": false
+      }
+    },
+    {
+      "check_id": "preprocedure_assessment",
+      "status": "BLOCK",
+      "summary": "Practitioner-patient relationship, medical record, or performer disclosure evidence is missing.",
+      "citation_urls": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+      ],
+      "facts": {
+        "practitioner_patient_relationship_established": false,
+        "adequate_medical_record_present": false,
+        "performer_identity_disclosed": false,
+        "good_faith_exam_label_status": "REVIEW"
+      }
+    },
+    {
+      "check_id": "product_lot",
+      "status": "PASS",
+      "summary": "Product lot is captured and has no matched alert in the captured search; this is not authenticity verification.",
+      "citation_urls": [
+        "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+      ],
+      "facts": {
+        "verified": true,
+        "alerted": false,
+        "confidence": "HIGH"
+      }
+    },
+    {
+      "check_id": "comprehension",
+      "status": "PASS",
+      "summary": "Comprehension evidence meets the configured threshold.",
+      "citation_urls": [
+        "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+      ],
+      "facts": {
+        "recorded": true,
+        "score": 4,
+        "threshold": 4,
+        "confidence": "HIGH"
+      }
+    },
+    {
+      "check_id": "board_status",
+      "status": "PASS",
+      "summary": "Captured disciplinary status is clear.",
+      "citation_urls": [
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "facts": {
+        "disciplinary_status": "CLEAR"
+      }
+    }
+  ],
+  "rule_snapshot": {
+    "state": "TX",
+    "rule_id": "TX-NEUROTOXIN-2026-08-20",
+    "citations": {
+      "product_lot": [
+        "https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states"
+      ],
+      "board_status": [
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "comprehension": [
+        "https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html"
+      ],
+      "provider_license": [
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html"
+      ],
+      "authority_pathway": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+        "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ],
+      "preprocedure_assessment": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html"
+      ],
+      "delegation_and_supervision": [
+        "https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html",
+        "https://www.bon.texas.gov/faq_nursing_practice.asp.html",
+        "https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf"
+      ]
+    },
+    "required_evidence": [
+      "provider_license",
+      "authority_pathway",
+      "delegation_and_supervision",
+      "preprocedure_assessment",
+      "product_lot",
+      "comprehension",
+      "board_status"
+    ],
+    "supervision_model": "Evidence-backed human review",
+    "procedure_category": "NEUROTOXIN",
+    "delegated_path_credentials": [
+      "RN",
+      "APRN",
+      "PA"
+    ],
+    "direct_performer_credentials": [
+      "PHYSICIAN"
+    ],
+    "credential_interpretation_review": [
+      "AESTHETICIAN",
+      "LVN",
+      "OTHER"
+    ]
+  },
+  "canonical_rule_snapshot": "{\"rule_id\":\"TX-NEUROTOXIN-2026-08-20\",\"state\":\"TX\",\"procedure_category\":\"NEUROTOXIN\",\"direct_performer_credentials\":[\"PHYSICIAN\"],\"delegated_path_credentials\":[\"RN\",\"APRN\",\"PA\"],\"credential_interpretation_review\":[\"AESTHETICIAN\",\"LVN\",\"OTHER\"],\"required_evidence\":[\"provider_license\",\"authority_pathway\",\"delegation_and_supervision\",\"preprocedure_assessment\",\"product_lot\",\"comprehension\",\"board_status\"],\"supervision_model\":\"Evidence-backed human review\",\"citations\":{\"provider_license\":[\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\"],\"authority_pathway\":[\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\",\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\"],\"delegation_and_supervision\":[\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\",\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\",\"https://statutes.capitol.texas.gov/docs/OC/pdf/OC.157.pdf\"],\"preprocedure_assessment\":[\"https://www.sos.state.tx.us/texreg/archive/January102025/Adopted%20Rules/22.EXAMINING%20BOARDS.html\"],\"product_lot\":[\"https://www.fda.gov/drugs/drug-alerts-and-statements/counterfeit-version-botox-found-multiple-states\"],\"comprehension\":[\"https://www.ahrq.gov/health-literacy/professional-training/informed-choice/audio-script.html\"],\"board_status\":[\"https://www.bon.texas.gov/faq_nursing_practice.asp.html\"]}}",
+  "rule_snapshot_sha256": "a53cd39cee0c31347c8f135c3e1de5001388b595b28954f317086653879dbafe",
+  "id": 757,
+  "encounter_id": "SYN-ENC-d3060c2c-cfe2-44d0-9f47-73693dba1000",
+  "state": "REMEDIATION",
+  "evaluated_at": 1788235593209
+}

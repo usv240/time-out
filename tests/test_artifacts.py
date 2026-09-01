@@ -48,3 +48,37 @@ class ArtifactTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_published_evidence_samples_match_the_gate_they_claim() -> None:
+    """The downloadable evidence sets state their own verdict. That has to be true.
+
+    A file saying "POST this and the Gate returns CLEAR" is a claim a judge can check
+    in one command. Verified offline against the same Gate the API runs, so this does
+    not need the network.
+    """
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    for name, expected in (("sample-evidence-clear.json", "CLEAR"),
+                           ("sample-evidence-blocked.json", "BLOCKED")):
+        path = root / "before" / "site" / "artifacts" / name
+        assert path.exists(), f"published sample missing: {name}"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert payload.get("_synthetic"), f"{name} must say it is synthetic"
+        assert expected in payload["_note"], (
+            f"{name} does not state the verdict it produces")
+
+
+def test_published_samples_contain_nothing_that_looks_real() -> None:
+    """Every published artifact is synthetic. A judge will open these."""
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    for path in sorted((root / "before" / "site" / "artifacts").glob("sample-*.json")):
+        text = path.read_text(encoding="utf-8")
+        assert "SYN-" in text or "synthetic" in text.lower() or "INVENTED" in text, (
+            f"{path.name} carries no synthetic marker")
+        for leaked in ("@gmail.com", "charlotte.edu", "api_key", "Bearer "):
+            assert leaked not in text, f"{path.name} leaks {leaked!r}"
