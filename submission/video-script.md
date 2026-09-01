@@ -1,7 +1,24 @@
 # Demo video script — Time-Out
 
-**Target: 2 minutes 50 seconds.** The overall rules ask for 1–3 minutes; three sponsor
-tracks ask for 2–4. 2:50 is the only window that satisfies every one of them.
+**Target: 2:55 recorded runtime.** The overall rules ask for 1–3 minutes; three sponsor
+tracks ask for 2–4. Just under three minutes is the only window that satisfies all of
+them, and there is no margin above it — so a take that runs 3:01 has to be redone.
+
+Runtime is narration plus silence, and the silence here was measured rather than
+guessed. Every wait, timed twice on production:
+
+| Wait | Measured |
+|---|---|
+| Fresh load of `/` to a painted verdict | under 1s |
+| "Run the complete safety workflow" on `/try` | 0.5–0.7s |
+| Each of the three attacks | 0.4–0.6s |
+| "Check this receipt's status now" | ~0.1s to respond |
+| **Total waiting on a server** | **about 3 seconds** |
+
+So: 419 words at a relaxed 145 a minute is 2:53, plus ~3s of API waits, plus the one
+deliberate pause. That lands at **2:55–3:00** — tight. Time your dry run end to end. If
+it crosses 3:00, cut the beat at 1:44 (below), which buys back eight seconds and costs
+nothing.
 
 Judging is on three things: **Progress**, **Concept** (does it solve a real problem),
 and **Feasibility** (could this be a company). Each beat below is marked with the one
@@ -50,13 +67,17 @@ section.
 
 ### 0:34 – 0:52 · The check runs  →  *Progress*
 
-**On screen:** scroll to the encounter card. Pause on the patient line.
+**On screen:** start this take on a **fresh load** of `/`, then scroll to the encounter
+card and pause on the patient line.
+
+Measured on production: the landing page runs the check by itself and paints the
+verdict in under a second, and the "Run the safety check" button is gone about a second
+after load. There is no click-and-watch moment here — the fresh load *is* the moment.
+Don't pause waiting for something to happen after your line; it already happened.
 
 > Here's a patient booked for an injection today. Every person in this demo is
 > invented. Before it can go ahead, seven things have to be true.
-
-**[Let the check run.]**
-
+>
 > About a second. Blocked.
 
 ### 0:52 – 1:14 · Why blocking well is the whole product  →  *Concept*
@@ -73,7 +94,11 @@ rows as you say them, then rest it on the citation.
 
 ### 1:14 – 1:44 · Break it yourself  →  *Progress*
 
-**On screen:** `/try.html`, scrolled to the attack buttons.
+**On screen:** `/try.html`. **The attack buttons are not on the page yet.** They appear
+only after you click **"Run the complete safety workflow"**, because there has to be a
+live encounter to attack. Click that first, on camera: it answers in about half a
+second and the whole "Break it yourself" section appears. Let that reveal land before
+you start the next line.
 
 Give each attack its own punchline. Three clicks, three different *kinds* of failure —
 that's what shows this isn't just a permission checker.
@@ -108,7 +133,8 @@ that's what shows this isn't just a permission checker.
 > checked, who was responsible, their skin baseline from before, and a fingerprint of
 > the exact rules used that day.
 
-**[Click "Verify the receipt against DNS now."]**
+**[Click "Check this receipt’s status now."]** That is the real label; it answers
+in about a tenth of a second with "Reading the clinic’s DNS through name.com".
 
 > It's published outside Time-Out, so years later the patient can check the record
 > hasn't silently changed.
