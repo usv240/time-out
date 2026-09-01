@@ -567,6 +567,43 @@ async function runPasted() {
   }
 }
 
+// ---- view the artifacts without downloading them -----------------------------
+// The files were download-only, which meant a judge had to save a JSON file and open
+// it in something else to see what we were talking about. Most people will not.
+async function openArtifact(btn) {
+  const view = document.querySelector("#data-viewer");
+  const { src, kind, title } = btn.dataset;
+  view.hidden = false;
+  view.innerHTML = `<p class="muted">Loading ${escapeHtml(title)}…</p>`;
+  view.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  const head = `<div class="viewer-head"><strong>${escapeHtml(title)}</strong>
+    <span class="viewer-actions"><a href="${escapeHtml(src)}" target="_blank" rel="noopener">Open in a tab</a>
+    <a href="${escapeHtml(src)}" download>Download</a>
+    <button type="button" class="viewer-close" aria-label="Close">Close</button></span></div>`;
+
+  if (kind === "img") {
+    view.innerHTML = `${head}<img class="viewer-img" src="${escapeHtml(src)}" alt="${escapeHtml(title)}">`;
+    return;
+  }
+  if (kind === "pdf") {
+    // An <object> falls back to its own children when a PDF cannot be shown inline,
+    // which is the honest outcome on browsers that refuse to embed one.
+    view.innerHTML = `${head}<object class="viewer-pdf" data="${escapeHtml(src)}" type="application/pdf">
+      <p class="muted">Your browser will not display a PDF inline.
+      <a href="${escapeHtml(src)}" target="_blank" rel="noopener">Open it in a tab</a> instead.</p></object>`;
+    return;
+  }
+  try {
+    const r = await fetch(src);
+    if (!r.ok) throw new Error(`${r.status} fetching the file`);
+    const text = JSON.stringify(await r.json(), null, 2);
+    view.innerHTML = `${head}<pre class="viewer-json">${escapeHtml(text)}</pre>`;
+  } catch (error) {
+    view.innerHTML = `${head}<p class="console-error">${escapeHtml(error.message)}</p>`;
+  }
+}
+
 function renderAttackGrid() {
   attackGrid.replaceChildren();
   for (const attack of ATTACKS) {
@@ -595,6 +632,11 @@ attackReset?.addEventListener("click", async () => {
 
 // `i` buttons: click to open, Esc to close, focus returns to the trigger.
 document.addEventListener("click", (event) => {
+  const artifact = event.target.closest(".data-view");
+  if (artifact) { openArtifact(artifact); return; }
+  if (event.target.closest(".viewer-close")) {
+    document.querySelector("#data-viewer").hidden = true; return;
+  }
   if (event.target.closest("#paste-run")) { runPasted(); return; }
   if (event.target.closest("#paste-fill")) { fillPaste(); return; }
   if (event.target.closest("#compose-run")) { runComposed(); return; }

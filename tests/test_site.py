@@ -153,3 +153,20 @@ def test_claimed_test_counts_match_reality() -> None:
     assert claimed, "the assumptions page states no test count"
     assert claimed == {actual}, (
         f"assumptions.html claims {sorted(claimed)} tests; {actual} are defined")
+
+
+def test_every_artifact_can_be_viewed_without_downloading() -> None:
+    """A download-only link is a dead end for most people.
+
+    The artifacts were `download` links, so clicking one saved a JSON file that a judge
+    then had to open somewhere else. Each now offers a View button that renders it on
+    the page, with Download kept beside it.
+    """
+    import re
+    html = (ROOT / "before" / "site" / "try.html").read_text(encoding="utf-8")
+    viewable = set(re.findall(r'class="data-view"[^>]*data-src="/artifacts/([^"]+)"', html))
+    linked = set(re.findall(r'href="/artifacts/(sample-[^"]+|[a-z-]+\.pdf)"', html))
+    linked -= {"time-out-demo-data.zip"}
+    missing = sorted(f for f in linked if f not in viewable and not f.endswith(".zip"))
+    assert not missing, f"artifacts that can only be downloaded, never viewed: {missing}"
+    assert len(viewable) >= 9, f"expected every artifact viewable, found {len(viewable)}"
