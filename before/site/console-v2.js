@@ -298,13 +298,34 @@ async function runHeroPath() {
 
 // ---------------------------------------------------------------- Break it yourself
 
+async function openSyntheticEncounter() {
+  const r = await fetch(`${V1}/encounters/demo/evaluate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  const live = await r.json();
+  if (!r.ok) throw new Error(live.message || "could not open a synthetic encounter");
+  liveEncounterId = live.encounter_id;
+  return live;
+}
+
+// A CLEAR verdict advances the encounter past REMEDIATION, and the state machine
+// correctly refuses to re-open a cleared encounter by editing its evidence — you do not
+// get to un-clear a decision by rewriting the facts. So once an encounter clears it is
+// spent, and the next attempt opens a fresh one rather than provoking a 400 and
+// recovering from it. Clicking Reset and then any attack used to show the previous
+// CLEAR while an error appeared elsewhere: a judge seeing a success that never happened.
+let encounterSpent = false;
+
 async function remediateAndEvaluate(patch, label) {
+  if (encounterSpent || !liveEncounterId) {
+    await openSyntheticEncounter();
+    encounterSpent = false;
+  }
   const body = { ...CLEARED, ...patch, encounter_id: liveEncounterId, actor: `Judge: ${label}` };
   const r = await fetch(`${V1}/encounters/${encodeURIComponent(liveEncounterId)}/remediate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!r.ok) throw new Error((await r.json()).message || "remediate failed");
   const e = await fetch(`${V1}/encounters/${encodeURIComponent(liveEncounterId)}/evaluate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ encounter_id: liveEncounterId }) });
   const verdict = await e.json();
   if (!e.ok) throw new Error(verdict.message || "evaluate failed");
+  encounterSpent = verdict.verdict === "CLEAR";
   return verdict;
 }
 
@@ -321,6 +342,152 @@ function renderAttack(attack, verdict) {
     <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code> — the same frozen rules every time.</p>`;
   attackResult.hidden = false;
   attackResult.setAttribute("role", verdict.verdict === "BLOCKED" ? "alert" : "status");
+}
+
+// ---- Compose your own encounter ----------------------------------------------
+// The six attacks each break one thing we chose. This hands the whole evidence set
+// over: set any field, run the real Gate, read the cited verdict. It is the same
+// remediate + evaluate pair the attacks use, so there is no second code path and no
+// way for this panel to show something the backend would not.
+//
+// Deliberately no upload. This product refuses PHI and never accepts a real person's
+// face; a form that invited a judge to paste one would contradict the boundary the
+// rest of the site spends its time defending.
+
+const FIELDS = [
+  { group: "Who is performing it", items: [
+    { key: "credential_type", label: "Credential", type: "select",
+      options: ["RN", "LVN", "PA", "APRN", "PHYSICIAN", "AESTHETICIAN", "LASER TECHNICIAN"],
+      hint: "A job title is never an answer on its own." },
+    { key: "training_documented", label: "Procedure training documented", type: "bool" },
+    { key: "complication_training", label: "Complication-response training", type: "bool" },
+    { key: "delegation_agreement_id", label: "Delegation agreement on file", type: "presence",
+      present: "SYN-DELEG-001", hint: "Empty means absent, and absent is not the same as unknown." },
+    { key: "protocol_id", label: "Signed protocol on file", type: "presence", present: "SYN-PROTO-001" },
+    { key: "delegating_physician_active", label: "Delegating physician active", type: "bool" },
+  ]},
+  { group: "Supervision and the order", items: [
+    { key: "patient_specific_order_present", label: "Patient-specific order", type: "bool" },
+    { key: "order_contains_drug_dose_strength_route", label: "Order states drug, dose, strength, route", type: "bool" },
+    { key: "bls_current", label: "BLS current", type: "bool" },
+    { key: "supervisor_onsite", label: "Supervisor on site", type: "bool" },
+    { key: "supervisor_immediately_available", label: "Supervisor immediately available", type: "bool" },
+    { key: "physician_emergency_appointment_available", label: "Emergency appointment available", type: "bool" },
+  ]},
+  { group: "The pre-procedure record", items: [
+    { key: "practitioner_patient_relationship_established", label: "Practitioner–patient relationship", type: "bool" },
+    { key: "adequate_medical_record_present", label: "Adequate medical record", type: "bool" },
+    { key: "performer_identity_disclosed", label: "Performer identity disclosed to patient", type: "bool" },
+  ]},
+  { group: "The product", items: [
+    { key: "product_lot_no", label: "Lot number", type: "text" },
+    { key: "product_alert_status", label: "Alert status", type: "select",
+      options: ["MATCHED_TO_NO_CAPTURED_ALERT", "ALERT_CANDIDATE", "CONFIRMED_ALERT", "UNKNOWN"],
+      hint: "A candidate is not a finding of fact. Only a confirmed alert blocks." },
+  ]},
+  { group: "Did the patient understand", items: [
+    { key: "comprehension_passed", label: "Teach-back passed", type: "bool" },
+    { key: "comprehension_score", label: "Teach-back score", type: "number", min: 0, max: 100 },
+  ]},
+];
+
+function composerState() {
+  const s = { ...CLEARED };
+  delete s.actor;
+  return s;
+}
+let composed = composerState();
+
+function composerControl(f) {
+  const id = `c-${f.key}`;
+  const v = composed[f.key];
+  const hint = f.hint ? `<small class="compose-hint">${escapeHtml(f.hint)}</small>` : "";
+  if (f.type === "bool") {
+    return `<label class="compose-row" for="${id}">
+      <input type="checkbox" id="${id}" data-key="${f.key}" data-type="bool" ${v ? "checked" : ""}>
+      <span>${escapeHtml(f.label)}</span>${hint}</label>`;
+  }
+  if (f.type === "presence") {
+    return `<label class="compose-row" for="${id}">
+      <input type="checkbox" id="${id}" data-key="${f.key}" data-type="presence"
+        data-present="${escapeHtml(f.present)}" ${v ? "checked" : ""}>
+      <span>${escapeHtml(f.label)}</span>${hint}</label>`;
+  }
+  if (f.type === "select") {
+    const opts = f.options.map((o) =>
+      `<option value="${escapeHtml(o)}"${o === v ? " selected" : ""}>${escapeHtml(o)}</option>`).join("");
+    return `<label class="compose-row compose-wide" for="${id}"><span>${escapeHtml(f.label)}</span>
+      <select id="${id}" data-key="${f.key}" data-type="text">${opts}</select>${hint}</label>`;
+  }
+  if (f.type === "number") {
+    return `<label class="compose-row compose-wide" for="${id}"><span>${escapeHtml(f.label)}</span>
+      <input type="number" id="${id}" data-key="${f.key}" data-type="number"
+        min="${f.min}" max="${f.max}" value="${Number(v)}">${hint}</label>`;
+  }
+  return `<label class="compose-row compose-wide" for="${id}"><span>${escapeHtml(f.label)}</span>
+    <input type="text" id="${id}" data-key="${f.key}" data-type="text" value="${escapeHtml(v)}">${hint}</label>`;
+}
+
+function renderComposer() {
+  const host = document.querySelector("#compose-grid");
+  if (!host) return;
+  host.innerHTML = FIELDS.map((g) =>
+    `<fieldset class="compose-group"><legend>${escapeHtml(g.group)}</legend>
+      ${g.items.map(composerControl).join("")}</fieldset>`).join("");
+}
+
+function readComposer() {
+  for (const el of document.querySelectorAll("#compose-grid [data-key]")) {
+    const key = el.dataset.key;
+    if (el.dataset.type === "bool") composed[key] = el.checked;
+    else if (el.dataset.type === "presence") composed[key] = el.checked ? el.dataset.present : "";
+    else if (el.dataset.type === "number") composed[key] = Number(el.value);
+    else composed[key] = el.value;
+  }
+}
+
+async function runComposed() {
+  const out = document.querySelector("#compose-result");
+  const btn = document.querySelector("#compose-run");
+  if (!liveEncounterId) {
+    out.hidden = false;
+    out.className = "attack-result review";
+    out.innerHTML = `<p>Run the safety check first — that opens the synthetic encounter this evaluates.</p>`;
+    return;
+  }
+  readComposer();
+  btn.disabled = true;
+  out.hidden = false;
+  out.className = "attack-result";
+  out.innerHTML = `<p class="muted">Sending your evidence to the Gate on Xano…</p>`;
+  try {
+    const verdict = await remediateAndEvaluate(composed, "Composed by a judge");
+    const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
+    const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT — this encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD — a person has to decide."
+      : "CLEAR — every check passed on your evidence.";
+    out.className = `attack-result ${cls}`;
+    out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
+      <h3>${escapeHtml(headline)}</h3>
+      <p class="muted">Your evidence set, evaluated by the same Gate the rest of this page uses.</p>
+      ${failed.length ? findingsTable({ findings: failed })
+        : `<p>All seven checks passed. Nothing here says the procedure is safe or lawful — only that the evidence to proceed was on file.</p>`}
+      <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code></p>`;
+    await renderAudit(liveEncounterId);
+  } catch (error) {
+    out.className = "attack-result review";
+    out.innerHTML = `<p class="console-error">${escapeHtml(error.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function resetComposer() {
+  composed = composerState();
+  renderComposer();
+  const out = document.querySelector("#compose-result");
+  if (out) out.hidden = true;
 }
 
 function renderAttackGrid() {
@@ -351,6 +518,8 @@ attackReset?.addEventListener("click", async () => {
 
 // `i` buttons: click to open, Esc to close, focus returns to the trigger.
 document.addEventListener("click", (event) => {
+  if (event.target.closest("#compose-run")) { runComposed(); return; }
+  if (event.target.closest("#compose-reset")) { resetComposer(); return; }
   const btn = event.target.closest(".info-btn");
   if (!btn) return;
   const pop = document.getElementById(btn.getAttribute("aria-controls"));
@@ -381,6 +550,12 @@ if (density) {
 
 renderEncounters([{ id: "new synthetic encounter", patient_display_name: "Synthetic patient", state: "READY TO RUN" }]);
 renderAttackGrid();
+renderComposer();   // the composer shares CLEARED, so build it alongside the attacks
+// Rebuild on open so the controls always reflect the current evidence set rather than
+// whatever the last run left behind.
+document.querySelector("#compose")?.addEventListener("toggle", (e) => {
+  if (e.target.open) renderComposer();
+});
 loadStatic().catch(() => {});
 
 

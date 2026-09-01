@@ -107,12 +107,45 @@ async def run(base: str) -> None:
             hit = {c for c in expected if c in state["text"]}
             check(bool(hit), f"{label} -> cites {' or '.join(sorted(expected))}")
 
-        reset = page.locator("button", has_text="Reset").first
+        reset = page.locator("#attack-reset")
         await reset.scroll_into_view_if_needed()
         await reset.click()
         await page.wait_for_timeout(10000)
         rt = await page.evaluate("() => document.querySelector('#attack-result').innerText")
         check("CLEAR" in rt, "Reset returns CLEAR")
+
+        # A CLEAR verdict advances the encounter out of REMEDIATION, and the state
+        # machine refuses further evidence edits. Attacking after a Reset used to show
+        # the stale CLEAR while an error appeared elsewhere — a judge seeing a success
+        # that did not happen. The client now opens a fresh encounter and retries.
+        again = page.locator(".attack-btn").nth(1)
+        await again.scroll_into_view_if_needed()
+        await again.click()
+        await page.wait_for_timeout(10000)
+        after = await page.evaluate("""() => {
+            const r = document.querySelector('#attack-result');
+            const err = document.querySelector('#console-error, .console-error');
+            return { text: r.innerText, error: err && !err.hidden ? err.innerText.slice(0, 120) : null }; }""")
+        check("TIME OUT" in after["text"], "an attack still refuses after a Reset")
+        check(after["error"] is None, "no error surfaces after a Reset")
+
+        # The composer hands the whole evidence set over; it must survive the same path.
+        summary = page.locator("#compose > summary")
+        if await summary.count():
+            await summary.scroll_into_view_if_needed()
+            await summary.click()
+            await page.wait_for_timeout(900)
+            n_controls = await page.evaluate("() => document.querySelectorAll('#compose-grid [data-key]').length")
+            check(n_controls >= 15, f"composer renders its controls ({n_controls})")
+            await page.locator("#c-delegation_agreement_id").uncheck()
+            run_btn = page.locator("#compose-run")
+            await run_btn.scroll_into_view_if_needed()
+            await run_btn.click()
+            await page.wait_for_timeout(11000)
+            composed = await page.evaluate("() => document.querySelector('#compose-result').innerText")
+            check("TIME OUT" in composed, "composed evidence without delegation is refused")
+        else:
+            check(False, "composer present")
 
         # ---- receipt: the signed attestation and both sponsors' proof ----------
         print("\n/receipt.html")

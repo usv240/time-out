@@ -467,3 +467,30 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 .assumption-list .src code{ font-size: var(--step--3); }
 .limit-list{ display: grid; gap: 12px; margin: 20px 0 0; padding-left: 1.15rem; max-width: 76ch; }
 .limit-list li{ color: var(--ink-2); line-height: 1.6; }
+
+/* ---- compose your own encounter ---- */
+.compose{ margin-top: 20px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+.compose > summary{ display: grid; gap: 2px; padding: 14px 16px; cursor: pointer; list-style: none; }
+.compose > summary::-webkit-details-marker{ display: none; }
+.compose-summary-title{ font-weight: 650; font-size: var(--step-0); }
+.compose-summary-title::before{ content: "+ "; color: var(--accent); }
+.compose[open] .compose-summary-title::before{ content: "\2212 "; }
+.compose-summary-hint{ color: var(--ink-3); font-size: var(--step--1); }
+.compose > summary:hover{ background: var(--surface-sunk); }
+.compose > summary:focus-visible{ outline: 2px solid var(--accent); outline-offset: -2px; }
+.compose-body{ padding: 0 16px 16px; }
+.compose-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 16px; margin: 16px 0; }
+.compose-group{ margin: 0; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 8px; }
+.compose-group legend{ padding: 0 6px; color: var(--accent-ink); font-family: var(--f-mono);
+  font-size: var(--step--3); letter-spacing: .08em; text-transform: uppercase; }
+.compose-row{ display: flex; align-items: center; gap: 8px; min-height: 32px;
+  font-size: var(--step--1); color: var(--ink-2); cursor: pointer; flex-wrap: wrap; }
+.compose-row.compose-wide{ display: grid; gap: 4px; align-items: start; }
+.compose-row input[type="checkbox"]{ width: 17px; height: 17px; accent-color: var(--accent); flex: none; }
+.compose-row select, .compose-row input[type="text"], .compose-row input[type="number"]{
+  width: 100%; min-height: 34px; padding: 4px 8px; border: 1px solid var(--rule);
+  border-radius: 5px; background: var(--bg); color: var(--ink); font: inherit;
+  font-size: var(--step--1); }
+.compose-hint{ flex-basis: 100%; color: var(--ink-3); font-size: var(--step--2); line-height: 1.45; }
+.compose-actions{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
