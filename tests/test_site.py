@@ -181,3 +181,33 @@ def test_no_em_dashes_in_anything_we_ship() -> None:
         if "\u2014" in text or "&mdash;" in text:
             offenders.append(path.name)
     assert not offenders, f"em dashes are back in: {sorted(offenders)}"
+
+
+def test_the_jargon_a_non_expert_meets_is_defined_somewhere() -> None:
+    """Someone with no clinical or legal background has to be able to follow this.
+
+    BLS appeared twelve times across the site and was never once expanded. The glossary
+    marks the first occurrence of each term on each page; this asserts the terms that
+    actually appear in the copy have a definition to attach.
+    """
+    import re
+    site = ROOT / "before" / "site"
+    glossary = (site / "glossary.js").read_text(encoding="utf-8")
+    defined = {t.lower() for t in re.findall(r'^\s*"([^"]+)":', glossary, re.M)}
+
+    prose = " ".join(p.read_text(encoding="utf-8") for p in site.glob("*.html"))
+    prose = re.sub(r"<script.*?</script>", " ", prose, flags=re.S)
+
+    must_define = ["BLS", "teach-back", "delegation", "attestation",
+                   "neurotoxin", "aesthetician", "Medical Director"]
+    missing = [t for t in must_define
+               if re.search(rf"\b{re.escape(t)}\b", prose, re.I) and t.lower() not in defined]
+    assert not missing, f"terms used in the copy with no plain-English definition: {missing}"
+
+
+def test_every_page_loads_the_glossary() -> None:
+    """A definition that only exists on one page is not much use on the others."""
+    site = ROOT / "before" / "site"
+    missing = [p.name for p in sorted(site.glob("*.html"))
+               if "glossary.js" not in p.read_text(encoding="utf-8")]
+    assert not missing, f"pages with no glossary: {missing}"

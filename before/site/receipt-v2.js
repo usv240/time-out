@@ -278,7 +278,11 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-loadReceipt();
+loadReceipt().then(() => {
+  // The receipt body is built from JSON after load, so the glossary has to run again
+  // once it exists. Without this the patient's own page defined nothing.
+  window.dispatchEvent(new CustomEvent("timeout:rendered"));
+});
 
 // The `i` buttons opened on click only, which meant a judge had to guess they were
 // interactive. Hover and keyboard focus now open them too. Click still toggles, so

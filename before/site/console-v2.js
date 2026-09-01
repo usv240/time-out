@@ -280,6 +280,8 @@ function renderTimeline(items, liveIndexes = new Set([0])) {
       + `<details class="step-evidence"${open}><summary>Evidence</summary><div class="step-evidence-body">${evidence}</div></details>`;
     timeline.append(row);
   });
+  // Newly rendered results carry the same jargon, so define it there too.
+  window.dispatchEvent(new CustomEvent("timeout:rendered"));
 }
 
 async function renderAudit(encounterId) {
