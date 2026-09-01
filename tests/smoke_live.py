@@ -252,6 +252,21 @@ async def run(base: str) -> None:
         for g in gaps:
             print(f"        {g}")
 
+        # The tip that explains the dotted underlines has to be where it is read.
+        buried = []
+        for p in ["/", "/try.html", "/receipt.html", "/how-it-works.html",
+                  "/assumptions.html", "/api.html", "/evidence.html"]:
+            await page.goto(base + p, wait_until="networkidle", timeout=90000)
+            await page.wait_for_timeout(2200)
+            y = await page.evaluate(
+                """() => { const h = document.querySelector('.glossary-hint');
+                     return h ? Math.round(h.getBoundingClientRect().top + scrollY) : -1; }""")
+            if y < 0 or y > 950:
+                buried.append(f"{p}: {'absent' if y < 0 else str(y) + 'px down'}")
+        check(not buried, f"glossary tip is in the first screen on every page ({len(buried)} not)")
+        for entry in buried:
+            print(f"        {entry}")
+
         await page.goto(base + "/", wait_until="networkidle", timeout=90000)
         await page.wait_for_timeout(1500)
         collided = False

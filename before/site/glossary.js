@@ -102,9 +102,21 @@ function offerHint() {
     'Hover over one, or tap it on a phone.</span>' +
     '<button type="button" class="glossary-hint-x" aria-label="Dismiss this tip">Got it</button>';
 
-  const hero = document.querySelector(".page-hero, .receipt-header, main > section, main");
-  (hero && hero.parentNode ? hero.parentNode : document.body)
-    .insertBefore(hint, hero ? hero.nextSibling : null);
+  // Anchor it to the end of the opening paragraphs. A comma-list querySelector returns
+  // whichever match comes first in the document, which on the home page put this after
+  // a section 7,600px tall: present, correct, and 7,600px below anyone who needed it.
+  // Priority order, one query each. A comma list returns whichever match comes first in
+  // the document, and <main> is an ancestor of every candidate, so it always won: the
+  // hint then anchored to the last .lead on the whole page, 6,254px down the home page.
+  // ":not(.next-step)" because nav-guide.js appends its own <section> at the foot of the
+  // page and runs first: on the receipt, whose body renders late, that was the only
+  // main > section by the time this ran, and the hint landed 3,367px down inside it.
+  const opening = document.querySelector("main > section:not(.next-step)")
+               || document.querySelector("main > div")
+               || document.querySelector("main");
+  const leads = opening ? opening.querySelectorAll(".lead, .receipt-intro") : [];
+  if (leads.length) leads[leads.length - 1].after(hint);
+  else (opening || document.body).prepend(hint);
 
   hint.querySelector(".glossary-hint-x").addEventListener("click", () => {
     hint.remove();
