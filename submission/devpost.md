@@ -95,8 +95,8 @@ We'd rather you trust the parts that work. It does not determine legality — it
 
 ### Where it stands
 
-Six of seven sponsor integrations run live against real APIs, with responses cached so the demo never depends on a third party answering at the moment a judge clicks. Doctavian's generation is blocked on the demo account's Google Drive delivery — we declined to grant a third party full Drive access for a hackathon build, and we've asked for an internal-storage option. Everything upstream of that call is live.
+All seven sponsor integrations run live against real APIs, with responses cached so the demo never depends on a third party answering at the moment a judge clicks. Doctavian was the hard one: generation returned TEMPLATE_READ_FAILED until we found the payload needs a root `data` wrapper the docs don't show. The generated consent PDF is committed and viewable on /try.
 
-One person, ten build days, Claude Code and Codex, sixty tests, CI green, public repo.
+One person, ten build days, Claude Code and Codex, ninety-four tests, CI green, public repo.
 
 **Repo:** https://github.com/usv240/time-out
