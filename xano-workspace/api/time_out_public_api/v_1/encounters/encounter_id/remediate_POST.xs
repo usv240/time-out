@@ -44,6 +44,41 @@ query "v1/encounters/{encounter_id}/remediate" verb=POST {
   }
 
   stack {
+    // Refuse anything that looks like real personal data before it reaches storage.
+    // This endpoint is public with no key and the site invites judges to send their own
+    // evidence, so the boundary is enforced here rather than only in the local dev
+    // server where it first lived.
+    //
+    // XanoScript has no regex, so the test is deliberately blunt and per-field: an "@"
+    // anywhere, or nine or more digits inside a single field. Nine is the smallest thing
+    // worth catching (an SSN); a phone number is ten. Counting across all fields together
+    // does not work — the legitimate synthetic identifiers already carry ten between them,
+    // which is exactly the false positive that caught the first version of this guard.
+    var $all_text {
+      value = ($input.actor ?? "") ~ " " ~ ($input.delegation_agreement_id ?? "") ~ " " ~ ($input.protocol_id ?? "") ~ " " ~ ($input.product_lot_no ?? "") ~ " " ~ ($input.credential_type ?? "")
+    }
+
+    var $actor_digits {
+      value = (($input.actor ?? "")|strlen) - ((($input.actor ?? "")|replace:"0":""|replace:"1":""|replace:"2":""|replace:"3":""|replace:"4":""|replace:"5":""|replace:"6":""|replace:"7":""|replace:"8":""|replace:"9":"")|strlen)
+    }
+
+    var $deleg_digits {
+      value = (($input.delegation_agreement_id ?? "")|strlen) - ((($input.delegation_agreement_id ?? "")|replace:"0":""|replace:"1":""|replace:"2":""|replace:"3":""|replace:"4":""|replace:"5":""|replace:"6":""|replace:"7":""|replace:"8":""|replace:"9":"")|strlen)
+    }
+
+    var $protocol_digits {
+      value = (($input.protocol_id ?? "")|strlen) - ((($input.protocol_id ?? "")|replace:"0":""|replace:"1":""|replace:"2":""|replace:"3":""|replace:"4":""|replace:"5":""|replace:"6":""|replace:"7":""|replace:"8":""|replace:"9":"")|strlen)
+    }
+
+    var $lot_digits {
+      value = (($input.product_lot_no ?? "")|strlen) - ((($input.product_lot_no ?? "")|replace:"0":""|replace:"1":""|replace:"2":""|replace:"3":""|replace:"4":""|replace:"5":""|replace:"6":""|replace:"7":""|replace:"8":""|replace:"9":"")|strlen)
+    }
+
+    precondition (!($all_text|contains:"@") && $actor_digits < 9 && $deleg_digits < 9 && $protocol_digits < 9 && $lot_digits < 9) {
+      error_type = "inputerror"
+      error = "This looks like real personal data. Every encounter here is synthetic: send invented identifiers only, with no email addresses, phone numbers or national identifiers."
+    }
+
     db.get encounter {
       field_name = "public_id"
       field_value = $input.encounter_id

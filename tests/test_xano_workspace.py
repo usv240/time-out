@@ -112,3 +112,23 @@ def test_gate_treats_a_null_delegation_id_as_absent_not_present() -> None:
                 assert f"authority_evidence.{field} != null" in line, (
                     f"{field} is compared without a null guard on: {line.strip()[:110]}"
                 )
+
+
+def test_public_remediate_refuses_phi_shaped_input() -> None:
+    """The site tells judges to send their own evidence, so the guard must be server-side.
+
+    It originally lived only in the local dev server while /assumptions claimed PHI was
+    "rejected before it reaches storage" — and the deployed API accepted an email and a
+    phone number and wrote them to the audit log.
+
+    The per-field threshold matters: counting digits across all fields together rejects
+    the legitimate synthetic identifiers, which already carry ten between them.
+    """
+    src = (WORKSPACE / "api" / "time_out_public_api" / "v_1" / "encounters"
+           / "encounter_id" / "remediate_POST.xs").read_text(encoding="utf-8")
+    assert 'contains:"@"' in src, "no email check on the public remediate endpoint"
+    for field in ("actor_digits", "deleg_digits", "protocol_digits", "lot_digits"):
+        assert f"${field} < 9" in src, f"no per-field digit guard for {field}"
+    guard = src.index("precondition (!($all_text|contains")
+    body = src.index("db.get encounter {")
+    assert guard < body, "the PHI guard must run before anything is read or written"

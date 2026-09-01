@@ -319,7 +319,11 @@ async function remediateAndEvaluate(patch, label) {
     await openSyntheticEncounter();
     encounterSpent = false;
   }
-  const body = { ...CLEARED, ...patch, encounter_id: liveEncounterId, actor: `Judge: ${label}` };
+  // The caller's own actor is preserved when they supplied one, so a pasted value
+  // reaches the server's PHI guard instead of being quietly overwritten by ours —
+  // otherwise pasting an email returned CLEAR and looked accepted.
+  const actor = patch.actor ? `Judge: ${patch.actor}` : `Judge: ${label}`;
+  const body = { ...CLEARED, ...patch, encounter_id: liveEncounterId, actor };
   const r = await fetch(`${V1}/encounters/${encodeURIComponent(liveEncounterId)}/remediate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!r.ok) throw new Error((await r.json()).message || "remediate failed");
   const e = await fetch(`${V1}/encounters/${encodeURIComponent(liveEncounterId)}/evaluate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ encounter_id: liveEncounterId }) });
@@ -490,6 +494,79 @@ function resetComposer() {
   if (out) out.hidden = true;
 }
 
+// ---- paste your own evidence ------------------------------------------------
+// A judge can download an evidence set, edit it anywhere, and send it back. Unknown
+// keys are dropped rather than forwarded, so a stray field cannot become a stored
+// value. The server refuses anything PHI-shaped and this shows that refusal rather
+// than hiding it — the boundary is the feature.
+const ALLOWED_KEYS = new Set(Object.keys(CLEARED));
+
+function fillPaste() {
+  const el = document.querySelector("#paste-json");
+  if (el) el.value = JSON.stringify(composerState(), null, 2);
+}
+
+async function runPasted() {
+  const el = document.querySelector("#paste-json");
+  const out = document.querySelector("#paste-result");
+  const btn = document.querySelector("#paste-run");
+  out.hidden = false;
+
+  let parsed;
+  try {
+    parsed = JSON.parse(el.value || "{}");
+  } catch (error) {
+    out.className = "attack-result review";
+    out.innerHTML = `<p class="console-error">That is not valid JSON: ${escapeHtml(error.message)}</p>`;
+    return;
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    out.className = "attack-result review";
+    out.innerHTML = `<p class="console-error">Send a JSON object of evidence fields.</p>`;
+    return;
+  }
+
+  const patch = {};
+  const dropped = [];
+  for (const [k, v] of Object.entries(parsed)) {
+    if (ALLOWED_KEYS.has(k)) patch[k] = v;
+    else if (!k.startsWith("_") && k !== "encounter_id") dropped.push(k);
+  }
+
+  btn.disabled = true;
+  out.className = "attack-result";
+  out.innerHTML = `<p class="muted">Sending to the Gate on Xano…</p>`;
+  try {
+    const verdict = await remediateAndEvaluate(patch, "Pasted by a judge");
+    const failed = (verdict.findings || []).filter((f) => f.status !== "PASS");
+    const cls = verdict.verdict === "CLEAR" ? "clear" : verdict.verdict === "REVIEW" ? "review" : "blocked";
+    const headline = verdict.verdict === "BLOCKED" ? "TIME OUT — this encounter cannot proceed."
+      : verdict.verdict === "REVIEW" ? "HOLD — a person has to decide."
+      : "CLEAR — every check passed on your JSON.";
+    out.className = `attack-result ${cls}`;
+    out.innerHTML = `<div class="attack-head"><span class="status-pill ${cls}">${escapeHtml(verdict.verdict)}</span> ${badge("live")}</div>
+      <h3>${escapeHtml(headline)}</h3>
+      ${dropped.length ? `<p class="muted">Ignored ${dropped.length} key${dropped.length > 1 ? "s" : ""} the Gate does not read: <code>${escapeHtml(dropped.slice(0, 6).join(", "))}</code></p>` : ""}
+      ${failed.length ? findingsTable({ findings: failed })
+        : `<p>All seven checks passed on the evidence you sent.</p>`}
+      <p class="muted">Rule snapshot <code>${escapeHtml((verdict.rule_snapshot_sha256 || "").slice(0, 16))}…</code></p>`;
+    await renderAudit(liveEncounterId);
+  } catch (error) {
+    // A PHI refusal is the product working. Say so plainly instead of showing a stack.
+    const phi = /personal data/i.test(error.message || "");
+    out.className = `attack-result ${phi ? "blocked" : "review"}`;
+    out.innerHTML = phi
+      ? `<div class="attack-head"><span class="status-pill blocked">REFUSED</span> ${badge("live")}</div>
+         <h3>The API refused your data.</h3>
+         <p>${escapeHtml(error.message)}</p>
+         <p class="muted">That refusal is the point. This system is synthetic by construction, and the
+           public endpoint enforces it rather than trusting the caller.</p>`
+      : `<p class="console-error">${escapeHtml(error.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function renderAttackGrid() {
   attackGrid.replaceChildren();
   for (const attack of ATTACKS) {
@@ -518,6 +595,8 @@ attackReset?.addEventListener("click", async () => {
 
 // `i` buttons: click to open, Esc to close, focus returns to the trigger.
 document.addEventListener("click", (event) => {
+  if (event.target.closest("#paste-run")) { runPasted(); return; }
+  if (event.target.closest("#paste-fill")) { fillPaste(); return; }
   if (event.target.closest("#compose-run")) { runComposed(); return; }
   if (event.target.closest("#compose-reset")) { resetComposer(); return; }
   const btn = event.target.closest(".info-btn");
@@ -550,7 +629,8 @@ if (density) {
 
 renderEncounters([{ id: "new synthetic encounter", patient_display_name: "Synthetic patient", state: "READY TO RUN" }]);
 renderAttackGrid();
-renderComposer();   // the composer shares CLEARED, so build it alongside the attacks
+renderComposer();
+fillPaste();        // the composer shares CLEARED, so build it alongside the attacks
 // Rebuild on open so the controls always reflect the current evidence set rather than
 // whatever the last run left behind.
 document.querySelector("#compose")?.addEventListener("toggle", (e) => {
