@@ -82,9 +82,34 @@ function defineTerms(root = document.querySelector("main")) {
   }
 }
 
+// A dotted underline only helps if the reader knows to try it. Say so once, at the top
+// of the page, and remember that they have been told.
+const HINT_KEY = "timeout-glossary-hint";
+function offerHint() {
+  if (document.querySelector(".glossary-hint")) return;
+  if (!document.querySelector(".term")) return;
+  try { if (localStorage.getItem(HINT_KEY) === "seen") return; } catch { /* private mode */ }
+
+  const hint = document.createElement("aside");
+  hint.className = "glossary-hint";
+  hint.innerHTML = '<span><strong>New to this?</strong> Words with a dotted underline, ' +
+    'like <span class="term-sample">this</span>, have a plain-English definition. ' +
+    'Hover over one, or tap it on a phone.</span>' +
+    '<button type="button" class="glossary-hint-x" aria-label="Dismiss this tip">Got it</button>';
+
+  const hero = document.querySelector(".page-hero, .receipt-header, main > section, main");
+  (hero && hero.parentNode ? hero.parentNode : document.body)
+    .insertBefore(hint, hero ? hero.nextSibling : null);
+
+  hint.querySelector(".glossary-hint-x").addEventListener("click", () => {
+    hint.remove();
+    try { localStorage.setItem(HINT_KEY, "seen"); } catch { /* nothing to do */ }
+  });
+}
+
 // Re-run when the console renders its results, so live output gets definitions too.
-document.addEventListener("DOMContentLoaded", () => defineTerms());
-window.addEventListener("timeout:rendered", () => defineTerms());
+document.addEventListener("DOMContentLoaded", () => { defineTerms(); offerHint(); });
+window.addEventListener("timeout:rendered", () => { defineTerms(); offerHint(); });
 
 // A phone has no hover, so a tap opens the definition and a tap elsewhere closes it.
 document.addEventListener("click", (e) => {
