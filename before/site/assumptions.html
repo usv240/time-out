@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Every assumption Time-Out makes, every case it handles, and what happens when each one fails, each pinned by a named test in the public repository.">
     <meta name="color-scheme" content="light dark">
-    Assumptions and edge cases · Time-Out
+    <title>Assumptions and edge cases · Time-Out</title>
     <script>
       (() => {
         const saved = localStorage.getItem("before-theme");
@@ -23,7 +23,7 @@
       <section class="page-hero">
         <p class="eyebrow">Assumptions and edge cases</p>
         <h1>No clinic has used this yet. Here is everything we thought about instead.</h1>
-        <p class="lead">We can&rsquo;t show you customers. What we can show you is every assumption this design rests on, every case the Gate actually handles, and what happens when each one fails, with the named test that pins it. <strong>93 tests, all of them in the public repository.</strong> If a claim on this page ever stops being true, a test goes red.</p>
+        <p class="lead">We can&rsquo;t show you customers. What we can show you is every assumption this design rests on, every case the Gate actually handles, and what happens when each one fails, with the named test that pins it. <strong>94 tests, all of them in the public repository.</strong> If a claim on this page ever stops being true, a test goes red.</p>
         <p class="muted">Nothing below is aspirational. Anything we have not built says so.</p>
       </section>
 
@@ -126,7 +126,7 @@
           <li><strong>Sandbox DNS does not resolve publicly</strong>, and a TXT record stays mutable by whoever owns the domain. Giving the clinic its own domain removes us from the trust path; it does not make the record notarised.</li>
           <li><strong>Every clinic, patient, face, licence, lot and document here is synthetic.</strong> That is a deliberate constraint, and it is also a limit on what this demonstrates.</li>
         </ul>
-        <p class="muted">Each of the seven checks, the state machine, the audit trail and the receipt are pinned by the 93 tests in <a href="https://github.com/usv240/time-out" target="_blank" rel="noopener">the public repository</a>. Run <code>python -m pytest tests -q</code> from a clean clone with the network disabled and you get the same receipt hash we do.</p>
+        <p class="muted">Each of the seven checks, the state machine, the audit trail and the receipt are pinned by the 94 tests in <a href="https://github.com/usv240/time-out" target="_blank" rel="noopener">the public repository</a>. Run <code>python -m pytest tests -q</code> from a clean clone with the network disabled and you get the same receipt hash we do.</p>
         </div>
       </section>
     </main>

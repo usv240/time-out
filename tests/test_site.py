@@ -320,3 +320,24 @@ def test_the_hero_rail_cannot_float_over_the_verdict() -> None:
             if ".hero-stats{" in line.replace(" ", "") and "grid-column" in line]
     assert rule, "the .hero-stats grid rule moved; re-check this"
     assert "sticky" not in rule[0], f"the hero rail is sticky again: {rule[0].strip()}"
+
+
+def test_every_page_has_a_title_tag() -> None:
+    """The em dash pass rewrote "<title>A - B</title>" to "A · B" and took the tags
+    with the dash. All seven pages then had no title at all: the browser treats stray
+    text in <head> as the start of <body>, so it rendered as copy in the top-left
+    corner, and every tab, bookmark and link preview showed the bare URL instead.
+    """
+    import re
+    for page in sorted((ROOT / "before" / "site").glob("*.html")):
+        html = page.read_text(encoding="utf-8")
+        head = html[: html.find("</head>")]
+        titles = re.findall(r"<title>(.*?)</title>", head, re.S)
+        assert len(titles) == 1, f"{page.name} has {len(titles)} titles in <head>"
+        assert titles[0].strip(), f"{page.name} has an empty title"
+
+        # Nothing else may sit loose in <head>: that is what put text on the page.
+        inert = re.sub(r"<script.*?</script>|<style.*?</style>|<title>.*?</title>",
+                       " ", head, flags=re.S)
+        stray = [t.strip() for t in re.split(r"<[^>]+>", inert) if t.strip()]
+        assert not stray, f"{page.name} has bare text in <head>, it will render: {stray}"
