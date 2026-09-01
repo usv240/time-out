@@ -154,6 +154,12 @@ def test_claimed_test_counts_match_reality() -> None:
     assert claimed == {actual}, (
         f"assumptions.html claims {sorted(claimed)} tests; {actual} are defined")
 
+    # The README said 87 in three places and 94 in a fourth, all on the same page.
+    # A judge who spots two different numbers stops believing the rest of them.
+    readme = (root / "README.md").read_text(encoding="utf-8")
+    stated = {int(n) for n in re.findall(r"(\d+) (?:checks, offline|offline checks)", readme)}
+    assert stated == {actual}, f"README claims {sorted(stated)} offline checks; {actual} exist"
+
 
 def test_every_artifact_can_be_viewed_without_downloading() -> None:
     """A download-only link is a dead end for most people.

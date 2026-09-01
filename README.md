@@ -151,7 +151,7 @@ git clone https://github.com/usv240/time-out.git && cd time-out
 python -m pip install -r requirements.txt
 python -m before.seed         # write the synthetic cache
 python -m before.verify       # run the whole hero path offline, print the receipt
-python -m pytest tests -q     # 87 checks, offline
+python -m pytest tests -q     # 94 checks, offline
 ```
 
 Everything above is offline. One more suite drives the **deployed** site in a real
@@ -160,7 +160,7 @@ reproducibility check, and layout at phone and desktop widths:
 
 ```bash
 python -m playwright install chromium
-python -m tests.smoke_live                    # 45 checks against production
+python -m tests.smoke_live                    # 48 checks against production
 ```
 
 It exists because the offline suite cannot see a transport-layer rejection between
@@ -233,7 +233,7 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 | Nutrient · SerpApi · name.com · Perfect Corp | ✅ Live calls verified, responses cached for offline replay |
 | Foxit | ✅ Agent live end to end: prompt → MCP assembly → pause → human eSign, **signed** (envelope 35611080, EXECUTED) → outcome read back GET-only. Two MCP field-mapping bugs documented and routed via REST |
 | Doctavian | ⚠️ Auth, data source, solution, template + data upload live. Generation blocked on the demo account's Google Drive delivery — we declined to grant full Drive access. Resolution requested from Doctavian. |
-| Tests | ✅ 87 offline + 45 live-browser smoke checks · CI green |
+| Tests | ✅ 94 offline + 48 live-browser smoke checks · CI green |
 
 ---
 
