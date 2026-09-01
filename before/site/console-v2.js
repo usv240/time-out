@@ -222,7 +222,17 @@ function renderTimeline(items, liveIndexes = new Set([0])) {
     else if (item.step === "foxit_pause") specialized = foxitProof();
     else if (item.result?.findings) specialized = findingsTable(item.result);
     const detail = escapeHtml(JSON.stringify(item.result, null, 2));
-    row.innerHTML = `<span class="timeline-index">${index + 1}</span><div><h3>${escapeHtml(title)} ${info(item.step)}</h3><p>${escapeHtml(description)}</p>${badge(liveIndexes.has(index) ? "live" : "cached")}</div><span class="status-pill ${className}">${pill}</span>${specialized}<details class="machine-evidence"><summary>Machine evidence</summary><pre class="timeline-detail">${detail}</pre></details>`;
+    // Fourteen steps with every table and proof block expanded ran to nine thousand
+    // pixels, and a judge had to scroll past all of it to reach the attacks. The
+    // headline of each step stays visible; the evidence opens on demand. The live
+    // step opens itself, so the page still shows real output on arrival.
+    const open = liveIndexes.has(index) ? " open" : "";
+    const evidence = `${specialized}<details class="machine-evidence"><summary>Machine evidence</summary><pre class="timeline-detail">${detail}</pre></details>`;
+    row.innerHTML = `<span class="timeline-index">${index + 1}</span>`
+      + `<div><h3>${escapeHtml(title)} ${info(item.step)}</h3><p>${escapeHtml(description)}</p>`
+      + `${badge(liveIndexes.has(index) ? "live" : "cached")}</div>`
+      + `<span class="status-pill ${className}">${pill}</span>`
+      + `<details class="step-evidence"${open}><summary>Evidence</summary><div class="step-evidence-body">${evidence}</div></details>`;
     timeline.append(row);
   });
 }

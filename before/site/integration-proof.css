@@ -1,4 +1,9 @@
-.perfect-proof, .dns-proof, .machine-evidence { grid-column: 2 / -1; }
+/* Every proof block is a child of .timeline-item, whose first track is the 40px
+   step-number column. Any block missing from this list renders 40px wide with its
+   text wrapped one word per line — which is exactly what nutrient-proof, foxit-proof
+   and dns-receipt-proof were doing. */
+.perfect-proof, .dns-proof, .machine-evidence,
+.nutrient-proof, .foxit-proof, .dns-receipt-proof { grid-column: 2 / -1; }
 .perfect-proof { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.2fr); gap: 20px; padding: 18px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface-sunk); }
 .baseline-portrait { position: relative; align-self: start; overflow: hidden; aspect-ratio: 1024 / 1214; border-radius: 6px; background: #05090b; }
 .baseline-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -32,3 +37,24 @@
   .perfect-proof, .verification-stack { grid-template-columns: 1fr; }
   .baseline-portrait { max-width: 420px; }
 }
+
+/* ---- each step's evidence, collapsed by default ----
+   The proof blocks live inside this <details> now, so it is the element that must
+   span the timeline row; the blocks inside it are laid out normally. */
+.step-evidence { grid-column: 2 / -1; margin-top: 10px; }
+.step-evidence > summary { display: inline-flex; align-items: center; gap: 8px;
+  min-height: 32px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); cursor: pointer; list-style: none;
+  font-family: var(--f-mono); font-size: var(--step--3); letter-spacing: .08em;
+  text-transform: uppercase; }
+.step-evidence > summary::-webkit-details-marker { display: none; }
+.step-evidence > summary::before { content: "+"; color: var(--accent); font-weight: 700; }
+.step-evidence[open] > summary::before { content: "\2212"; }
+.step-evidence > summary:hover { border-color: var(--accent); color: var(--accent-ink); }
+.step-evidence > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.step-evidence-body { display: grid; gap: 12px; padding-top: 12px; }
+/* Inside the collapsed body the blocks are no longer grid children of the row. */
+.step-evidence-body > .perfect-proof, .step-evidence-body > .nutrient-proof,
+.step-evidence-body > .foxit-proof, .step-evidence-body > .dns-receipt-proof,
+.step-evidence-body > .dns-proof, .step-evidence-body > .machine-evidence,
+.step-evidence-body > .findings { grid-column: auto; }

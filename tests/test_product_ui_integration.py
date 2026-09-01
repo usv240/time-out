@@ -68,3 +68,34 @@ def test_offline_hero_receipt_is_repeatable_and_txt_matches_actual_hash() -> Non
     assert baseline["vto_used"] is False
     assert baseline["image_ref"].startswith("/assets/perfectcorp/")
     assert baseline["overlay_ref"].startswith("/assets/perfectcorp/")
+
+
+def test_every_proof_block_spans_the_timeline_row() -> None:
+    """A proof block is a child of .timeline-item, whose first track is 40px wide.
+
+    Any block that does not claim `grid-column` lands in that track and renders 40px
+    wide with its text wrapped one word per line. Three of them did at once, which
+    looked like a rendering glitch rather than a missing selector.
+
+    Only blocks rendered directly inside a timeline row are checked. `.tamper-proof`
+    sits inside `.foxit-proof` and `.attestation-proof` lives on the receipt page,
+    which is not a grid — neither needs a column.
+    """
+    import re
+    from pathlib import Path
+    css = (Path(__file__).resolve().parents[1] / "before" / "site"
+           / "integration-proof.css").read_text(encoding="utf-8")
+    # Strip comments first: a comment above a rule otherwise gets absorbed into the
+    # selector text and silently swallows the class that follows it.
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+
+    spanning: set[str] = set()
+    for selector, block in re.findall(r"([^{}]+)\{([^}]*)\}", css, re.S):
+        if "grid-column" not in block:
+            continue
+        spanning |= {c.strip().lstrip(".") for c in selector.split(",")
+                     if c.strip().startswith(".")}
+
+    timeline_level = {"perfect-proof", "nutrient-proof", "foxit-proof", "dns-receipt-proof"}
+    missing = sorted(timeline_level - spanning)
+    assert not missing, f"proof blocks with no grid-column will collapse to 40px: {missing}"
