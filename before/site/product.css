@@ -364,7 +364,11 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 @media (min-width: 60rem){
   .hero{ grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); align-items: start; }
   .hero-copy{ grid-column: 1; }
-  .hero-stats{ grid-column: 2; grid-row: 1; align-self: start; position: sticky; top: 96px; }
+  /* Not sticky. The stats and the result card are both children of .hero, so a sticky
+     rail's containing block is the whole section: past ~500px of scroll it detached and
+     floated straight over the verdict card, printing "13,000" through the PASS/FAIL
+     column. Containing it to row 1 would leave nothing to stick to anyway. */
+  .hero-stats{ grid-column: 2; grid-row: 1; align-self: start; }
   .hero .evaluation, .hero .after-copy{ grid-column: 1 / -1; }
 }
 .hero-stats{ border-left: 2px solid var(--accent); padding-left: 1.15rem; }
@@ -645,4 +649,11 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
                 justify-content: center; padding: 10px 12px; }
   /* Whatever the copy does later, the menu stays inside the screen. */
   .nav-links.is-open{ max-height: calc(100vh - 88px); overflow-y: auto; }
+}
+
+/* A lone 44px circle in the corner reads as a stray artifact rather than a control:
+   the CTA that used to sit beside it is desktop-hidden by design. Smaller on a mouse,
+   full touch target on anything without hover. */
+@media (hover: hover) and (min-width: 48rem){
+  .site-header .icon-button{ min-width: 36px; min-height: 36px; }
 }

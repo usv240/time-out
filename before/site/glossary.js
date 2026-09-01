@@ -32,7 +32,12 @@ const TERMS = {
 
 // Never mark text inside these: it is either code, already interactive, or a control.
 const SKIP = new Set(["CODE", "PRE", "A", "BUTTON", "SCRIPT", "STYLE", "TEXTAREA",
-                      "OPTION", "SELECT", "SUMMARY", "H1", "TITLE"]);
+                      "OPTION", "SELECT", "SUMMARY", "TITLE",
+                      // Every heading level. A definition injected into an <h2>
+                      // becomes part of the heading text: one read "Canonical
+                      // JSON, SHA-256A fingerprint of a file. Change one char...".
+                      // The term is defined in the prose underneath anyway.
+                      "H1", "H2", "H3", "H4", "H5", "H6"]);
 
 function defineTerms(root = document.querySelector("main")) {
   if (!root) return;

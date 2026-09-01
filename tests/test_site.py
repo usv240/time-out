@@ -256,3 +256,67 @@ def test_every_page_loads_the_nav_guide() -> None:
     missing = [p.name for p in sorted(site.glob("*.html"))
                if "nav-guide.js" not in p.read_text(encoding="utf-8")]
     assert not missing, f"pages with an unexplained nav: {missing}"
+
+
+def _section_key(text: str) -> str:
+    import re
+    text = re.sub(r"<[^>]+>", "", text)
+    for entity, char in (("&rsquo;", "'"), ("\u2019", "'"), ("&amp;", "&"),
+                         ("&mdash;", "\u2014"), ("&nbsp;", " ")):
+        text = text.replace(entity, char)
+    # Mirrors key() in section-guide.js: an allow-list, because hyphens and
+    # apostrophes are part of words here ("fastest-growing", "don't").
+    text = re.sub(r"[^a-z0-9'\- ]+", " ", text.lower())
+    return re.sub(r"\s+", " ", text).strip()[:54]
+
+
+def test_every_section_says_what_it_is_and_why() -> None:
+    """A heading alone does not tell a non-expert why a section exists.
+
+    "Could this be a company" and "In the open" are meaningful only to someone who has
+    already read the argument. Keys are heading text, so a reworded heading fails here
+    instead of quietly losing its explanation.
+    """
+    import re
+    site = ROOT / "before" / "site"
+    guide = (site / "section-guide.js").read_text(encoding="utf-8")
+    described = set(re.findall(r'^\s*"([^"]+)":\s*\[', guide, re.M))
+
+    missing = []
+    for page in sorted(site.glob("*.html")):
+        html = re.sub(r"<script.*?</script>", " ",
+                      page.read_text(encoding="utf-8"), flags=re.S)
+        for m in re.finditer(r"<h2[^>]*>(.*?)</h2>", html, re.S):
+            key = _section_key(m.group(1))
+            if key and key not in described:
+                missing.append(f"{page.name}: {key!r}")
+    assert not missing, f"sections with no what/why: {missing}"
+
+
+def test_section_explanations_are_bound_exactly_once() -> None:
+    """Two handlers on one button toggle twice per click and cancel out.
+
+    app.js, console-v2.js and receipt-v2.js each already delegate .info-btn from the
+    document, so section-guide.js must stand down on the pages that load them.
+    """
+    site = ROOT / "before" / "site"
+    owns = ("app.js", "console-v2.js", "receipt-v2.js")
+    for page in sorted(site.glob("*.html")):
+        html = page.read_text(encoding="utf-8")
+        assert "section-guide.js" in html, f"{page.name} has unexplained sections"
+        loaded = [s for s in owns if f'src="/{s}' in html]
+        assert len(loaded) <= 1, f"{page.name} binds .info-btn {len(loaded)} times: {loaded}"
+
+
+def test_the_hero_rail_cannot_float_over_the_verdict() -> None:
+    """The stats rail and the verdict card are siblings inside .hero.
+
+    A sticky rail's containing block is therefore the whole section, so past roughly
+    500px of scroll it detached and printed "13,000" straight through the PASS/FAIL
+    column of the result card.
+    """
+    css = (ROOT / "before" / "site" / "product.css").read_text(encoding="utf-8")
+    rule = [line for line in css.splitlines()
+            if ".hero-stats{" in line.replace(" ", "") and "grid-column" in line]
+    assert rule, "the .hero-stats grid rule moved; re-check this"
+    assert "sticky" not in rule[0], f"the hero rail is sticky again: {rule[0].strip()}"

@@ -236,6 +236,35 @@ async def run(base: str) -> None:
                     "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"))
             check(worst <= 2, f"no horizontal scroll at {w}px ({name}), worst {worst}px")
 
+        # Every section explains itself, and the hero rail stays out of the verdict.
+        await page.set_viewport_size({"width": 1440, "height": 950})
+        gaps = []
+        for p in ["/", "/try.html", "/how-it-works.html", "/assumptions.html",
+                  "/api.html", "/evidence.html"]:
+            await page.goto(base + p, wait_until="networkidle", timeout=90000)
+            await page.wait_for_timeout(2200)
+            missing = await page.evaluate(
+                """() => [...document.querySelectorAll('main h2')]
+                     .filter(h => !h.closest('.next-step') && !h.querySelector('.info-btn'))
+                     .map(h => h.textContent.trim().slice(0, 40))""")
+            gaps += [f"{p}: {m}" for m in missing]
+        check(not gaps, f"every section has a what/why button ({len(gaps)} without)")
+        for g in gaps:
+            print(f"        {g}")
+
+        await page.goto(base + "/", wait_until="networkidle", timeout=90000)
+        await page.wait_for_timeout(1500)
+        collided = False
+        for y in (500, 900, 1400):
+            await page.evaluate(f"() => scrollTo(0, {y})")
+            await page.wait_for_timeout(250)
+            collided = collided or await page.evaluate(
+                """() => { const g = e => e.getBoundingClientRect();
+                  const s = g(document.querySelector('.hero-stats'));
+                  const v = g(document.querySelector('.evaluation'));
+                  return !(s.right <= v.x || s.x >= v.right || s.bottom <= v.y || s.y >= v.bottom); }""")
+        check(not collided, "hero stats never overlap the verdict card while scrolling")
+
         real = [e for e in dict.fromkeys(js_errors)]
         check(not real, f"no JS errors or failing API calls ({len(real)})")
         for e in real:

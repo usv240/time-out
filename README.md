@@ -247,7 +247,7 @@ shared/gate/       the deterministic seven-check evaluator (pure, no network)
 fixtures/          synthetic clinic, providers, encounters, documents, face
 xano-workspace/    the deployed Xano schema, functions, and API — as code
 research/          primary-source basis for the Texas ruleset
-tests/             90 offline checks + a live-browser smoke suite
+tests/             93 offline checks + a live-browser smoke suite
 ```
 
 The Python package is named `before/` for historical reasons; the product is Time-Out.
