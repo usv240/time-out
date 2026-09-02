@@ -207,3 +207,69 @@ patient data today, on purpose.
 
 **Repo:** https://github.com/usv240/time-out
 **Live:** https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
+
+---
+
+## Built with (paste one at a time; Devpost caps at 25)
+
+Devpost turns each of these into a tag, and sponsor judges filter by their own product
+tag, so the seven sponsor products go in first. Every entry below is something the repo
+actually calls, checked 2026-09-02.
+
+**Sponsors first (these are the ones being filtered on):**
+
+```
+xano
+nutrient
+serpapi
+perfect-corp
+name.com
+doctavian
+foxit
+```
+
+**Then the rest, in order of how much they carry:**
+
+```
+foxit-esign
+foxit-pdf-services
+model-context-protocol
+xanoscript
+python
+javascript
+webcrypto
+sha-256
+dns
+rest-api
+oauth2
+pkce
+playwright
+pytest
+reportlab
+pypdf
+github-actions
+html
+```
+
+That is exactly 25. If Devpost rejects a tag with a dot or a hyphen, try `namecom` and
+`perfectcorp`, and drop `html` before dropping anything above it.
+
+**Two worth not cutting:** `webcrypto` and `sha-256` are what back the reproducibility
+claim, and `model-context-protocol` is the one that tells a Foxit judge the agent went
+through their MCP server rather than raw HTTP.
+
+## Try it out (links)
+
+Add both. The live site first, because it is the one a judge will actually click.
+
+```
+https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
+https://github.com/usv240/time-out
+```
+
+If a third link is allowed, this one goes straight to the thing that makes the project
+look real, with no navigation needed:
+
+```
+https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io/try.html
+```
