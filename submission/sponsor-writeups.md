@@ -8,7 +8,7 @@ first sentence.
 - Live: https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
 - API: `POST https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1/encounters/demo/evaluate`
 - Repo: https://github.com/usv240/time-out
-- Video: [VIDEO URL]
+- Video: https://drive.google.com/file/d/10jUN1IkBSP1Jl0kl-NH7TquhFY5XB-Q-/view?usp=sharing
 
 **One-line pitch (use everywhere)**
 > Time-Out is the surgical time-out for cosmetic procedures: before an injection can go ahead, it checks who is performing it, what is being used, and whether the patient understood — and refuses to produce a safety record when the evidence isn't there.

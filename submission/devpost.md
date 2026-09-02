@@ -19,7 +19,12 @@ https://timeout-prod-74602b-x6g0-xqak-a8ri.n7e.xano.io
 
 ## Video demo
 
-`[VIDEO URL]` — recorded Sep 1, ≤3 minutes
+Downloadable backup (already given to Devpost under Additional info):
+https://drive.google.com/file/d/10jUN1IkBSP1Jl0kl-NH7TquhFY5XB-Q-/view?usp=sharing
+
+2:47, 19.5 MB. Inside the 1 to 3 minute overall cap and the 2 to 4 minute sponsor
+range at the same time. The Devpost "Video demo link" field itself wants a YouTube,
+Facebook, Vimeo or Youku URL, so a Drive link will not embed there.
 
 ## Built with (add each as a tag)
 
