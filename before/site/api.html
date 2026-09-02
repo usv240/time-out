@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Time-Out synthetic sandbox API documentation and playground.">
   <title>API sandbox · Time-Out</title><script>(()=>{const t=localStorage.getItem("before-theme")||"light";if(t!=="system")document.documentElement.dataset.theme=t})();</script>
-  <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=1846c09e"><link rel="stylesheet" href="/integration-proof.css?v=70682250"><script src="/api-page.js?v=1f27d763" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=b79ebf1e"><link rel="stylesheet" href="/product.css?v=1846c09e"><link rel="stylesheet" href="/integration-proof.css?v=70682250"><script src="/api-page.js?v=ad7e9428" defer></script>
 <script src="/shell.js?v=35765bf6" defer></script></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a><div class="offline-banner">Live Xano synthetic sandbox · No PHI · Texas neurotoxin only</div>
@@ -28,22 +28,47 @@
 }</code></pre></section>
         <section class="docs-card playground"><p class="eyebrow">Live playground</p><h2>Request</h2><textarea id="request-body" spellcheck="false" aria-label="JSON request body">{}</textarea><button class="button button-primary" id="send-request" type="button">Send request</button><h2 style="margin-top:24px">Response</h2><pre id="response-output" aria-live="polite"><code>Select “Send request” to call the live Xano API.</code></pre></section>
         <section class="docs-card"><p class="eyebrow">Endpoint reference</p><h2>Core encounter API</h2><div style="overflow-x:auto"><table class="endpoint-table"><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody>
-          <tr><td>POST</td><td><code>/v1/encounters/demo/evaluate</code></td><td>Run the seeded Gate.</td></tr>
+          <tr><td>POST</td><td><code>/v1/encounters/demo/evaluate</code></td><td>Run the seeded Gate.</td></tr><tr><td>POST</td><td><code>/v1/keys</code></td><td>Issue an optional caller tag. Grants nothing.</td></tr>
           <tr><td>GET</td><td><code>/v1/encounters/:id</code></td><td>State, findings, review tasks, history.</td></tr>
           <tr><td>POST</td><td><code>/v1/encounters</code></td><td>Create a synthetic encounter from a committed fixture.</td></tr>
           <tr><td>POST</td><td><code>/v1/encounters/:id/evidence</code></td><td>Replay typed Nutrient extraction.</td></tr>
           <tr><td>POST</td><td><code>/v1/encounters/:id/remediate</code></td><td>Attach documented remediation without DB editing.</td></tr>
           <tr><td>POST</td><td><code>/v1/encounters/:id/rerun</code></td><td>Rerun against the frozen snapshot.</td></tr>
-        </tbody></table></div></section>
+        </tbody></table></div></section><section class="docs-card"><p class="eyebrow">Errors</p><h2>What it does when you get it wrong.</h2>
+<p class="lead">Every row below is a real response from the deployed API, recorded by calling it. Errors come back as <code>{ code, message, payload }</code>, and <code>payload.param</code> names the offending field when there is one.</p>
+<div style="overflow-x:auto"><table class="endpoint-table"><thead><tr><th>You send</th><th>You get</th><th>Why</th></tr></thead><tbody>
+<tr><td>An encounter id that does not exist</td><td><code>404 ERROR_CODE_NOT_FOUND</code><br>&ldquo;Synthetic encounter not found.&rdquo;</td><td>Ids are opaque. Nothing leaks about whether one ever existed.</td></tr>
+<tr><td>A required field left out</td><td><code>400 ERROR_CODE_INPUT_ERROR</code><br><code>payload.param</code> names it</td><td>The Gate never runs on a partial evidence set. Missing is not the same as false.</td></tr>
+<tr><td>A field of the wrong type</td><td><code>400</code> &ldquo;Value is not a valid integer.&rdquo;</td><td>Typed inputs, checked before any database read.</td></tr>
+<tr><td>An email address, phone number or SSN in any field</td><td><code>400</code> &ldquo;This looks like real personal data.&rdquo;</td><td>Refused before storage, not after. This sandbox will not accept a real patient.</td></tr>
+<tr><td>A label longer than 64 characters</td><td><code>400</code> &ldquo;A label must be 64 characters or fewer.&rdquo;</td><td>Free text that reaches an audit log gets a ceiling.</td></tr>
+<tr><td><code>GET</code> on a <code>POST</code> route</td><td><code>404</code> &ldquo;Unable to locate request.&rdquo;</td><td>Routes are method-bound.</td></tr>
+<tr><td>A key header, a nonsense key, or no key</td><td><code>200</code> in all three cases</td><td>The tag is optional by design. It is not a credential and never becomes one.</td></tr>
+</tbody></table></div></section>
+<section class="docs-card"><p class="eyebrow">The whole lifecycle</p><h2>Blocked, fixed, cleared. Three calls.</h2>
+<p class="lead">This is the sequence the demo runs, and it works from any client with no credentials. The verdict changes because the evidence changed, not because anything was overridden.</p>
+<pre class="code-block"><code># 1. evaluate the seeded encounter
+curl -sX POST $BASE/v1/encounters/demo/evaluate   -H 'Content-Type: application/json' -d '{}'
+# -> { "verdict": "BLOCKED", "findings": [ ... 7 checks ... ] }
+
+# 2. attach the missing evidence, as a named actor
+curl -sX POST $BASE/v1/encounters/$ID/remediate   -H 'Content-Type: application/json'   -d '{"actor":"your-name","credential_type":"RN", ... }'
+# -> 200
+
+# 3. evaluate again against the same frozen ruleset
+curl -sX POST $BASE/v1/encounters/$ID/evaluate   -H 'Content-Type: application/json' -d '{}'
+# -> { "verdict": "CLEAR" }</code></pre>
+<p class="muted">Verified end to end over plain HTTP with no key, no token and no cookie. Nobody edits a database at any point: the only way to change a verdict is to attach evidence, and every attempt lands in the append-only audit log.</p></section>
+
       </div>
       <aside>
-        <section class="docs-card"><p class="eyebrow">Instant access</p><h2>No signup. No key.</h2><p>The public endpoint is hard-limited by its data model to synthetic Texas neurotoxin encounters.</p><button class="button button-primary" id="get-key" type="button">Show sandbox access</button><div class="key-output" id="key-output" aria-live="polite" hidden></div></section>
+        <section class="docs-card"><p class="eyebrow">Instant access</p><h2>No signup. No key.</h2><p>Every endpoint works with no credentials at all, and always will. You can still generate a tag if you want one: it labels your calls in the audit log so you can find them again, and it grants nothing.</p><button class="button button-primary" id="get-key" type="button">Generate a key</button><div class="key-output" id="key-output" aria-live="polite" hidden></div></section>
         <section class="docs-card"><p class="eyebrow">Safety boundaries</p><div class="boundary-box"><strong>Not for clinical use.</strong><p>Texas neurotoxin only. Returns a pre-procedure safety determination for human review, never a legal conclusion. The sandbox rejects common real-data patterns.</p></div></section>
         <section class="docs-card"><p class="eyebrow">Changelog</p><p><code>2026-08-20</code>: Complete offline reference API, signed webhook outbox, and rule-review workflow.</p></section>
         <section class="docs-card"><p class="eyebrow">Errors</p><p><code>400 INVALID_JSON</code>: correct the JSON object.</p><p><code>409 WORKFLOW_CONFLICT</code>: follow the returned remedy and retry.</p><p><code>429 RATE_LIMITED</code>: wait one minute.</p></section>
       </aside>
     </div>
   </main>
-  <script src="/glossary.js?v=7a44ea72" defer></script><script src="/nav-guide.js?v=d78a1ad2" defer></script><script src="/section-guide.js?v=b716a2fd" defer></script>
+  <script src="/glossary.js?v=7a44ea72" defer></script><script src="/nav-guide.js?v=d78a1ad2" defer></script><script src="/section-guide.js?v=2ba1d203" defer></script>
   </body>
 </html>

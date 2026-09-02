@@ -120,6 +120,14 @@ const SECTIONS = {
     "The rest of the endpoints: create an encounter, evaluate it, fix it, issue the receipt.",
     "The whole lifecycle, not only the check in the middle of it.",
   ],
+  "what it does when you get it wrong": [
+    "Every error the API can return, with the exact status and message.",
+    "How a system behaves on bad input tells you more than how it behaves on good input.",
+  ],
+  "blocked fixed cleared three calls": [
+    "The whole lifecycle as three curl commands: evaluate, attach evidence, evaluate again.",
+    "The verdict changes because the evidence changed. Nobody edits a database to make it pass.",
+  ],
   "no signup no key": [
     "Why this is open to anyone, and what that costs us.",
     "A key would make the demo unverifiable for everybody who did not stop to request one.",

@@ -16,8 +16,25 @@ async function evaluateDemo() {
 }
 document.querySelector("#run-example").addEventListener("click", evaluateDemo);
 document.querySelector("#send-request").addEventListener("click", evaluateDemo);
-document.querySelector("#get-key").addEventListener("click", () => {
+document.querySelector("#get-key").addEventListener("click", async () => {
   const target = document.querySelector("#key-output");
+  const button = document.querySelector("#get-key");
   target.hidden = false;
-  target.textContent = JSON.stringify({ access: "instant", signup: false, key_required: false, scope: "synthetic Texas neurotoxin only", endpoint: XANO_API_BASE }, null, 2);
+  target.textContent = "Issuing a tag from the live API...";
+  button.disabled = true;
+  try {
+    // A real POST. The key it returns is optional everywhere: it tags your calls in
+    // the audit log and grants nothing, which is why there is no signup behind it.
+    const response = await fetch(`${XANO_API_BASE}/v1/keys`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ label: "issued from the docs page" }),
+    });
+    const body = await response.json();
+    target.textContent = JSON.stringify(body, null, 2);
+  } catch (error) {
+    target.textContent = `Could not reach the API: ${error.message}`;
+  } finally {
+    button.disabled = false;
+  }
 });
