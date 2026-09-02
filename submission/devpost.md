@@ -87,7 +87,7 @@ The rule that shapes everything: **the software never decides what's legal, and 
 - **Perfect Corp YouCam** captures the patient's skin baseline — twelve scored concerns, overlay masks, skin age — before treatment. A record the patient keeps. A baseline and communication aid; never a diagnosis.
 - **name.com** publishes each receipt's SHA-256 as a DNS TXT record on a registered domain and reads it back through the API. Verification that doesn't require trusting us.
 - **Doctavian** holds one consent template that branches on the authority pathway, loops over cited disclosures, and calculates only the non-clinical disclosure count. Nothing uncited enters the document.
-- **Foxit** runs the assembly agent: from a plain prompt, through the official Foxit MCP server, to a watermarked three-page record — then it stops. The Medical Director's attestation is a human eSign action, and it was signed: envelope `35611080`, status EXECUTED. The agent reads the outcome back but issues only GETs, so it can never act on an envelope. We found, worked around and reported upstream three field-mapping bugs in the MCP server along the way, each with a reproduction.
+- **Foxit** runs the assembly agent: from a plain prompt, through the official Foxit MCP server, to a watermarked three-page record — then it stops. The Medical Director's attestation is a human eSign action, and it was signed: envelope `35704700`, status EXECUTED. The agent reads the outcome back but issues only GETs, so it can never act on an envelope. We found, worked around and reported upstream three field-mapping bugs in the MCP server along the way, each with a reproduction.
 
 ### What this is not
 

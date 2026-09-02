@@ -151,7 +151,7 @@ git clone https://github.com/usv240/time-out.git && cd time-out
 python -m pip install -r requirements.txt
 python -m before.seed         # write the synthetic cache
 python -m before.verify       # run the whole hero path offline, print the receipt
-python -m pytest tests -q     # 95 checks, offline
+python -m pytest tests -q     # 96 checks, offline
 ```
 
 Everything above is offline. One more suite drives the **deployed** site in a real
@@ -231,7 +231,7 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 | Gate, state machine, audit log, receipts | ✅ Live on Xano |
 | Public site + API | ✅ Live — `/try` runs the Gate live on Xano, lets you **break it yourself** (six real attacks, audited), and shows the audit log; `/receipt` is the patient's record; `/how-it-works` re-hashes a live verdict in your browser |
 | Nutrient · SerpApi · name.com · Perfect Corp | ✅ Live calls verified, responses cached for offline replay |
-| Foxit | ✅ Agent live end to end: prompt → MCP assembly → pause → human eSign, **signed** (envelope 35611080, EXECUTED) → outcome read back GET-only. Two MCP field-mapping bugs documented and routed via REST |
+| Foxit | ✅ Agent live end to end: prompt → MCP assembly → pause → human eSign, **signed** (envelope 35704700, EXECUTED) → outcome read back GET-only. Two MCP field-mapping bugs documented and routed via REST |
 | Doctavian | ⚠️ Auth, data source, solution, template + data upload live. Generation blocked on the demo account's Google Drive delivery — we declined to grant full Drive access. Resolution requested from Doctavian. |
 | Tests | ✅ 94 offline + 48 live-browser smoke checks · CI green |
 
@@ -247,7 +247,7 @@ shared/gate/       the deterministic seven-check evaluator (pure, no network)
 fixtures/          synthetic clinic, providers, encounters, documents, face
 xano-workspace/    the deployed Xano schema, functions, and API — as code
 research/          primary-source basis for the Texas ruleset
-tests/             95 offline checks + a live-browser smoke suite
+tests/             96 offline checks + a live-browser smoke suite
 ```
 
 The Python package is named `before/` for historical reasons; the product is Time-Out.

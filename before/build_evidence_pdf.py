@@ -51,7 +51,11 @@ def build(output: Path = OUTPUT) -> Path:
         Paragraph("Encounter SYN-ENC-BLOCKED-002 / Texas / neurotoxin / 20 Aug 2026", styles["Lead"]),
     ]
     summary = [
-        ["Record status", "AWAITING HUMAN ATTESTATION"],
+        # True before and after signing. "AWAITING HUMAN ATTESTATION" stopped
+        # being true the moment a Medical Director signed page 3, and eSign
+        # overlays a signature rather than rewriting the body, so the signed copy
+        # carried a first page that contradicted its own signature page.
+        ["Record status", "ASSEMBLED BY AGENT / SEE PAGE 3 FOR ATTESTATION"],
         ["Gate verdict", "CLEAR after documented remediation"],
         ["Determination scope", "Pre-procedure safety determination for human review"],
         ["Patient", "SYN-PATIENT-001 / fictional"],

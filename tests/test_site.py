@@ -373,3 +373,32 @@ def test_light_is_the_default_theme() -> None:
         assert 'localStorage.removeItem("before-theme")' not in js, (
             f"{name} removes the stored theme; an absent key now means light, so "
             f'choosing "system" would silently become light')
+
+
+def test_the_signed_record_does_not_contradict_its_own_signature() -> None:
+    """eSign overlays a signature; it does not rewrite the body.
+
+    The first page used to read "AWAITING HUMAN ATTESTATION", which stopped being true
+    the moment a Medical Director signed page 3. The wording has to hold in both
+    states, the way the page 3 block already does.
+    """
+    import re
+    from pypdf import PdfReader
+
+    artifacts = ROOT / "before" / "site" / "artifacts"
+    for name in ("time-out-safety-record.pdf", "time-out-safety-record-signed.pdf"):
+        pdf = artifacts / name
+        assert pdf.is_file(), f"{name} is missing"
+        pages = PdfReader(str(pdf)).pages
+        first = re.sub(r"\s+", " ", pages[0].extract_text() or "")
+        assert "AWAITING HUMAN ATTESTATION" not in first, (
+            f"{name} page 1 claims it is awaiting attestation")
+        assert "SEE PAGE 3 FOR ATTESTATION" in first, (
+            f"{name} page 1 does not point at the attestation page: {first[:120]}")
+
+    # Code only. The comment above that line quotes the old wording to explain why it
+    # went, and an explanation of a fix should not fail the test for the fix.
+    generator = (ROOT / "before" / "build_evidence_pdf.py").read_text(encoding="utf-8")
+    code = " ".join(line.split("#", 1)[0] for line in generator.splitlines())
+    assert '"AWAITING HUMAN ATTESTATION"' not in code, (
+        "the generator would reintroduce a status that a signature falsifies")

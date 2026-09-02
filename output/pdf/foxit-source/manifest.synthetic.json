@@ -5,11 +5,11 @@
   "contains_prohibited_identifiers": false,
   "agent_prompt": "assemble the safety record for encounter SYN-ENC-BLOCKED-002",
   "source_document": "output/pdf/synthetic-safety-evidence-record.pdf",
-  "source_document_sha256": "521bd38861a265527e58c7d2782fbd6505176db92dcd529c4c8cae694f5d9c38",
+  "source_document_sha256": "585186897621639895329d509898c65dbcd7c1db660f8db0e67681ec520752b6",
   "documents": [
     {
       "path": "output/pdf/foxit-source/01-encounter-and-boundary.pdf",
-      "sha256": "1a5ae9253fed8a07e38004e4054f640bfa1e7ec44d21339fb401d5c5de75c58b",
+      "sha256": "c416de04f9f4350cfcdc44d8ecf8010cde5d731d0cb2f796261ffa113ed71f7e",
       "pages": 1,
       "section": "Encounter summary and human-signature boundary"
     },

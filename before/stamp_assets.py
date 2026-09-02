@@ -22,7 +22,14 @@ from pathlib import Path
 SITE = Path(__file__).resolve().parents[1] / "before" / "site"
 
 # href="/product.css" or href="/product.css?v=abc1234"  /  src="./app.js"
-REF = re.compile(r'(?P<attr>href|src)="(?P<path>\.?/[^"?]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"')
+#
+# Artifacts are stamped too. They are served with the same max-age=3600, and the signed
+# safety record was re-issued once during the build: for an hour afterwards a returning
+# visitor was handed the previous PDF, with a first page that contradicted its own
+# signature page. "data-src" matches as well, which is what the artifact viewer reads.
+REF = re.compile(
+    r'(?P<attr>href|src)="(?P<path>\.?/[^"?]+\.(?:css|js|pdf|png|jpg|json))'
+    r'(?:\?v=[0-9a-f]+)?"')
 
 
 def digest(asset: Path) -> str:
