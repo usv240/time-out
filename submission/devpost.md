@@ -81,7 +81,7 @@ On `/how-it-works`, your browser fetches a live verdict, hashes the canonical ru
 
 The rule that shapes everything: **the software never decides what's legal, and no model ever does arithmetic.** Models read documents into typed fields with confidence scores. Every verdict comes from deterministic code over a cited rules table. Anything uncertain goes to a named human.
 
-- **Xano** is the entire backend — fifteen tables, the encounter state machine with guarded transitions, the Gate, an append-only audit log, the public API, and the static site — deployed from the CLI and committed as code.
+- **Xano** is the entire backend — seventeen tables, thirteen public endpoints, the encounter state machine with guarded transitions, the Gate, an append-only audit log, the public API, and the static site — deployed from the CLI and committed as code.
 - **Nutrient DWS** reads credential, intake, and product documents into typed fields with per-element confidence and page coordinates. Anything below the confidence floor routes to a named Medical Director before the encounter can advance. Redaction runs before anything leaves the vault.
 - **SerpApi** searches FDA warning letters and Texas board actions live. A hit is an alert *candidate* that reopens a ready encounter; a person confirms or dismisses it, and that decision is audited. Our first live search returned the actual April 2026 warning letter.
 - **Perfect Corp YouCam** captures the patient's skin baseline — twelve scored concerns, overlay masks, skin age — before treatment. A record the patient keeps. A baseline and communication aid; never a diagnosis.
@@ -97,6 +97,6 @@ We'd rather you trust the parts that work. It does not determine legality — it
 
 All seven sponsor integrations run live against real APIs, with responses cached so the demo never depends on a third party answering at the moment a judge clicks. Doctavian was the hard one: generation returned TEMPLATE_READ_FAILED until we found the payload needs a root `data` wrapper the docs don't show. The generated consent PDF is committed and viewable on /try.
 
-One person, ten build days, Claude Code and Codex, ninety-four tests, CI green, public repo.
+One person, ten build days, Claude Code and Codex, ninety-nine tests, CI green, public repo.
 
 **Repo:** https://github.com/usv240/time-out

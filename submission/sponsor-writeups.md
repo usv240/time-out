@@ -17,7 +17,7 @@ first sentence.
 
 ## Xano — Build a better version of business software you use today
 
-**Xano is the entire backend.** Fifteen tables, the encounter state machine with guarded transitions, the deterministic seven-check Gate, approval gates, an append-only audit log, the public REST API, and static hosting for the site — all in Xano, deployed from the CLI, with the workspace committed as code in `xano-workspace/`.
+**Xano is the entire backend.** Seventeen tables, thirteen public endpoints, the encounter state machine with guarded transitions, the deterministic seven-check Gate, approval gates, an append-only audit log, the public REST API, and static hosting for the site — all in Xano, deployed from the CLI, with the workspace committed as code in `xano-workspace/`.
 
 **Build story**
 
