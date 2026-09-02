@@ -35,7 +35,19 @@ function populateBlockedResult(decision) {
     facts.append(wrapper);
   }
   const citation = document.querySelector("#blocked-citation");
-  citation.href = primaryFailure.citation_urls[0];
+  // The snapshot records the citation as it stood when the rules were frozen. Texas
+  // moved its register to a new portal afterwards and that URL now 404s. Rewriting the
+  // snapshot to repair link rot would defeat the point of freezing it, so the frozen
+  // value stays and the link points at somewhere the rule can still be read. This is
+  // the failure mode a frozen snapshot exists to survive.
+  const MOVED = "sos.state.tx.us/texreg/archive";
+  const READABLE = "https://www.law.cornell.edu/regulations/texas/title-22/part-9/chapter-169";
+  const frozen = primaryFailure.citation_urls[0];
+  citation.href = frozen.includes(MOVED) ? READABLE : frozen;
+  if (frozen.includes(MOVED)) {
+    citation.title = `The frozen snapshot cites ${frozen}. That page moved after the ` +
+      "snapshot was taken, so this link opens the same rule at Cornell LII.";
+  }
   document.querySelector("#snapshot-hash").textContent = decision.rule_snapshot_sha256;
 }
 

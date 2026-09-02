@@ -402,3 +402,24 @@ def test_the_signed_record_does_not_contradict_its_own_signature() -> None:
     code = " ".join(line.split("#", 1)[0] for line in generator.splitlines())
     assert '"AWAITING HUMAN ATTESTATION"' not in code, (
         "the generator would reintroduce a status that a signature falsifies")
+
+
+def test_no_page_links_a_reader_at_the_moved_texas_register() -> None:
+    """Texas moved its register to a new portal and the old deep link now 404s.
+
+    The frozen rule snapshot still records the original URL, and that is correct: a
+    snapshot exists to preserve what was cited, and rewriting it to repair link rot
+    would defeat the point. What must not happen is a judge clicking a citation on the
+    site and landing on "the requested file was not found".
+    """
+    dead = "sos.state.tx.us/texreg/archive"
+    site = ROOT / "before" / "site"
+    offenders = [p.name for p in sorted(site.glob("*.html"))
+                 if dead in p.read_text(encoding="utf-8")]
+    assert not offenders, f"pages linking the moved Texas Register: {offenders}"
+
+    # The card renders its citation from the frozen snapshot, so app.js has to redirect
+    # that one value rather than the site pretending the snapshot says something else.
+    app = (site / "app.js").read_text(encoding="utf-8")
+    assert dead in app and "law.cornell.edu" in app, (
+        "app.js must detect the moved URL and send the reader somewhere readable")
