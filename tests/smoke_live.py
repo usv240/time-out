@@ -280,6 +280,24 @@ async def run(base: str) -> None:
                   return !(s.right <= v.x || s.x >= v.right || s.bottom <= v.y || s.y >= v.bottom); }""")
         check(not collided, "hero stats never overlap the verdict card while scrolling")
 
+        # Clicking "Run this request" must visibly do something where the reader is
+        # looking. It answered in 0.6s all along, into a pane 884px below the fold, so
+        # the page looked broken.
+        await page.set_viewport_size({"width": 1440, "height": 900})
+        await page.goto(base + "/api.html", wait_until="networkidle", timeout=90000)
+        await page.wait_for_timeout(2000)
+        await page.click("main button:has-text('Run this request')")
+        await page.wait_for_function(
+            "() => /verdict/.test(document.querySelector('#response-output').textContent)",
+            timeout=45000)
+        await page.wait_for_timeout(2200)
+        seen = await page.evaluate(
+            """() => { const o = document.querySelector('#response-output');
+                 const h = document.querySelector('.site-header').getBoundingClientRect();
+                 const b = o.getBoundingClientRect();
+                 return b.top >= h.bottom - 2 && b.top < innerHeight - 100; }""")
+        check(seen, "the API response lands on screen, clear of the sticky header")
+
         real = [e for e in dict.fromkeys(js_errors)]
         check(not real, f"no JS errors or failing API calls ({len(real)})")
         for e in real:

@@ -657,3 +657,8 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 @media (hover: hover) and (min-width: 48rem){
   .site-header .icon-button{ min-width: 36px; min-height: 36px; }
 }
+
+/* scrollIntoView aligns the top of the pane with the top of the viewport, and the
+   sticky header then covers the first two lines: "verdict" is line two, and it is the
+   line the whole call exists to show. Same offset the section anchors already use. */
+#response-output, #key-output{ scroll-margin-top: 118px; }
