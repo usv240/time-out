@@ -1,6 +1,6 @@
 const XANO_API_BASE = "https://x6g0-xqak-a8ri.n7e.xano.io/api:before";
 const DEMO_DECISION_URL = `${XANO_API_BASE}/v1/encounters/demo/evaluate`;
-const THEME_ORDER = ["system", "light", "dark"];
+const THEME_ORDER = ["light", "dark", "system"];
 
 const runButton = document.querySelector("#run-check");
 const actionPanel = document.querySelector("#evaluation-action");
@@ -106,7 +106,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 const themeButton = document.querySelector("#theme-toggle");
-function currentTheme() { return localStorage.getItem("before-theme") || "system"; }
+function currentTheme() { return localStorage.getItem("before-theme") || "light"; }
 function renderThemeButton(theme) {
   themeButton.setAttribute("aria-label", `Theme: ${theme}. Activate for next theme.`);
   themeButton.title = `Theme: ${theme}`;
@@ -115,7 +115,8 @@ function renderThemeButton(theme) {
 function setTheme(theme) {
   if (theme === "system") {
     document.documentElement.removeAttribute("data-theme");
-    localStorage.removeItem("before-theme");
+    // Stored, not removed: an absent key now means light, not "follow the OS".
+    localStorage.setItem("before-theme", "system");
   } else {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("before-theme", theme);

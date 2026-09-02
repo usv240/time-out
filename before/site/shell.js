@@ -1,4 +1,4 @@
-const themeOrder = ["system", "light", "dark"];
+const themeOrder = ["light", "dark", "system"];
 const nav = document.querySelector(".nav");
 const navLinks = nav?.querySelector(".nav-links");
 
@@ -25,7 +25,7 @@ if (nav && navLinks) {
   themeButton.innerHTML = '<span aria-hidden="true">◐</span>';
   actions.append(themeButton);
 
-  function currentTheme() { return localStorage.getItem("before-theme") || "system"; }
+  function currentTheme() { return localStorage.getItem("before-theme") || "light"; }
   function renderTheme(theme) {
     themeButton.setAttribute("aria-label", `Theme: ${theme}. Activate for next theme.`);
     themeButton.title = `Theme: ${theme}`;
@@ -34,7 +34,8 @@ if (nav && navLinks) {
   function setTheme(theme) {
     if (theme === "system") {
       document.documentElement.removeAttribute("data-theme");
-      localStorage.removeItem("before-theme");
+      // Stored, not removed: an absent key now means light, not "follow the OS".
+      localStorage.setItem("before-theme", "system");
     } else {
       document.documentElement.dataset.theme = theme;
       localStorage.setItem("before-theme", theme);

@@ -151,7 +151,7 @@ git clone https://github.com/usv240/time-out.git && cd time-out
 python -m pip install -r requirements.txt
 python -m before.seed         # write the synthetic cache
 python -m before.verify       # run the whole hero path offline, print the receipt
-python -m pytest tests -q     # 94 checks, offline
+python -m pytest tests -q     # 95 checks, offline
 ```
 
 Everything above is offline. One more suite drives the **deployed** site in a real
@@ -247,7 +247,7 @@ shared/gate/       the deterministic seven-check evaluator (pure, no network)
 fixtures/          synthetic clinic, providers, encounters, documents, face
 xano-workspace/    the deployed Xano schema, functions, and API — as code
 research/          primary-source basis for the Texas ruleset
-tests/             94 offline checks + a live-browser smoke suite
+tests/             95 offline checks + a live-browser smoke suite
 ```
 
 The Python package is named `before/` for historical reasons; the product is Time-Out.

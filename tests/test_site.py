@@ -347,3 +347,29 @@ def test_every_page_has_a_title_tag() -> None:
                        " ", head, flags=re.S)
         stray = [t.strip() for t in re.split(r"<[^>]+>", inert) if t.strip()]
         assert not stray, f"{page.name} has bare text in <head>, it will render: {stray}"
+
+
+def test_light_is_the_default_theme() -> None:
+    """A judge on a dark-mode laptop was shown the dark site before seeing the light one.
+
+    Light is now the default: an absent stored preference means light, not "follow the
+    OS". "system" is still reachable from the toggle, but it has to be stored
+    explicitly, because removing the key no longer means what it used to.
+    """
+    import re
+    site = ROOT / "before" / "site"
+
+    for page in sorted(site.glob("*.html")):
+        html = page.read_text(encoding="utf-8")
+        boot = re.search(r'localStorage\.getItem\("before-theme"\)([^<]{0,120})', html)
+        assert boot, f"{page.name} has no theme boot script"
+        assert '|| "light"' in boot.group(0) or '||"light"' in boot.group(0), (
+            f"{page.name} does not default to light: {boot.group(0)[:90]}")
+
+    for name in ("app.js", "shell.js"):
+        js = (site / name).read_text(encoding="utf-8")
+        assert 'localStorage.getItem("before-theme") || "light"' in js, (
+            f"{name} still falls back to a theme other than light")
+        assert 'localStorage.removeItem("before-theme")' not in js, (
+            f"{name} removes the stored theme; an absent key now means light, so "
+            f'choosing "system" would silently become light')
