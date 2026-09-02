@@ -143,9 +143,14 @@ h3 { font-size: 20px; letter-spacing: -.015em; }
 .principles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 32px; }
 .principles-grid article { padding-top: 20px; border-top: 2px solid var(--accent); }
 .principles-grid p { margin: 12px 0 0; color: var(--ink-2); }
-.snapshot-proof { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr); align-items: center; gap: 32px; margin-top: 48px; padding: 32px; border-radius: 10px; background: var(--evidence-bg); color: var(--evidence-ink); }
+.snapshot-proof { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr); align-items: end; gap: 32px; margin-top: 48px; padding: 32px; border-radius: 10px; background: var(--evidence-bg); color: var(--evidence-ink); }
 .snapshot-proof .eyebrow { color: var(--evidence-ink); }
-.snapshot-proof code { overflow-wrap: anywhere; font-size: var(--step--1); }
+/* The hash is evidence for the heading beside it, so it sits on the heading's line.
+   With align-items:center the two columns were centred independently: a 57px block of
+   label plus heading against a 21px line of hash, which left the hash floating 17px
+   down, level with neither. Bottom alignment puts its baseline on the heading's. */
+.snapshot-proof code { overflow-wrap: anywhere; font-size: var(--step--1); line-height: 1.5; }
+.snapshot-proof > div { align-self: end; }
 
 .scenario-card { display: block; color: var(--ink); text-decoration: none; }
 a.scenario-card:hover { color: var(--ink); border-color: var(--accent); transform: translateY(-2px); }

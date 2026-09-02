@@ -226,7 +226,12 @@ async def run(base: str) -> None:
         # ---- every page reachable, no sideways scroll, no JS errors ------------
         print("\nwhole site")
         pages = ["/", "/try.html", "/receipt.html", "/how-it-works.html", "/evidence.html", "/api.html"]
-        for w, name in ((390, "phone"), (1440, "desktop")):
+        # 768 is an iPad in portrait, and it was the one width nobody tested: the
+        # nav hints went inline at 48rem while the nav only collapses at 680px, so
+        # between those two the header ran 85px off the right edge. 360 is a common
+        # Android width where a 20rem grid minimum could not shrink to fit.
+        for w, name in ((360, "small phone"), (390, "phone"), (680, "nav collapse"),
+                        (768, "tablet portrait"), (1440, "desktop")):
             await page.set_viewport_size({"width": w, "height": 900})
             worst = 0
             for p in pages:

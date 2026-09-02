@@ -138,7 +138,10 @@
 @media (max-width:820px){.nutrient-split{grid-template-columns:1fr}}
 .tamper-proof{margin:.6rem 0;padding:.7rem .9rem;background:var(--blocked-wash,#FBE7E5);border-left:3px solid var(--blocked,#B3261E)}
 .live-now{margin-top:2.5rem;padding-top:1.5rem;border-top:2px solid var(--accent,#0B6E77)}
-.live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:1.25rem;margin-top:1rem}
+/* min(20rem, 100%) so the track can shrink below 320px. A bare minmax(20rem, 1fr)
+   cannot go under its minimum, so on a 360px phone the 320px column plus the
+   shell padding ran 5px off the right edge and the page scrolled sideways. */
+.live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(20rem,100%),1fr));gap:1.25rem;margin-top:1rem}
 
 /* ============================================================================
    TYPOGRAPHY PASS, smaller, quieter, regular/medium weights.
@@ -638,6 +641,13 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 @media (max-width: 48rem){
   .next-step{ margin: 40px 16px 8px; }
   .next-step-cards{ grid-template-columns: 1fr; }
+}
+
+/* 680px, not 48rem, because that is where styles.css turns the nav into a vertical
+   menu. At 48rem these fired first: between 681px and 768px the hints went inline
+   while the nav was still a horizontal row, inflating it from 454px to 674px and
+   pushing 85px of the page off the right edge. An iPad in portrait is 768px. */
+@media (max-width: 680px){
   /* No hover on a phone, and the open menu is a vertical list, so show it inline.
      Only the "what" line: with both lines the seven-item menu grew to 852px and ran
      off the bottom of an 844px phone with no way to scroll to the last two links. */
