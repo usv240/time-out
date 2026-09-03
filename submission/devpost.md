@@ -102,6 +102,6 @@ We'd rather you trust the parts that work. It does not determine legality — it
 
 All seven sponsor integrations run live against real APIs, with responses cached so the demo never depends on a third party answering at the moment a judge clicks. Doctavian was the hard one: generation returned TEMPLATE_READ_FAILED until we found the payload needs a root `data` wrapper the docs don't show. The generated consent PDF is committed and viewable on /try.
 
-One person, ten build days, Claude Code and Codex, ninety-nine tests, CI green, public repo.
+One person, ten build days, Claude Code and Codex, ninety-seven tests, CI green, public repo.
 
 **Repo:** https://github.com/usv240/time-out

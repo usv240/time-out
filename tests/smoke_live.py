@@ -319,10 +319,54 @@ def main() -> int:
     print(f"Smoke test against {args.base}")
     asyncio.run(run(args.base))
 
+    # The API is open on purpose, and a key must never quietly start gating it. These
+    # ran in the offline unit suite for a while, which was wrong: that suite serves its
+    # own requests from a local server and has no internet, so in CI they failed with
+    # connection refused. They test the deployed API, so they live here.
+    import json
+    import urllib.error
+    import urllib.request
+
+    api = "https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1"
+
+    def call(method, path, body=None, headers=None):
+        head = {"Content-Type": "application/json"}
+        head.update(headers or {})
+        payload = json.dumps(body).encode() if body is not None else None
+        req = urllib.request.Request(api + path, data=payload, method=method, headers=head)
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.status, json.loads(r.read() or b"null")
+        except urllib.error.HTTPError as e:
+            return e.code, json.loads(e.read() or b"{}")
+
+    status, issued = call("POST", "/keys", {"label": "smoke"})
+    check(status == 200 and issued.get("key", "").startswith("tok_demo_")
+          and issued.get("required") is False,
+          "POST /v1/keys issues an optional tag that grants nothing")
+
+    codes = []
+    for headers in ({"X-Time-Out-Key": issued.get("key", "")},
+                    {"X-Time-Out-Key": "not-a-real-key"}, None):
+        codes.append(call("POST", "/encounters/demo/evaluate", {}, headers)[0])
+    check(codes == [200, 200, 200],
+          f"the key stays optional: real, nonsense and absent all return 200 ({codes})")
+
+    refusals = [
+        (call("GET", "/encounters/SYN-ENC-does-not-exist")[0], 404),
+        (call("POST", "/encounters", {})[0], 400),
+        (call("POST", "/keys", {"label": "someone@example.com"})[0], 400),
+        (call("POST", "/keys", {"label": "x" * 300})[0], 400),
+    ]
+    check(all(got == want for got, want in refusals),
+          f"the API refuses bad input the way /api documents it ({refusals})")
+
     # The README and the Devpost story both quote this number. A count that drifts is
     # the kind of small wrongness a judge checks first, so the suite that owns the
     # number verifies the claim instead of trusting a human to remember.
     import re
+    from pathlib import Path
+
     root = Path(__file__).resolve().parents[1]
     claimed: set[int] = set()
     for rel in ("README.md", "submission/devpost-about.md"):
