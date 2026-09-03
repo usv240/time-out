@@ -134,7 +134,7 @@ Every transition writes an audit event. Retries are idempotent. `READY_FOR_PROCE
 
 | Sponsor | What it does here | Why nothing else would do |
 |---|---|---|
-| **Xano** | The entire backend: 15 tables, the state machine, the Gate, approvals, the audit log, the public API, and static hosting. | The whole product is a state machine with an audit trail. Xano *is* the system, not a database behind it. |
+| **Xano** | The entire backend: 17 tables, 13 public endpoints, the state machine, the Gate, approvals, the audit log, the public API, and static hosting. | The whole product is a state machine with an audit trail. Xano *is* the system, not a database behind it. |
 | **Nutrient DWS** | Parses credential, intake, and product documents into typed fields with **per-field confidence and page coordinates**. Semantic redaction before anything leaves the vault. | A field below the confidence floor routes to a named Medical Director, who sees the source page with the uncertain field boxed at the coordinates DWS returned, before the encounter can advance. The threshold lives in code, never in a prompt. |
 | **SerpApi** | Live searches for FDA warning letters and Texas board actions. A hit becomes an **alert candidate** that moves a ready encounter back to human review. | Live data with a consequence — it changes the workflow. It never decides authenticity, discipline, or law; a person confirms or dismisses, and that's audited. |
 | **Perfect Corp YouCam** | Standardized skin baseline: 12 scored concerns, an overall score, skin age, and overlay masks, captured before treatment. | An objective, repeatable pre-procedure record the patient keeps. A **baseline and communication aid — never a diagnosis.** |
@@ -192,6 +192,11 @@ Base: `https://x6g0-xqak-a8ri.n7e.xano.io/api:before/v1`
 | `POST` | `/encounters/{id}/remediate` | Attach what was missing, as a named person |
 | `POST` | `/encounters/{id}/rerun` | Re-evaluate after remediation |
 | `GET` | `/encounters/{id}` | State, findings, and full audit history |
+| `POST` | `/keys` | Issue an optional caller tag. Grants nothing; every endpoint works without it |
+| `GET` | `/live/envcheck` | Which sponsor credentials the deployment actually has |
+| `POST` | `/live/serpapi_scan` | Live FDA and board search, executed server-side |
+| `GET` | `/live/receipt_status` | Read a receipt's published DNS status |
+| `POST` | `/live/receipt_verify` | Verify a receipt digest against the published record |
 
 Every response carries `determination_scope: "Pre-procedure safety determination for human review"`. The API is synthetic-only and rejects common real-data patterns.
 
@@ -224,7 +229,7 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 
 ---
 
-## Status — 27 Aug 2026
+## Status — 3 Sep 2026
 
 | Area | State |
 |---|---|
@@ -232,7 +237,7 @@ Primary-source basis for the Texas ruleset: [`research/texas-neurotoxin-authorit
 | Public site + API | ✅ Live — `/try` runs the Gate live on Xano, lets you **break it yourself** (six real attacks, audited), and shows the audit log; `/receipt` is the patient's record; `/how-it-works` re-hashes a live verdict in your browser |
 | Nutrient · SerpApi · name.com · Perfect Corp | ✅ Live calls verified, responses cached for offline replay |
 | Foxit | ✅ Agent live end to end: prompt → MCP assembly → pause → human eSign, **signed** (envelope 35704700, EXECUTED) → outcome read back GET-only. Two MCP field-mapping bugs documented and routed via REST |
-| Doctavian | ⚠️ Auth, data source, solution, template + data upload live. Generation blocked on the demo account's Google Drive delivery — we declined to grant full Drive access. Resolution requested from Doctavian. |
+| Doctavian | ✅ Live end to end: auth, data source, solution, template upload, and generation. `TEMPLATE_READ_FAILED` turned out to be a missing root `data` wrapper the docs don't show; the generated consent PDF is committed and viewable on `/try`. Three API findings reported upstream with reproductions. |
 | Tests | ✅ 97 offline + 56 live-browser smoke checks · CI green |
 
 ---
