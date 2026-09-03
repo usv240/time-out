@@ -255,7 +255,13 @@ code, pre, .timeline-detail{ font-family: var(--f-mono); font-size: var(--step--
 .wwh-steps li::before{ content:counter(s); position:absolute; left:0; top:.05rem; width:1.6rem; height:1.6rem; display:grid; place-items:center;
   font-family:var(--f-mono); font-size: var(--step--2); font-weight:600; color:var(--accent-ink); background:var(--accent-wash); border-radius:50%; }
 .wwh-steps strong{ color:var(--ink); }
-.wwh-reverse{ margin-top:1.25rem; padding:.8rem 1rem; background:var(--review-wash); border-left:3px solid var(--review); font-size:var(--step--1); max-width:74ch; }
+/* Spans the content column like the box above it. It used to sit outside .shell as a
+   direct child of the full-bleed section, so it started at the viewport edge, 100px
+   left of everything else, capped at 74ch: a narrow strip jammed against the screen. */
+.wwh-reverse{ margin-top:1.25rem; padding:1rem 2rem; background:var(--review-wash); border-left:3px solid var(--review); font-size:var(--step--1); line-height:1.6;
+  /* A site-wide readable-measure cap on <p> still applied and held it at about 505px
+     beside a 1240px box. This is a full-width callout, not body prose. */
+  max-width:none; }
 
 /* built-with table */
 .scroll-x{ overflow-x:auto; }
