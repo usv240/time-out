@@ -219,7 +219,7 @@ We'd rather you trust the parts that work.
 ## Why this problem
 
 - ~13,000 US med spas by end of 2026, with complication rates measurably higher than physician offices — *Aesthetic Surgery Journal*, 2026
-- Of 20 med spa malpractice cases reviewed, 13 ended in plaintiff verdicts averaging near $2.5M. The leading causes: **absent informed consent, failure to communicate risk, and liability for the actions of delegates** — Westlaw review, 2006–2024
+- Of 20 med spa malpractice cases reviewed, 13 ended in plaintiff verdicts averaging near $2.5M. The leading causes: **absent informed consent, failure to communicate risk, and liability for the actions of delegates** — *Annals of Plastic Surgery*, 2026 ([PMID 42048538](https://pubmed.ncbi.nlm.nih.gov/42048538/)), reviewing Westlaw cases 2006–2024
 - In April 2026 the FDA warned a Texas med spa that could not reconcile the authentic Botox it purchased against what it recorded administering
 - Interactive teach-back materially outperforms written consent for understanding — systematic review, 2020
 
