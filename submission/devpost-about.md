@@ -58,7 +58,7 @@ check. Nobody edits a database. That is the difference between software that sto
 and software that helps you.
 
 When everything clears, consent is compiled from a template that branches on who is
-performing the procedure, the patient completes a teach-back, a standardised skin
+performing the procedure, the patient completes a teach-back, a standardized skin
 baseline is captured, an agent assembles the record and **stops**, and a Medical
 Director signs the attestation by hand. The patient walks out with a safety receipt:
 what was checked, who was responsible, their skin baseline, and a fingerprint of the
