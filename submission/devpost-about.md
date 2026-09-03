@@ -4,7 +4,7 @@ Paste everything below the line into Devpost's **"About the project"** box. It i
 already in Devpost's seven headings and formatted as Markdown, which that field accepts.
 
 Nothing here is a claim the site does not already carry a source for. Numbers checked
-2026-09-02: 99 offline tests, 49 live browser checks, 17 Xano tables, 13 public
+2026-09-02: 99 offline tests, 52 live browser checks, 17 Xano tables, 13 public
 endpoints, 8 backend functions, eSign envelope 35704700 EXECUTED.
 
 ---
@@ -167,7 +167,7 @@ it to work per field.
 
 **Seven sponsor integrations that each own a step nothing else could do**, with
 responses cached so the demo never depends on a third party answering at the moment a
-judge clicks. And 99 offline tests plus 49 live browser checks, CI green, public repo.
+judge clicks. And 99 offline tests plus 52 live browser checks, CI green, public repo.
 
 ## What we learned
 
